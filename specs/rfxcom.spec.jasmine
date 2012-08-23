@@ -1,0 +1,21 @@
+(function() {
+
+  var serialport = require('serialport'),
+      RfxCom = require('../rfxcom').RfxCom;
+
+  describe('RfxCom', function() {
+    describe('initialisation', function() {
+      it('can be created with a serial port', function() {
+        var port = createSpyObj('port', ['on']);
+        var spy = spyOn(serialport, 'SerialPort').andReturn(port);
+        var rfxcom = new RfxCom('/dev/ttyUSB0');
+
+        expect(rfxcom.device).toBe('/dev/ttyUSB0');
+        expect(spy).toHaveBeenCalledWith('/dev/ttyUSB0', {baudrate: 38400, parser: any(Function)});
+        expect(port.on).toHaveBeenCalledWith('data', any(Function));
+        expect(port.on).toHaveBeenCalledWith('error', any(Function));
+      })
+    });
+  });
+
+}).call(this);
