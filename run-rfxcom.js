@@ -14,15 +14,19 @@ rfxcom.on("response", function(message, sequence) {
   console.log("Received response to %s, %s", sequence, message);
 });
 
+rfxcom.on("status", function(subtype, seqnbr, cmnd, receiver_type, firmware_version) {
+  console.log("Received status %s, %s, %s, %s, %s", subtype, seqnbr, cmnd, receiver_type, firmware_version);
+});
+
+
 rfxcom.on("ready", function() {
   console.log("RfxCom ready for further behaviour.");
   rfxcom.reset(function() {
-    rfxcom.delay(50)
-    rfxcom.getStatus(function(err, result) {
-      console.log("getStatus result = %j %j", err, result);
-    });
-    rfxcom.lightOff("F09AC7", 1, function(err, result) {
-      console.log("Light switched off %j %j", err, result);
-    })
+    rfxcom.delay(1000);
+    rfxcom.flush();
+    rfxcom.delay(2000);
+    rfxcom.getStatus();
   });
 });
+
+rfxcom.open();
