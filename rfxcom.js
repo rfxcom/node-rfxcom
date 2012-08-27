@@ -18,6 +18,11 @@ function RfxCom(device, options) {
   this._cmd = 0;
   this.device = device;
 
+  // This is a buffering parser which accumulates bytes until it receives the
+  // number of bytes specified in the first byte of the message.
+  // It relies on a flushed buffer, to ensure the first byte corresponds to the
+  // size of the first message.
+  // The 'data' message emitted has all the bytes from the message.
   this.rfxtrxParser = function() {
     var data = [],
         requiredBytes = 0;
@@ -79,25 +84,6 @@ RfxCom.prototype.open = function() {
   });
 }
 
-RfxCom.prototype.elec2Handler = function(data) {
-  var subtypes = {
-        0x01: "CM119/160"
-      },
-      TOTAL_DIVISOR = 223.666,
-      subtype = subtypes[data[0]],
-      seqnbr = data[1],
-      id = "0x" + this.dumpHex(data.slice(2, 4), false).join(""),
-      count = data[4],
-      instant = data.slice(5, 9),
-      total = data.slice(9, 15),
-      current_watts = this.bytesToUint32(instant),
-      total_watts = this.bytesToUint48(total) / TOTAL_DIVISOR;
-
-  var rounded_total = Math.round(total_watts * Math.pow(10, 2)) / Math.pow(10, 2);
-
-  this.emit("elec2", subtype, id, current_watts, rounded_total);
-}
-
 RfxCom.prototype.messageHandler = function(data) {
   var seqnbr = data[0],
       message = data[1],
@@ -110,8 +96,13 @@ RfxCom.prototype.messageHandler = function(data) {
   this.emit("response", responses[message], seqnbr);
 }
 
+/**
+ *
+ * Called by the data event handler when data arrives from the device with
+ * information about its settings.
+ *
+ */
 RfxCom.prototype.interfaceHandler = function(data) {
-
   var receiver_types = {
     0x50: "310MHz",
     0x51: "315MHz",
@@ -134,6 +125,12 @@ RfxCom.prototype.interfaceHandler = function(data) {
   this.emit("status", subtype, seqnbr, cmnd, receiver_type, firmware_version);
 }
 
+/**
+ *
+ * Called by the data event handler when data arrives from a LightwaveRF/Siemens
+ * light control device.
+ *
+ */
 RfxCom.prototype.lighting5Handler = function(data) {
   var subtypes = {
         0x00: "LightwaveRF, Siemens",
@@ -152,17 +149,33 @@ RfxCom.prototype.lighting5Handler = function(data) {
   this.emit("lighting5", subtype, id, unitcode, command);
 }
 
+/**
+ *
+ * Fetches a "command number" sequence number for identifying requests sent to
+ * the device.
+ *
+ */
 RfxCom.prototype.getCmdNumber = function() {
   if (this._cmd > 256)
     this._cmd = 0;
   return this._cmd++;
 }
 
+/**
+ *
+ * Writes the reset sequence to the RFxtrx433.
+ *
+ */
 RfxCom.prototype.reset = function(callback) {
   var buffer = [13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   this.serial.write(buffer, callback);
 }
 
+/**
+ *
+ * Calls flush on the underlying SerialPort.
+ *
+ */
 RfxCom.prototype.flush = function(callback) {
   this.serial.flush(callback);
 }
@@ -178,7 +191,16 @@ RfxCom.prototype.getStatus = function(callback) {
   return cmd_id;
 }
 
+/**
+ *
+ * Turn on the specified light unit.
+ *
+ * Currently only works for lighting5 (LightwaveRF, Siemens) lights.
+ *
+ */
+
 RfxCom.prototype.lightOn = function(id, unit, callback) {
+  // TODO: Fix this hard-coded light...
   var cmd_id = this.getCmdNumber(),
       buffer = [0x0A, 0x14, 0, cmd_id, 0xf0, 0x9a, 0xc7, 1, 1, 0, 0];
   this.serial.write(buffer, function(err, response) {
@@ -189,7 +211,7 @@ RfxCom.prototype.lightOn = function(id, unit, callback) {
 
 /**
  *
- * Turn the specified light unit.
+ * Turn off the specified light unit.
  *
  * Currently only works for lighting5 (LightwaveRF, Siemens) lights.
  *
@@ -217,13 +239,13 @@ RfxCom.prototype.delay = function(ms) {
   while (+new Date() < ms) { }
 }
 
-RfxCom.prototype.dumpHex = function(buffer, noPrefix) {
-  var prefix = Boolean(noPrefix) ? "0x" : "";
+RfxCom.prototype.dumpHex = function(buffer, prefix) {
+  var prefix = prefix ? prefix : "";
   function dec2hex(value) {
     var hexDigits = "0123456789ABCDEF";
     return prefix + (hexDigits[value >> 4] + hexDigits[value & 15]); 
   };
-  return _.map(buffer, dec2hex);
+  return _.map(buffer, dec2hex)
 }
 
 /**
@@ -258,6 +280,34 @@ RfxCom.prototype.stringToBytes = function(bytes) {
     result.push(parseInt(bytes.substr(i, 2), 16));
   }
   return result;
+}
+
+/**
+ *
+ * Called by the data event handler when data arrives an OWL CM119/CM160 power
+ * measurement device.
+ *
+ * Calculates the current usage and total usage from the bytes sent, and emits
+ * an "elec2" message for handling.
+ *
+ */
+RfxCom.prototype.elec2Handler = function(data) {
+  var subtypes = {
+        0x01: "CM119/160"
+      },
+      TOTAL_DIVISOR = 223.666,
+      subtype = subtypes[data[0]],
+      seqnbr = data[1],
+      id = "0x" + this.dumpHex(data.slice(2, 4), false).join(""),
+      count = data[4],
+      instant = data.slice(5, 9),
+      total = data.slice(9, 15),
+      current_watts = this.bytesToUint32(instant),
+      total_watts = this.bytesToUint48(total) / TOTAL_DIVISOR;
+
+  var rounded_total = Math.round(total_watts * Math.pow(10, 2)) / Math.pow(10, 2);
+
+  this.emit("elec2", subtype, id, current_watts, rounded_total);
 }
 
 module.exports.RfxCom = RfxCom;
