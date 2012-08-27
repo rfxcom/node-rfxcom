@@ -57,7 +57,6 @@ RfxCom.prototype.open = function() {
     var length = data.shift(),
        packet_type = data.shift();
        handler = self.handlers[packet_type];
-    console.log("Chose handler %s", handler);
     if (typeof handler != "undefined") {
       self[handler](data);
     } else {
@@ -146,7 +145,7 @@ RfxCom.prototype.lighting5Handler = function(data) {
       },
       subtype = subtypes[data[0]],
       seqnbr = data[1],
-      id = this.dumpHex(data.slice(2, 5)),
+      id = "0x" + this.dumpHex(data.slice(2, 5), false).join(""),
       unitcode = data[5],
       command = commands[data[6]];
 
@@ -172,7 +171,9 @@ RfxCom.prototype.getStatus = function(callback) {
   var cmd_id = this.getCmdNumber(),
       buffer = [13, 0, 0, cmd_id, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   this.serial.write(buffer, function(err, response) {
-    callback(err, response, cmd_id);
+    if (callback) {
+      return callback(err, response, cmd_id);
+    }
   });
   return cmd_id;
 }
