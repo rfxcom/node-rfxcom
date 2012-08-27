@@ -198,11 +198,10 @@ RfxCom.prototype.getStatus = function(callback) {
  * Currently only works for lighting5 (LightwaveRF, Siemens) lights.
  *
  */
-
 RfxCom.prototype.lightOn = function(id, unit, callback) {
-  // TODO: Fix this hard-coded light...
   var cmd_id = this.getCmdNumber(),
-      buffer = [0x0A, 0x14, 0, cmd_id, 0xf0, 0x9a, 0xc7, 1, 1, 0, 0];
+      id_bytes = this.stringToBytes(id),
+      buffer = [0x0A, 0x14, 0, cmd_id, id_bytes[0], id_bytes[1], id_bytes[2], 1, 1, 0, 0];
   this.serial.write(buffer, function(err, response) {
     callback(err, response, cmd_id);
   });
@@ -219,7 +218,7 @@ RfxCom.prototype.lightOn = function(id, unit, callback) {
 RfxCom.prototype.lightOff = function(id, unit, callback) {
   var cmd_id = this.getCmdNumber(),
       id_bytes = this.stringToBytes(id),
-      buffer = [0x0A, 0x14, 0, cmd_id] + id_bytes + [1, 0, 0, 0];
+      buffer = [0x0A, 0x14, 0, cmd_id, id_bytes[0], id_bytes[1], id_bytes[2], 1, 0, 0, 0];
   this.serial.write(buffer, function(err, response) {
     callback(err, response, cmd_id);
   });
@@ -277,7 +276,13 @@ RfxCom.prototype.bytesToUint48 = function(bytes) {
 RfxCom.prototype.stringToBytes = function(bytes) {
   var result = [];
   for (var i=0; i < bytes.length; i+=2) {
-    result.push(parseInt(bytes.substr(i, 2), 16));
+    var byteString = bytes.substr(i, 2);
+    if (byteString != "0x") {
+      var value = parseInt(bytes.substr(i, 2), 16);
+      if (typeof value != "undefined") {
+        result.push(value);
+      }
+    }
   }
   return result;
 }

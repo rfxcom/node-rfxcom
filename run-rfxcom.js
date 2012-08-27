@@ -22,9 +22,8 @@ rfxcom.on("status", function(subtype, seqnbr, cmnd, receiver_type, firmware_vers
 rfxcom.on("ready", function() {
   console.log("RfxCom ready for further behaviour.");
   rfxcom.reset(function() {
-    rfxcom.delay(1000);
+    rfxcom.delay(100);
     rfxcom.flush();
-    rfxcom.delay(2000);
     rfxcom.getStatus();
   });
 });

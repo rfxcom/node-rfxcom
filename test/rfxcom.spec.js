@@ -112,6 +112,11 @@
         var rfxcom = new RfxCom("/dev/ttyUSB0");
         assert.equal(rfxcom.stringToBytes("203052").toString(), [32, 48, 82].toString());
       })
+      it("should ignore leading 0x on a string", function() {
+        var rfxcom = new RfxCom("/dev/ttyUSB0");
+        assert.equal(rfxcom.stringToBytes("0x203052").toString(), [32, 48, 82].toString());
+      })
+
     });
   });
 }).call(this);
