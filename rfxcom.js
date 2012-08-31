@@ -11,7 +11,8 @@ function RfxCom(device, options) {
     0x01: "interfaceHandler",
     0x02: "messageHandler",
     0x14: "lighting5Handler",
-    0x5a: "elec2Handler"
+    0x5a: "elec2Handler",
+    0x20: "security1Handler"
   }
 
   // Running counter for command numbers.
@@ -85,14 +86,15 @@ RfxCom.prototype.open = function() {
 }
 
 RfxCom.prototype.messageHandler = function(data) {
-  var seqnbr = data[0],
-      message = data[1],
-      responses = {
+  var subtype = data[0]
+    , seqnbr = data[1]
+    , responses = {
         0: "ACK - transmit OK",
         1: "ACK - transmit delayed",
         2: "NAK - transmitter did not lock onto frequency",
         3: "NAK - AC address not allowed"
-      };
+      }
+    , message = data[2];
   this.emit("response", responses[message], seqnbr);
 }
 
@@ -199,9 +201,14 @@ RfxCom.prototype.getStatus = function(callback) {
  *
  */
 RfxCom.prototype.lightOn = function(id, unit, callback) {
-  var cmd_id = this.getCmdNumber(),
-      id_bytes = this.stringToBytes(id),
-      buffer = [0x0A, 0x14, 0, cmd_id, id_bytes[0], id_bytes[1], id_bytes[2], 1, 1, 0, 0];
+  var self = this
+    , cmd_id = this.getCmdNumber()
+    ,  id_bytes = this.stringToBytes(id)
+    ,  buffer = [0x0A, 0x14, 0, cmd_id, id_bytes[0], id_bytes[1], id_bytes[2], unit, 1, 0, 0];
+
+  if (self.options.debug) {
+    console.log("Sending lightOn data: %s", self.dumpHex(buffer));
+  }
   this.serial.write(buffer, function(err, response) {
     callback(err, response, cmd_id);
   });
@@ -216,9 +223,14 @@ RfxCom.prototype.lightOn = function(id, unit, callback) {
  *
  */
 RfxCom.prototype.lightOff = function(id, unit, callback) {
-  var cmd_id = this.getCmdNumber(),
-      id_bytes = this.stringToBytes(id),
-      buffer = [0x0A, 0x14, 0, cmd_id, id_bytes[0], id_bytes[1], id_bytes[2], 1, 0, 0, 0];
+  var self = this
+    , cmd_id = this.getCmdNumber()
+    , id_bytes = this.stringToBytes(id)
+    , buffer = [0x0A, 0x14, 0, cmd_id, id_bytes[0], id_bytes[1], id_bytes[2], unit, 0, 0, 0];
+
+  if (self.options.debug) {
+    console.log("Sending lightOff data: %s", self.dumpHex(buffer));
+  }
   this.serial.write(buffer, function(err, response) {
     callback(err, response, cmd_id);
   });
@@ -313,6 +325,40 @@ RfxCom.prototype.elec2Handler = function(data) {
   var rounded_total = Math.round(total_watts * Math.pow(10, 2)) / Math.pow(10, 2);
 
   this.emit("elec2", subtype, id, current_watts, rounded_total);
+}
+
+/**
+ *
+ * Called by the data event handler when data arrives from various security
+ * devices.
+ *
+ */
+RfxCom.prototype.security1Handler = function(data) {
+  var subtypes = {
+        0x00: "X10 Securityy door/windo sensor",
+        0x01: "X10 security motion sensor",
+        0x02: "X10 security remote (no alive packets)",
+      },
+      subtype = subtypes[data[0]],
+      seqnbr = data[1],
+      id = "0x" + this.dumpHex(data.slice(2, 5), false).join(""),
+      device_status = data[5],
+      battery_level = data[6];
+
+  this.emit("security1", subtype, id, device_status, battery_level);
+}
+
+
+RfxCom.prototype.resetTamper = function(callback) {
+  var cmd_id = this.getCmdNumber(),
+      // 08,20,01,01,F3,FC,6F,84,89
+      buffer = [0x08, 0x20, 0x01, cmd_id, 0xF3, 0xFC, 0x6F, 0x84 & 0x7f, 0x00];
+  this.serial.write(buffer, function(err, response) {
+    if (callback) {
+      return callback(err, response, cmd_id);
+    }
+  });
+  return cmd_id;
 }
 
 module.exports.RfxCom = RfxCom;
