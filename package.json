@@ -8,10 +8,9 @@
   },
   "main": "rfxcom.js",
   "devDependencies": {
-    "jasmine-node": "~1.0.26"
+    "jasmine-node": "*",
+    "sinon": "*"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha",
-    "watch": "./node_modules/.bin/mocha --growl --watch"
   }
 }
