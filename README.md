@@ -49,20 +49,6 @@ rfxcom.open();
 
 </pre>
 
-
-RfxCom methods
-==============
-
-RfxCom.open = function() {
-RfxCom.messageHandler = function(data) {
-RfxCom.statusHandler = function(data) {
-RfxCom.prototype.reset = function(callback) {
-RfxCom.prototype.flush = function(callback) {
-RfxCom.prototype.getStatus = function(callback) {
-RfxCom.prototype.lightOn = function(id, unit, callback) {
-RfxCom.prototype.lightOff = function(id, unit, callback) {
-
-
 RfxCom events
 =============
 
