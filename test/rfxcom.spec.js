@@ -6,12 +6,19 @@ var FakeSerialPort = function() {
   var self = this;
   events.EventEmitter.call(this);
   self.bytesWritten = [];
+  self.flushed = false;
 }
 util.inherits(FakeSerialPort, events.EventEmitter);
 
 FakeSerialPort.prototype.write = function(buffer, callback){
   var self = this;
   self.bytesWritten += buffer;
+  callback()
+}
+
+FakeSerialPort.prototype.flush = function(callback){
+  var self = this;
+  self.flushed = true;
   callback()
 }
 
@@ -77,6 +84,17 @@ describe("RfxCom", function() {
       rfxcom.messageHandler([0x00, 0x03, 0x00]);
     });
   });
+
+  describe(".flush", function() {
+    it("should flush the underlying serialport", function(done) {
+      var fakeSerialPort = new FakeSerialPort()
+        , rfxcom = new RfxCom("/dev/ttyUSB0", {port: fakeSerialPort});
+      rfxcom.flush(function(){
+        expect(fakeSerialPort.flushed).toBeTruthy();
+        done();
+      });
+    })
+  })
 
   describe(".lightOff", function() {
     it("should send the correct bytes to the serialport", function(done) {

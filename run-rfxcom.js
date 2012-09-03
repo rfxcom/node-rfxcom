@@ -17,7 +17,7 @@ var rfxcom = new RfxCom("/dev/ttyUSB0", {debug: true});
 rfxcom.on("ready", function() {
   console.log("RfxCom ready for further behaviour.");
   rfxcom.reset(function() {
-    rfxcom.delay(1000);
+    rfxcom.delay(500);
     rfxcom.flush();
     rfxcom.getStatus(function(){
       console.log("Status completed.");

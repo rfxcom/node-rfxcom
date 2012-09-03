@@ -171,7 +171,7 @@ RfxCom.prototype.reset = function(callback) {
  */
 RfxCom.prototype.flush = function(callback) {
   var self = this;
-  self.serial.flush(callback);
+  self.serialport.flush(callback);
 }
 
 RfxCom.prototype.getStatus = function(callback) {
