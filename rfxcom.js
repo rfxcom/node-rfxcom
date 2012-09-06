@@ -3,7 +3,7 @@ var _ = require("underscore")
   , EventEmitter = require("events").EventEmitter
   , util = require("util");
 
-function RfxCom(device, options) {
+function RfxCom(device, options){
   var self = this;
 
   self.options = options || {};
@@ -31,16 +31,16 @@ function RfxCom(device, options) {
   // It relies on a flushed buffer, to ensure the first byte corresponds to the
   // size of the first message.
   // The 'data' message emitted has all the bytes from the message.
-  self.rfxtrxParser = function() {
+  self.rfxtrxParser = function(){
     var data = []
       , requiredBytes = 0;
-    return function (emitter, buffer) {
+    return function (emitter, buffer){
       // Collect data
       data.push.apply(data, buffer);
-      if (requiredBytes == 0) {
+      if (requiredBytes == 0){
         requiredBytes = buffer[0] + 1;
       }
-      if (data.length >= requiredBytes) {
+      if (data.length >= requiredBytes){
         emitter.emit("data", data.slice(0, requiredBytes+1));
         data = data.slice(requiredBytes);
         requiredBytes = 0;
@@ -50,22 +50,22 @@ function RfxCom(device, options) {
 };
 util.inherits(RfxCom, EventEmitter);
 
-RfxCom.prototype.open = function() {
+RfxCom.prototype.open = function(){
   var self = this;
 
   if (typeof self.serialport == "undefined"){
-    self.serialport = new serialport.SerialPort(this.device, {
+    self.serialport = new serialport.SerialPort(self.device, {
       baudrate : 38400,
       parser: self.rfxtrxParser()
     })
   }
-  self.serialport.on("open", function() {
+  self.serialport.on("open", function(){
     self.emit("ready");
   });
 
   // Add data read event listener
-  self.serialport.on("data", function(data) {
-    if (self.options.debug) {
+  self.serialport.on("data", function(data){
+    if (self.options.debug){
       console.log("Received: %s", self.dumpHex(data));
     }
 
@@ -73,29 +73,29 @@ RfxCom.prototype.open = function() {
       , packet_type = data.shift()
       , handler = self.handlers[packet_type];
 
-    if (typeof handler != "undefined") {
+    if (typeof handler != "undefined"){
       self[handler](data);
     } else {
-      if (self.options.debug) {
+      if (self.options.debug){
         console.log("Unhandled packet type = %s", self.dumpHex([packet_type]));
       }
     }
   });
 
-  self.serialport.on("error", function(msg) {
+  self.serialport.on("error", function(msg){
     console.log("Error %s", msg);
   });
 
-  self.serialport.on("end", function() {
+  self.serialport.on("end", function(){
     console.log("Received 'end'");
   });
 
-  self.serialport.on("drain", function() {
+  self.serialport.on("drain", function(){
     console.log("Received 'drain'");
   });
 }
 
-RfxCom.prototype.messageHandler = function(data) {
+RfxCom.prototype.messageHandler = function(data){
   var self = this
     , subtype = data[0]
     , seqnbr = data[1]
@@ -115,7 +115,7 @@ RfxCom.prototype.messageHandler = function(data) {
  * information about its settings.
  *
  */
-RfxCom.prototype.statusHandler = function(data) {
+RfxCom.prototype.statusHandler = function(data){
   var self = this
     , receiver_types = {
         0x50: "310MHz"
@@ -145,7 +145,7 @@ RfxCom.prototype.statusHandler = function(data) {
  * the device.
  *
  */
-RfxCom.prototype.getCmdNumber = function() {
+RfxCom.prototype.getCmdNumber = function(){
   var self = this;
 
   if (self._cmd > 256)
@@ -158,7 +158,7 @@ RfxCom.prototype.getCmdNumber = function() {
  * Writes the reset sequence to the RFxtrx433.
  *
  */
-RfxCom.prototype.reset = function(callback) {
+RfxCom.prototype.reset = function(callback){
   var self = this
      , buffer = [13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   self.serialport.write(buffer, callback);
@@ -169,17 +169,17 @@ RfxCom.prototype.reset = function(callback) {
  * Calls flush on the underlying SerialPort.
  *
  */
-RfxCom.prototype.flush = function(callback) {
+RfxCom.prototype.flush = function(callback){
   var self = this;
   self.serialport.flush(callback);
 }
 
-RfxCom.prototype.getStatus = function(callback) {
+RfxCom.prototype.getStatus = function(callback){
   var self = this
-    , cmd_id = this.getCmdNumber()
+    , cmd_id = self.getCmdNumber()
     , buffer = [13, 0, 0, cmd_id, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  self.serialport.write(buffer, function(err, response) {
-    if (callback) {
+  self.serialport.write(buffer, function(err, response){
+    if (callback){
       return callback(err, response, cmd_id);
     }
   });
@@ -193,16 +193,16 @@ RfxCom.prototype.getStatus = function(callback) {
  * Currently only works for lighting5 (LightwaveRF, Siemens) lights.
  *
  */
-RfxCom.prototype.lightOn = function(id, unit, callback) {
+RfxCom.prototype.lightOn = function(id, unit, callback){
   var self = this
-    , cmd_id = this.getCmdNumber()
-    ,  id_bytes = this.stringToBytes(id)
-    ,  buffer = [0x0A, 0x14, 0, cmd_id, id_bytes[0], id_bytes[1], id_bytes[2], unit, 1, 0, 0];
+    , cmd_id = self.getCmdNumber()
+    , id_bytes = self.stringToBytes(id)
+    , buffer = [0x0A, 0x14, 0, cmd_id, id_bytes[0], id_bytes[1], id_bytes[2], unit, 1, 0, 0];
 
-  if (self.options.debug) {
+  if (self.options.debug){
     console.log("Sending lightOn data: %s", self.dumpHex(buffer));
   }
-  self.serialport.write(buffer, function(err, response) {
+  self.serialport.write(buffer, function(err, response){
     callback(err, response, cmd_id);
   });
   return cmd_id;
@@ -215,15 +215,15 @@ RfxCom.prototype.lightOn = function(id, unit, callback) {
  * Currently only works for lighting5 (LightwaveRF, Siemens) lights.
  *
  */
-RfxCom.prototype.lightOff = function(id, unit, callback) {
+RfxCom.prototype.lightOff = function(id, unit, callback){
   var self = this
     , cmd_id = self.getCmdNumber()
     , id_bytes = self.stringToBytes(id)
     , buffer = [0x0A, 0x14, 0, cmd_id, id_bytes[0], id_bytes[1], id_bytes[2], unit, 0, 0, 0];
-  if (self.options.debug) {
+  if (self.options.debug){
     console.log("Sending lightOff data: %s", self.dumpHex(buffer));
   }
-  self.serialport.write(buffer, function(err, response) {
+  self.serialport.write(buffer, function(err, response){
     callback(err, response, cmd_id);
   });
   return cmd_id;
@@ -237,14 +237,14 @@ RfxCom.prototype.lightOff = function(id, unit, callback) {
  * vagaries of system scheduling, but no fewer than the specified ms.
  *
  */
-RfxCom.prototype.delay = function(ms) {
+RfxCom.prototype.delay = function(ms){
   ms += +new Date();
-  while (+new Date() < ms) { }
+  while (+new Date() < ms){ }
 }
 
-RfxCom.prototype.dumpHex = function(buffer, prefix) {
+RfxCom.prototype.dumpHex = function(buffer, prefix){
   var prefix = prefix ? prefix : "";
-  function dec2hex(value) {
+  function dec2hex(value){
     var hexDigits = "0123456789ABCDEF";
     return prefix + (hexDigits[value >> 4] + hexDigits[value & 15]); 
   };
@@ -256,7 +256,7 @@ RfxCom.prototype.dumpHex = function(buffer, prefix) {
  * Converts an array of 4 bytes to a 32bit integer.
  *
  */
-RfxCom.prototype.bytesToUint32 = function(bytes) {
+RfxCom.prototype.bytesToUint32 = function(bytes){
   return (bytes[0] * Math.pow(2, 24)) + (bytes[1] << 16) + (bytes[2] << 8) + bytes[3];
 };
 
@@ -265,7 +265,7 @@ RfxCom.prototype.bytesToUint32 = function(bytes) {
  * Converts an array of 6 bytes to a 48bit integer.
  *
  */
-RfxCom.prototype.bytesToUint48 = function(bytes) {
+RfxCom.prototype.bytesToUint48 = function(bytes){
   return (bytes[0] * Math.pow(2, 40)) + (bytes[1] * Math.pow(2, 32)) +
     (bytes[2] * Math.pow(2, 24)) + (bytes[3] << 16) + (bytes[4] << 8) + bytes[4]
 }
@@ -277,13 +277,13 @@ RfxCom.prototype.bytesToUint48 = function(bytes) {
  * e.g. stringToBytes("202020") == [32, 32, 32]
  *
  */
-RfxCom.prototype.stringToBytes = function(bytes) {
+RfxCom.prototype.stringToBytes = function(bytes){
   var result = [];
-  for (var i=0; i < bytes.length; i+=2) {
+  for (var i=0; i < bytes.length; i+=2){
     var byteString = bytes.substr(i, 2);
-    if (byteString != "0x") {
+    if (byteString != "0x"){
       var value = parseInt(bytes.substr(i, 2), 16);
-      if (typeof value != "undefined") {
+      if (typeof value != "undefined"){
         result.push(value);
       }
     }
@@ -300,7 +300,7 @@ RfxCom.prototype.stringToBytes = function(bytes) {
  * an "elec2" message for handling.
  *
  */
-RfxCom.prototype.elec2Handler = function(data) {
+RfxCom.prototype.elec2Handler = function(data){
   var self = this
     , subtypes = {
         0x01: "CM119/160"
@@ -308,12 +308,12 @@ RfxCom.prototype.elec2Handler = function(data) {
     , TOTAL_DIVISOR = 223.666
     , subtype = subtypes[data[0]]
     , seqnbr = data[1]
-    , id = "0x" + this.dumpHex(data.slice(2, 4), false).join("")
+    , id = "0x" + self.dumpHex(data.slice(2, 4), false).join("")
     , count = data[4]
     , instant = data.slice(5, 9)
     , total = data.slice(9, 15)
-    , current_watts = this.bytesToUint32(instant)
-    , total_watts = this.bytesToUint48(total) / TOTAL_DIVISOR;
+    , current_watts = self.bytesToUint32(instant)
+    , total_watts = self.bytesToUint48(total) / TOTAL_DIVISOR;
 
   var rounded_total = Math.round(total_watts * Math.pow(10, 2)) / Math.pow(10, 2);
   self.emit("elec2", subtype, id, current_watts, rounded_total);
@@ -325,7 +325,7 @@ RfxCom.prototype.elec2Handler = function(data) {
  * devices.
  *
  */
-RfxCom.prototype.security1Handler = function(data) {
+RfxCom.prototype.security1Handler = function(data){
   var self = this
       subtypes = {
         0x00: "X10 Security door/window sensor",
@@ -334,7 +334,7 @@ RfxCom.prototype.security1Handler = function(data) {
       }
     , subtype = subtypes[data[0]]
     , seqnbr = data[1]
-    , id = "0x" + this.dumpHex(data.slice(2, 5), false).join("")
+    , id = "0x" + self.dumpHex(data.slice(2, 5), false).join("")
     , device_status = data[5]
     , battery_level = data[6];
 
@@ -347,7 +347,7 @@ RfxCom.prototype.security1Handler = function(data) {
  * light control device.
  *
  */
-RfxCom.prototype.lighting5Handler = function(data) {
+RfxCom.prototype.lighting5Handler = function(data){
   var self = this
     , subtypes = {
         0x00: "LightwaveRF, Siemens",
@@ -359,11 +359,59 @@ RfxCom.prototype.lighting5Handler = function(data) {
       },
       subtype = subtypes[data[0]],
       seqnbr = data[1],
-      id = "0x" + this.dumpHex(data.slice(2, 5), false).join(""),
+      id = "0x" + self.dumpHex(data.slice(2, 5), false).join(""),
       unitcode = data[5],
       command = commands[data[6]];
 
   self.emit("lighting5", subtype, id, unitcode, command);
 }
 
+
+/*
+ * This is a class for controlling LightwaveRF lights.
+ */
+function LightwaveRf(rfxcom){
+  var self = this;
+
+  self.rfxcom = rfxcom;
+}
+
+/*
+ * Switch on deviceId/unitCode
+ */
+LightwaveRf.prototype.switchOn = function(deviceId, unitCode, options, callback){
+  if (typeof options == "function"){
+    callback = options;
+    options = {};
+  }
+  if (typeof options.mood != "undefined"){
+    if (options.mood < 1 || options.mood > 5){
+      throw new Error("Invalid mood value must be in range 1-5.");
+    }
+  }
+  var self = this
+    , cmd_id = self.rfxcom.getCmdNumber()
+    , id_bytes = self.rfxcom.stringToBytes(deviceId)
+    , cmd = options.mood || 1
+    , level = options.level || 0x0
+    , buffer = [0x0A, 0x14, 0, cmd_id, id_bytes[0], id_bytes[1], id_bytes[2], unitCode, cmd, level, 0];
+  self.rfxcom.serialport.write(buffer, function(err, response){
+    callback(err, response, cmd_id);
+  });
+}
+
+/*
+ * Switch off deviceId/unitCode
+ */
+LightwaveRf.prototype.switchOff = function(deviceId, unitCode, callback){
+  var self = this
+    , cmd_id = self.rfxcom.getCmdNumber()
+    , id_bytes = self.rfxcom.stringToBytes(deviceId)
+    , buffer = [0x0A, 0x14, 0, cmd_id, id_bytes[0], id_bytes[1], id_bytes[2], unitCode, 0, 0, 0];
+  self.rfxcom.serialport.write(buffer, function(err, response){
+    callback(err, response, cmd_id);
+  });
+}
+
 module.exports.RfxCom = RfxCom;
+module.exports.LightwaveRf = LightwaveRf;
