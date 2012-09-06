@@ -260,12 +260,20 @@ describe("RfxCom", function(){
         })
         expect(fakeSerialPort).toHaveSent([10, 20, 0, 0, 0xF0, 0x9A, 0xC8, 1, 1, 80, 0]);
       });
+      it("should handle no callback", function(){
+        lightwaverf.switchOn("0xF09AC8", 1, {level: 80});
+        expect(fakeSerialPort).toHaveSent([10, 20, 0, 0, 0xF0, 0x9A, 0xC8, 1, 1, 80, 0]);
+      });
     });
     describe(".switchOff", function(){
       it("should send the correct bytes to the serialport", function(done){
         lightwaverf.switchOff("0xF09AC8", 1, function(){ 
           done();
         })
+        expect(fakeSerialPort).toHaveSent([10, 20, 0, 0, 0xF0, 0x9A, 0xC8, 1, 0, 0, 0]);
+      });
+      it("should handle no callback", function(){
+        lightwaverf.switchOff("0xF09AC8", 1);
         expect(fakeSerialPort).toHaveSent([10, 20, 0, 0, 0xF0, 0x9A, 0xC8, 1, 0, 0, 0]);
       });
     });
