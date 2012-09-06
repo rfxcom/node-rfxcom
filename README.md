@@ -19,16 +19,16 @@ To Use
 ------
 
 <pre>
-var RfxCom = require('./rfxcom').RfxCom;
+var rfxcom = require('./rfxcom');
 
-var rfxcom = new RfxCom("/dev/ttyUSB0", {debug: true});
+var rfxtrx = new rfxcom.RfxCom("/dev/ttyUSB0", {debug: true});
 
-rfxcom.on("ready", function() {
+rfxtrx.on("ready", function() {
   console.log("RfxCom ready for further behaviour.");
-  rfxcom.reset(function() {
-    rfxcom.delay(500);
-    rfxcom.flush();
-    rfxcom.getStatus(function(){
+  rfxtrx.reset(function() {
+    rfxtrx.delay(500);
+    rfxtrx.flush();
+    rfxtrx.getStatus(function(){
       console.log("Status completed.");
     });
   });
@@ -37,15 +37,15 @@ rfxcom.on("ready", function() {
 /*
  * This reports security updates from X10 security devices.
  */
-rfxcom.on("security1", function(subtype, id, deviceStatus, battery) {
-  if (deviceStatus==0x04) {
+rfxtrx.on("security1", function(subtype, id, deviceStatus, battery) {
+  if (deviceStatus==rfxcom.security.MOTION) {
     console.log("Device %s %s detected motion.", subtype, id);
-  } else if (deviceStatus==0x05) {
+  } else if (deviceStatus==rfxcom.security.NOMOTION)
     console.log("Device %s %s reported motion stopped.", subtype, id);
   }
 });
 
-rfxcom.open();
+rfxtrx.open();
 
 </pre>
 
