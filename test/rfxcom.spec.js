@@ -1,4 +1,5 @@
 var rfxcom = require("../rfxcom")
+  , protocols = rfxcom.protocols
   , events = require("events")
   , util = require("util");
 
@@ -104,6 +105,17 @@ describe("RfxCom", function() {
         done();
       })
       expect(fakeSerialPort).toHaveSent([13, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+    })
+  })
+
+  describe(".enable", function() {
+    it("should send the correct bytes to the serialport", function(done) {
+      var fakeSerialPort = new FakeSerialPort()
+        , device = new rfxcom.RfxCom("/dev/ttyUSB0", {port: fakeSerialPort});
+      device.enable([protocols.LACROSSE, protocols.OREGON, protocols.AC, protocols.ARC, protocols.X10], function(){
+        done();
+      })
+      expect(fakeSerialPort).toHaveSent([0x0D, 0x00, 0x00, 0x00, 0x03, 0x53, 0x00, 0x00, 0x08, 0x27, 0x0, 0x0, 0x0, 0x0])
     })
   })
 
