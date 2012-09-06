@@ -186,6 +186,29 @@ RfxCom.prototype.getStatus = function(callback){
   return cmd_id;
 }
 
+/*
+ * Enables reception of different protocols.
+ */
+RfxCom.prototype.enable = function(protocols, callback) {
+  var self = this
+    , cmd_id = this.getCmdNumber()
+    , msg = {};
+  _.each(protocols, function(protocol) {
+    if (typeof msg[protocol.msg] == "undefined") {
+      msg[protocol.msg] = protocol.bit;
+    } else {
+      msg[protocol.msg] |= protocol.bit;
+    }
+  })
+  var buffer = [0x0d, 0x00, 0x00, cmd_id, 0x03, 0x53, 0x00, 0x00, msg["4"], msg["5"], 0x00, 0x00, 0x00, 0x00];
+  self.serialport.write(buffer, function(err, response) {
+    if (callback) {
+      return callback(err, response, cmd_id);
+    }
+  });
+  return cmd_id;
+}
+
 /**
  *
  * Turn on the specified light unit.
@@ -366,7 +389,6 @@ RfxCom.prototype.lighting5Handler = function(data){
   self.emit("lighting5", subtype, id, unitcode, command);
 }
 
-
 /*
  * This is a class for controlling LightwaveRF lights.
  */
@@ -415,3 +437,17 @@ LightwaveRf.prototype.switchOff = function(deviceId, unitCode, callback){
 
 module.exports.RfxCom = RfxCom;
 module.exports.LightwaveRf = LightwaveRf;
+var protocols = {
+    MERTIK: { bit: 0x01, msg: 4}
+  , LIGHTWAVERF: { bit: 0x02, msg: 4 }
+  , HIDEKI: { bit: 0x04, msg: 4}
+  , LACROSSE: { bit: 0x08, msg: 4}
+  , FS20: { bit: 0x10, msg: 4}
+  , PROGUARD: { bit: 0x20, msg: 4}
+  , ROLLERTROL: { bit: 0x40, msg: 4 }
+  , X10: { bit: 0x01, msg: 5 }
+  , OREGON: { bit: 0x20, msg: 5}
+  , ARC: { bit: 0x02, msg: 5}
+  , AC: { bit: 0x04, msg: 5}
+}
+module.exports.protocols = protocols;
