@@ -1,27 +1,29 @@
-var rfxcom = require("../rfxcom")
-  , protocols = rfxcom.protocols
-  , events = require("events")
-  , util = require("util");
+'use strict';
 
-var FakeSerialPort = function(){
-  var self = this;
-  events.EventEmitter.call(this);
-  self.bytesWritten = [];
-  self.flushed = false;
-}
+var rfxcom = require("../rfxcom"),
+    protocols = rfxcom.protocols,
+    events = require("events"),
+    util = require("util");
+
+var FakeSerialPort = function () {
+    var self = this;
+    events.EventEmitter.call(this);
+    self.bytesWritten = [];
+    self.flushed = false;
+};
 util.inherits(FakeSerialPort, events.EventEmitter);
 
-FakeSerialPort.prototype.write = function(buffer, callback){
-  var self = this;
-  self.bytesWritten += buffer;
-  callback()
-}
+FakeSerialPort.prototype.write = function (buffer, callback) {
+    var self = this;
+    self.bytesWritten += buffer;
+    callback();
+};
 
-FakeSerialPort.prototype.flush = function(callback){
-  var self = this;
-  self.flushed = true;
-  callback()
-}
+FakeSerialPort.prototype.flush = function (callback) {
+    var self = this;
+    self.flushed = true;
+    callback();
+};
 
 
 describe("RfxCom", function(){
@@ -158,7 +160,8 @@ describe("RfxCom", function(){
       });
     });
 
-    describe(".lighting5Handler", function(){
+    describe(".lighting5Handler", function () {
+      var device;
       beforeEach(function(){
         device = new rfxcom.RfxCom("/dev/ttyUSB0");
       });
@@ -190,7 +193,8 @@ describe("RfxCom", function(){
       });
     });
 
-    describe(".security1Handler", function(){
+    describe(".security1Handler", function () {
+      var device;
       beforeEach(function(){
         device = new rfxcom.RfxCom("/dev/ttyUSB0");
       });
@@ -213,6 +217,7 @@ describe("RfxCom", function(){
     });
 
     describe(".statusHandler", function(){
+      var device;
       beforeEach(function(){
         device = new rfxcom.RfxCom("/dev/ttyUSB0");
       });
@@ -231,6 +236,9 @@ describe("RfxCom", function(){
   }); // describe Rfxcom Class.
 
   describe("LightwaveRf class", function(){
+    var lightwaverf,
+        fakeSerialPort,
+        device;
     beforeEach(function(){
       fakeSerialPort = new FakeSerialPort();
       device = new rfxcom.RfxCom("/dev/ttyUSB0", {port: fakeSerialPort});
