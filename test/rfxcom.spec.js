@@ -148,11 +148,11 @@ describe("RfxCom", function(){
     describe(".elec2Handler", function(){
       it("should emit an elec2 message when called", function(done){
         var device = new rfxcom.RfxCom("/dev/ttyUSB0");
-        device.on("elec2", function(subtype, id, current_watts, total_watts){
-          expect(subtype).toBe("CM119/160");
-          expect(id).toBe("0xA412");
-          expect(current_watts).toBe(370);
-          expect(total_watts).toBe(30225.82);
+        device.on("elec2", function(evt) {
+          expect(evt.subtype).toBe("CM119/160");
+          expect(evt.id).toBe("0xA412");
+          expect(evt.current_watts).toBe(370);
+          expect(evt.total_watts).toBe(30225.82);
           done();
         })
         device.elec2Handler([0x01, 0x00, 0xA4, 0x12, 0x02, 0x00, 0x00, 0x01, 0x72,
