@@ -6,16 +6,25 @@ var _ = require("underscore"),
     EventEmitter = require("events").EventEmitter,
     util = require("util");
 
+
+var INTERFACE_CONTROL = 0x00,
+    INTERFACE_MESSAGE = 0x01,
+    TRANSCEIVER_MESSAGE = 0x02,
+    ELEC2 = 0x5a,
+    LIGHTING5 = 0x14,
+    SECURITY1 = 0x20;
+
+
 function RfxCom(device, options) {
     var self = this;
 
     self.options = options || {};
     self.handlers = {
-        0x01: "statusHandler",
-        0x02: "messageHandler",
-        0x14: "lighting5Handler",
-        0x5a: "elec2Handler",
-        0x20: "security1Handler"
+        INTERFACE_MESSAGE: "statusHandler",
+        TRANSCEIVER_MESSAGE: "messageHandler",
+        LIGHTING5: "lighting5Handler",
+        ELEC2: "elec2Handler",
+        SECURITY1: "security1Handler"
     };
 
     // Running counter for command numbers.
@@ -159,6 +168,24 @@ RfxCom.prototype.getCmdNumber = function () {
     return self._cmd++;
 };
 
+
+/**
+ *
+ * Writes 
+ *
+ */
+RfxCom.prototype.sendMessage = function (type, subtype, cmd, extra, callback) {
+    var self = this,
+        cmdId = this.getCmdNumber(),
+        byteCount = extra.length + 4,
+        buffer = [byteCount, type, subtype, cmdId, cmd];
+
+    buffer = buffer.concat(extra);
+    self.serialport.write(buffer, callback);
+    return cmdId;
+}
+
+
 /**
  *
  * Writes the reset sequence to the RFxtrx433.
@@ -185,16 +212,8 @@ RfxCom.prototype.flush = function (callback) {
  * Sends the getstatus bytes to the interface.
  */
 RfxCom.prototype.getStatus = function (callback) {
-    var self = this,
-        cmdId = self.getCmdNumber(),
-        buffer = [13, 0, 0, cmdId, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-
-    self.serialport.write(buffer, function (err, response) {
-        if (callback) {
-            return callback(err, response, cmdId);
-        }
-    });
-    return cmdId;
+    var self = this;
+    return self.sendMessage(0x00, 0x00, 0x02, [0, 0, 0, 0, 0, 0, 0, 0, 0], callback);
 };
 
 /*
@@ -236,7 +255,7 @@ RfxCom.prototype.lightOn = function (id, unit, callback) {
     var self = this,
         cmdId = self.getCmdNumber(),
         idBytes = self.stringToBytes(id),
-        buffer = [0x0A, 0x14, 0, cmdId, idBytes[0], idBytes[1], idBytes[2], unit, 1, 0, 0];
+        buffer = [0x0A, LIGHTING5, 0, cmdId, idBytes[0], idBytes[1], idBytes[2], unit, 1, 0, 0];
 
     if (self.options.debug) {
         console.log("Sending lightOn data: %s", self.dumpHex(buffer));
@@ -258,7 +277,7 @@ RfxCom.prototype.lightOff = function (id, unit, callback) {
     var self = this,
         cmdId = self.getCmdNumber(),
         idBytes = self.stringToBytes(id),
-        buffer = [0x0A, 0x14, 0, cmdId, idBytes[0], idBytes[1], idBytes[2], unit, 0, 0, 0];
+        buffer = [0x0A, LIGHTING5, 0, cmdId, idBytes[0], idBytes[1], idBytes[2], unit, 0, 0, 0];
 
     if (self.options.debug) {
         console.log("Sending lightOff data: %s", self.dumpHex(buffer));
@@ -341,8 +360,8 @@ RfxCom.prototype.stringToBytes = function (bytes) {
 
 /**
  *
- * Called by the data event handler when data arrives an OWL CM119/CM160 power
- * measurement device.
+ * Called by the data event handler when data arrives from an OWL CM119/CM160
+ * power measurement device.
  *
  * Calculates the current usage and total usage from the bytes sent, and emits
  * an "elec2" message for handling.

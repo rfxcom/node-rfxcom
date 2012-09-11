@@ -262,7 +262,7 @@ describe("RfxCom", function(){
           lightwaverf.switchOn("0xF09AC8", 1, {mood: 6})
         }).toThrow(new Error("Invalid mood value must be in range 1-5."));
       });
-      it("should send send the level if one is specified", function(done){
+      it("should send the level if one is specified", function(done){
         lightwaverf.switchOn("0xF09AC8", 1, {level: 80}, function(){ 
           done();
         })
