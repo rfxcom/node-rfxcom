@@ -436,7 +436,13 @@ RfxCom.prototype.lighting5Handler = function (data) {
         unitcode = data[5],
         command = commands[data[6]];
 
-    self.emit("lighting5", subtype, id, unitcode, command);
+    var evt = {
+      subtype: subtype,
+      id: id,
+      unitcode: unitcode,
+      command: command
+    }
+    self.emit("lighting5", evt);
 };
 
 /*

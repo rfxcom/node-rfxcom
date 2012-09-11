@@ -165,28 +165,28 @@ describe("RfxCom", function(){
       beforeEach(function(){
         device = new rfxcom.RfxCom("/dev/ttyUSB0");
       });
-      it("should emit an elec2 message when called", function(done){
-        device.on("lighting5", function(subtype, id, unitcode, command){
-          expect(subtype).toBe("LightwaveRF, Siemens");
-          expect(id).toBe("0xF09AC7");
-          expect(unitcode).toBe(1);
-          expect(command).toBe("Off");
+      it("should emit an elec2 message when called", function(done) {
+        device.on("lighting5", function (evt) {
+          expect(evt.subtype).toBe("LightwaveRF, Siemens");
+          expect(evt.id).toBe("0xF09AC7");
+          expect(evt.unitcode).toBe(1);
+          expect(evt.command).toBe("Off");
           done();
         })
         device.lighting5Handler([0x00, 0x01, 0xF0, 0x9A, 0xC7, 0x01, 0x00, 0x00, 0x80])
       });
 
       it("should identify the subtype correctly", function(done){
-        device.on("lighting5", function(subtype, id, unitcode, command){
-          expect(subtype).toBe("EMW100 GAO/Everflourish");
+        device.on("lighting5", function (evt) {
+          expect(evt.subtype).toBe("EMW100 GAO/Everflourish");
           done();
         })
         device.lighting5Handler([0x01, 0x01, 0xF0, 0x9A, 0xC7, 0x01, 0x00, 0x00, 0x80])
       });
 
       it("should identify the command correctly", function(done){
-        device.on("lighting5", function(subtype, id, unitcode, command){
-          expect(command).toBe("On");
+        device.on("lighting5", function (evt) {
+          expect(evt.command).toBe("On");
           done();
         })
         device.lighting5Handler([0x01, 0x01, 0xF0, 0x9A, 0xC7, 0x01, 0x01, 0x00, 0x80])
