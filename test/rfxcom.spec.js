@@ -92,8 +92,8 @@ describe("RfxCom", function(){
 
     describe(".flush", function(){
       it("should flush the underlying serialport", function(done){
-        var fakeSerialPort = new FakeSerialPort()
-          , device = new rfxcom.RfxCom("/dev/ttyUSB0", {port: fakeSerialPort});
+        var fakeSerialPort = new FakeSerialPort(),
+            device = new rfxcom.RfxCom("/dev/ttyUSB0", {port: fakeSerialPort});
         device.flush(function(){
           expect(fakeSerialPort.flushed).toBeTruthy();
           done();
@@ -101,10 +101,21 @@ describe("RfxCom", function(){
       });
     });
 
+    describe(".reset", function(){
+      it("should send the correct bytes to the serialport", function(done){
+        var fakeSerialPort = new FakeSerialPort(),
+            device = new rfxcom.RfxCom("/dev/ttyUSB0", {port: fakeSerialPort});
+        device.reset(function(){
+          done();
+        });
+        expect(fakeSerialPort).toHaveSent([13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+      });
+    });
+
     describe(".getStatus", function(){
       it("should send the correct bytes to the serialport", function(done){
-        var fakeSerialPort = new FakeSerialPort()
-          , device = new rfxcom.RfxCom("/dev/ttyUSB0", {port: fakeSerialPort});
+        var fakeSerialPort = new FakeSerialPort(),
+            device = new rfxcom.RfxCom("/dev/ttyUSB0", {port: fakeSerialPort});
         device.getStatus(function(){
           done();
         });
@@ -114,8 +125,8 @@ describe("RfxCom", function(){
 
     describe(".enable", function() {
       it("should send the correct bytes to the serialport", function(done) {
-        var fakeSerialPort = new FakeSerialPort()
-          , device = new rfxcom.RfxCom("/dev/ttyUSB0", {port: fakeSerialPort});
+        var fakeSerialPort = new FakeSerialPort(),
+            device = new rfxcom.RfxCom("/dev/ttyUSB0", {port: fakeSerialPort});
         device.enable([protocols.LACROSSE, protocols.OREGON, protocols.AC, protocols.ARC, protocols.X10], function(){
           done();
         })
@@ -125,8 +136,8 @@ describe("RfxCom", function(){
 
     describe(".lightOff", function(){
       it("should send the correct bytes to the serialport", function(done){
-        var fakeSerialPort = new FakeSerialPort()
-          , device = new rfxcom.RfxCom("/dev/ttyUSB0", {port: fakeSerialPort});
+        var fakeSerialPort = new FakeSerialPort(),
+            device = new rfxcom.RfxCom("/dev/ttyUSB0", {port: fakeSerialPort});
         device.lightOff("0xF09AC6", 1, function(){
           done();
         })
@@ -136,8 +147,8 @@ describe("RfxCom", function(){
 
     describe(".lightOn", function(){
       it("should send the correct bytes to the serialport", function(done){
-        var fakeSerialPort = new FakeSerialPort()
-          , device = new rfxcom.RfxCom("/dev/ttyUSB0", {port: fakeSerialPort});
+        var fakeSerialPort = new FakeSerialPort(),
+            device = new rfxcom.RfxCom("/dev/ttyUSB0", {port: fakeSerialPort});
         device.lightOn("0xF09AC8", 1, function(){
           done();
         })
@@ -222,12 +233,12 @@ describe("RfxCom", function(){
         device = new rfxcom.RfxCom("/dev/ttyUSB0");
       });
       it("should emit a status message when called", function(done){
-        device.on("status", function(subtype, seqnbr, cmnd, receiver_type, firmware_version){
-          expect(subtype).toBe(0);
-          expect(seqnbr).toBe(0x01);
-          expect(cmnd).toBe(0x20);
-          expect(receiver_type).toBe("433.92MHz transceiver");
-          expect(firmware_version).toBe(0x30);
+        device.on("status", function (evt) {
+          expect(evt.subtype).toBe(0);
+          expect(evt.seqnbr).toBe(0x01);
+          expect(evt.cmnd).toBe(0x20);
+          expect(evt.receiverType).toBe("433.92MHz transceiver");
+          expect(evt.firmwareVersion).toBe(0x30);
           done();
         })
         device.statusHandler([0, 1, 0x20, 0x53, 0x30, 0x30, 0, 0, 0, 0, 0, 0, 0])

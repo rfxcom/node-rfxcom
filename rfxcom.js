@@ -147,9 +147,15 @@ RfxCom.prototype.statusHandler = function (data) {
         seqnbr = data[1],
         cmnd = data[2],
         receiverType = receiverTypes[data[3]],
-        firmwareVersion = data[4];
-
-    self.emit("status", subtype, seqnbr, cmnd, receiverType, firmwareVersion);
+        firmwareVersion = data[4],
+        evt = {
+          subtype: subtype,
+          seqnbr: seqnbr,
+          cmnd: cmnd,
+          receiverType: receiverType,
+          firmwareVersion: firmwareVersion
+        };
+    self.emit("status", evt);
 };
 
 /**
@@ -171,7 +177,7 @@ RfxCom.prototype.getCmdNumber = function () {
 
 /**
  *
- * Writes 
+ * Internal function for sending messages to the device.
  *
  */
 RfxCom.prototype.sendMessage = function (type, subtype, cmd, extra, callback) {
@@ -183,7 +189,7 @@ RfxCom.prototype.sendMessage = function (type, subtype, cmd, extra, callback) {
     buffer = buffer.concat(extra);
     self.serialport.write(buffer, callback);
     return cmdId;
-}
+};
 
 
 /**
@@ -192,9 +198,8 @@ RfxCom.prototype.sendMessage = function (type, subtype, cmd, extra, callback) {
  *
  */
 RfxCom.prototype.reset = function (callback) {
-    var self = this,
-        buffer = [13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    self.serialport.write(buffer, callback);
+    var self = this;
+    return self.sendMessage(0x00, 0x00, 0x00, [0, 0, 0, 0, 0, 0, 0, 0, 0], callback);
 };
 
 /**
@@ -381,14 +386,14 @@ RfxCom.prototype.elec2Handler = function (data) {
         total = data.slice(9, 15),
         current_watts = self.bytesToUint32(instant),
         total_watts = self.bytesToUint48(total) / TOTAL_DIVISOR,
-        rounded_total = Math.round(total_watts * Math.pow(10, 2)) / Math.pow(10, 2);
+        rounded_total = Math.round(total_watts * Math.pow(10, 2)) / Math.pow(10, 2),
+        evt =  {
+            subtype: subtype,
+            id: id,
+            current_watts: current_watts,
+            total_watts: rounded_total
+        };
 
-    var evt = {
-      subtype: subtype,
-      id: id,
-      current_watts: current_watts,
-      total_watts: rounded_total
-    }
     self.emit("elec2", evt);
 };
 
@@ -434,14 +439,13 @@ RfxCom.prototype.lighting5Handler = function (data) {
         seqnbr = data[1],
         id = "0x" + self.dumpHex(data.slice(2, 5), false).join(""),
         unitcode = data[5],
-        command = commands[data[6]];
-
-    var evt = {
-      subtype: subtype,
-      id: id,
-      unitcode: unitcode,
-      command: command
-    }
+        command = commands[data[6]],
+        evt = {
+            subtype: subtype,
+            id: id,
+            unitcode: unitcode,
+            command: command
+        };
     self.emit("lighting5", evt);
 };
 

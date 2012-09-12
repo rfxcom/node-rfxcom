@@ -1,3 +1,11 @@
+Version 0.1.0
+-------------
+- *API CHANGE* emitted events are now a JavaScript object.
+- New constants for security status messages e.g. security.MOTION.
+- Refactored sending messages to the serialport through a sendMessage - still
+  need to update the LightwaveRf prototype.
+- Improved the test coverage.
+
 Version 0.0.3
 -------------
 - Added LightwaveRf prototype for specialisation of LightwaveRf control.
