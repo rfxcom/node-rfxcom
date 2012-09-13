@@ -209,21 +209,100 @@ describe("RfxCom", function(){
       beforeEach(function(){
         device = new rfxcom.RfxCom("/dev/ttyUSB0");
       });
-      it("should emit an security1 message when called", function(done){
-        device.on("security1", function(subtype, id, device_status, battery_level){
-          expect(subtype).toBe("X10 Security door/window sensor");
-          expect(id).toBe("0xFFAA00");
-          expect(device_status).toBe(0x04)
+      it("should extract the id of the device", function(done){
+        device.on("security1", function (evt){
+          expect(evt.id).toBe("0xFFAA00");
+          done();
+        })
+        device.security1Handler([0x00, 0x00, 0xFF, 0xAA, 0x00, 0x02, 0x89]);
+      });
+
+      it("should correctly identify the NORMAL device state", function(done){
+        device.on("security1", function (evt){
+          expect(evt.deviceStatus).toBe(rfxcom.security.NORMAL);
+          done();
+        })
+        device.security1Handler([0x00, 0x00, 0xFF, 0xAA, 0x00, 0x00, 0x89]);
+      });
+      it("should correctly identify the NORMAL_DELAYED device state", function(done){
+        device.on("security1", function (evt){
+          expect(evt.deviceStatus).toBe(rfxcom.security.NORMAL_DELAYED);
+          done();
+        })
+        device.security1Handler([0x00, 0x00, 0xFF, 0xAA, 0x00, 0x01, 0x89]);
+      });
+
+      it("should correctly identify the ALARM device state", function(done){
+        device.on("security1", function (evt){
+          expect(evt.deviceStatus).toBe(rfxcom.security.ALARM);
+          done();
+        })
+        device.security1Handler([0x00, 0x00, 0xFF, 0xAA, 0x00, 0x02, 0x89]);
+      });
+      it("should correctly identify the ALARM_DELAYED device state", function(done){
+        device.on("security1", function (evt){
+          expect(evt.deviceStatus).toBe(rfxcom.security.ALARM_DELAYED);
+          done();
+        })
+        device.security1Handler([0x00, 0x00, 0xFF, 0xAA, 0x00, 0x03, 0x89]);
+      });
+
+      it("should correctly identify the MOTION device state", function(done){
+        device.on("security1", function (evt){
+          expect(evt.deviceStatus).toBe(rfxcom.security.MOTION);
           done();
         })
         device.security1Handler([0x00, 0x00, 0xFF, 0xAA, 0x00, 0x04, 0x89]);
       });
-      it("should identify the subtype correctly", function(done){
-        device.on("security1", function(subtype, id, device_status, battery_level){
-          expect(subtype).toBe("X10 security motion sensor");
+      it("should correctly identify the NO_MOTION device state", function(done){
+        device.on("security1", function (evt){
+          expect(evt.deviceStatus).toBe(rfxcom.security.NO_MOTION);
+          done();
+        })
+        device.security1Handler([0x00, 0x00, 0xFF, 0xAA, 0x00, 0x05, 0x89]);
+      });
+
+      it("should identify the X10 security motion sensor correctly", function (done) {
+        device.on("security1", function (evt){
+          expect(evt.subtype).toBe(rfxcom.security.X10_MOTION_SENSOR);
           done();
         })
         device.security1Handler([0x01, 0x00, 0xFF, 0xAA, 0x00, 0x04, 0x89]);
+      });
+      it("should identify the X10 security window sensor correctly", function (done) {
+        device.on("security1", function (evt){
+          expect(evt.subtype).toBe(rfxcom.security.X10_DOOR_WINDOW_SENSOR);
+          done();
+        })
+        device.security1Handler([0x00, 0x00, 0xFF, 0xAA, 0x00, 0x04, 0x89]);
+      });
+      it("should correctly identify the tamper notification from a device", function (done) {
+        device.on("security1", function (evt){
+          expect(evt.tampered).toBeTruthy();
+          done();
+        })
+        device.security1Handler([0x01, 0x00, 0xFF, 0xAA, 0x00, 0x84, 0x89]);
+      });
+      it("should report not tampered if the device doesn't" , function (done) {
+        device.on("security1", function (evt){
+          expect(evt.tampered).not.toBeTruthy();
+          done();
+        })
+        device.security1Handler([0x01, 0x00, 0xFF, 0xAA, 0x00, 0x04, 0x89]);
+      });
+      it("should correctly identify the battery status" , function (done) {
+        device.on("security1", function (evt){
+          expect(evt.batteryLevel).toBe(9);
+          done();
+        })
+        device.security1Handler([0x01, 0x00, 0xFF, 0xAA, 0x00, 0x04, 0x94]);
+      });
+      it("should correctly identify the signal strength" , function (done) {
+        device.on("security1", function (evt){
+          expect(evt.signalStrength).toBe(4);
+          done();
+        })
+        device.security1Handler([0x01, 0x00, 0xFF, 0xAA, 0x00, 0x04, 0x94]);
       });
     });
 

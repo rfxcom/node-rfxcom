@@ -405,18 +405,21 @@ RfxCom.prototype.elec2Handler = function (data) {
  */
 RfxCom.prototype.security1Handler = function (data) {
     var self = this,
-        subtypes = {
-            0x00: "X10 Security door/window sensor",
-            0x01: "X10 security motion sensor",
-            0x02: "X10 security remote (no alive packets)",
-        },
-        subtype = subtypes[data[0]],
+        subtype = data[0],
         seqnbr = data[1],
         id = "0x" + self.dumpHex(data.slice(2, 5), false).join(""),
         deviceStatus = data[5],
-        batteryLevel = data[6];
+        batterySignalLevel = data[6],
+        evt = {
+          subtype: subtype,
+          id: id,
+          deviceStatus: deviceStatus,
+          batteryLevel: batterySignalLevel >> 4,
+          signalStrength: batterySignalLevel & 0x0f,
+          tampered: deviceStatus & 0x80
+        };
 
-    self.emit("security1", subtype, id, deviceStatus, batteryLevel);
+    self.emit("security1", evt);
 };
 
 /**
@@ -517,6 +520,13 @@ exports.protocols = {
 };
 
 exports.security = {
+    NORMAL: 0x00,
+    NORMAL_DELAYED: 0x01,
+    ALARM: 0x02,
+    ALARM_DELAYED: 0x03,
     MOTION: 0x04,
-    NO_MOTION: 0x05
+    NO_MOTION: 0x05,
+    X10_DOOR_WINDOW_SENSOR: 0x00,
+    X10_MOTION_SENSOR: 0x01,
+    X10_SECURITY_REMOTE: 0x02
 };
