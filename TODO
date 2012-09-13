@@ -1,0 +1,7 @@
+TODO
+----
+
+* Improve testing of the rfxtrxParser.
+* Add support for further message types.
+* Attempt to make controllers more generic, i.e. something like
+  new Light({type: rfxcom.lights.X10, id: "A1"}).switchOn()

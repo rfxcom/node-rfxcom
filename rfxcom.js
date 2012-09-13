@@ -174,7 +174,6 @@ RfxCom.prototype.getCmdNumber = function () {
     return self._cmd++;
 };
 
-
 /**
  *
  * Internal function for sending messages to the device.

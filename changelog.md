@@ -1,3 +1,9 @@
+Version 0.2.0
+-------------
+
+- Update security1Handler event to make the types constants, and better split
+  the battery-level and signal strength elements.
+
 Version 0.1.1
 -------------
 
