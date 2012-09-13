@@ -384,14 +384,14 @@ RfxCom.prototype.elec2Handler = function (data) {
         count = data[4],
         instant = data.slice(5, 9),
         total = data.slice(9, 15),
-        current_watts = self.bytesToUint32(instant),
-        total_watts = self.bytesToUint48(total) / TOTAL_DIVISOR,
-        rounded_total = Math.round(total_watts * Math.pow(10, 2)) / Math.pow(10, 2),
+        currentWatts = self.bytesToUint32(instant),
+        totalWatts = self.bytesToUint48(total) / TOTAL_DIVISOR,
+        roundedTotal = Math.round(totalWatts * Math.pow(10, 2)) / Math.pow(10, 2),
         evt =  {
             subtype: subtype,
             id: id,
-            current_watts: current_watts,
-            total_watts: rounded_total
+            currentWatts: currentWatts,
+            totalWatts: roundedTotal
         };
 
     self.emit("elec2", evt);

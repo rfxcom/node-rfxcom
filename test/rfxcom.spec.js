@@ -162,8 +162,8 @@ describe("RfxCom", function(){
         device.on("elec2", function(evt) {
           expect(evt.subtype).toBe("CM119/160");
           expect(evt.id).toBe("0xA412");
-          expect(evt.current_watts).toBe(370);
-          expect(evt.total_watts).toBe(30225.82);
+          expect(evt.currentWatts).toBe(370);
+          expect(evt.totalWatts).toBe(30225.82);
           done();
         })
         device.elec2Handler([0x01, 0x00, 0xA4, 0x12, 0x02, 0x00, 0x00, 0x01, 0x72,

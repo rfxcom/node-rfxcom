@@ -1,3 +1,9 @@
+Version 0.1.1
+-------------
+
+- Updated the Readme.md to illustrate more use.
+- Renamed the current_watts and total_watts to currentWatts and totalWatts.
+
 Version 0.1.0
 -------------
 - *API CHANGE* emitted events are now a JavaScript object.
