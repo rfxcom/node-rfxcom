@@ -42,6 +42,53 @@ describe("RfxCom", function(){
   });
 
   describe("RfxCom class", function(){
+    describe("data event handler", function() {
+        it("should emit a response message when it receives message type 0x02", function (done) {
+          var fakeSerialPort = new FakeSerialPort(),
+              device = new rfxcom.RfxCom("/dev/ttyUSB0", {port: fakeSerialPort});
+          device.on("response", function (evt) {
+            done();
+          });
+          device.open();
+          fakeSerialPort.emit("data", [0x04, 0x02, 0x01, 0x00, 0x00]);
+        });
+        it("should emit a status message when it receives message type 0x01", function (done) {
+          var fakeSerialPort = new FakeSerialPort(),
+              device = new rfxcom.RfxCom("/dev/ttyUSB0", {port: fakeSerialPort});
+          device.on("status", function (evt) {
+            done();
+          });
+          device.open();
+          fakeSerialPort.emit("data", [0x0D, 0x01, 0x00, 0x01, 0x02, 0x53, 0x30, 0x00, 0x02, 0x21, 0x01, 0x00, 0x00, 0x00]);
+        });
+        it("should emit a lighting5 message when it receives message type 0x14", function (done) {
+          var fakeSerialPort = new FakeSerialPort(),
+              device = new rfxcom.RfxCom("/dev/ttyUSB0", {port: fakeSerialPort});
+          device.on("lighting5", function (evt) {
+            done();
+          });
+          device.open();
+          fakeSerialPort.emit("data", [0x0A, 0x14, 0x00, 0x01, 0xF0, 0x9A, 0xC7, 0x02, 0x00, 0x00, 0x80]);
+        });
+        it("should emit an elec2 message when it receives message type 0x5a", function (done) {
+          var fakeSerialPort = new FakeSerialPort(),
+              device = new rfxcom.RfxCom("/dev/ttyUSB0", {port: fakeSerialPort});
+          device.on("elec2", function (evt) {
+            done();
+          });
+          device.open();
+          fakeSerialPort.emit("data", [0x11, 0x5a, 0x01, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
+        });
+        it("should emit a security1 message when it receives message type 0x20", function (done) {
+          var fakeSerialPort = new FakeSerialPort(),
+              device = new rfxcom.RfxCom("/dev/ttyUSB0", {port: fakeSerialPort});
+          device.on("security1", function (evt) {
+            done();
+          });
+          device.open();
+          fakeSerialPort.emit("data", [0x08, 0x20, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00]);
+        });
+    });
     describe(".bytesToUint48", function(){
       it("should convert a sequence of 6 bytes to a longint", function(){
         var device = new rfxcom.RfxCom("/dev/ttyUSB0");
@@ -176,7 +223,7 @@ describe("RfxCom", function(){
       beforeEach(function(){
         device = new rfxcom.RfxCom("/dev/ttyUSB0");
       });
-      it("should emit an elec2 message when called", function(done) {
+      it("should emit a lighting5 message when called", function(done) {
         device.on("lighting5", function (evt) {
           expect(evt.subtype).toBe("LightwaveRF, Siemens");
           expect(evt.id).toBe("0xF09AC7");

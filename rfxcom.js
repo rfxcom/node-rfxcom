@@ -20,11 +20,11 @@ function RfxCom(device, options) {
 
     self.options = options || {};
     self.handlers = {
-        INTERFACE_MESSAGE: "statusHandler",
-        TRANSCEIVER_MESSAGE: "messageHandler",
-        LIGHTING5: "lighting5Handler",
-        ELEC2: "elec2Handler",
-        SECURITY1: "security1Handler"
+        0x01: "statusHandler",
+        0x02: "messageHandler",
+        0x14: "lighting5Handler",
+        0x5a: "elec2Handler",
+        0x20: "security1Handler"
     };
 
     // Running counter for command numbers.
@@ -392,7 +392,6 @@ RfxCom.prototype.elec2Handler = function (data) {
             currentWatts: currentWatts,
             totalWatts: roundedTotal
         };
-
     self.emit("elec2", evt);
 };
 
