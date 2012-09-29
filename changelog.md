@@ -1,3 +1,8 @@
+Version 0.2.1
+-------------
+
+- Fix bug in handler lookup and improve testing of data handler.
+
 Version 0.2.0
 -------------
 
