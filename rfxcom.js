@@ -24,7 +24,8 @@ function RfxCom(device, options) {
         0x02: "messageHandler",
         0x14: "lighting5Handler",
         0x5a: "elec2Handler",
-        0x20: "security1Handler"
+        0x20: "security1Handler",
+        0x50: "temp19Handler"
     };
 
     // Running counter for command numbers.
@@ -422,6 +423,31 @@ RfxCom.prototype.security1Handler = function (data) {
 
 /**
  *
+ * Called by the data event handler when data arrives from temp1-9
+ * devices.
+ *
+ */
+RfxCom.prototype.temp19Handler = function (data) {
+    var self = this,
+        subtype = data[0],
+        seqnbr = data[1],
+        id = "0x" + self.dumpHex(data.slice(2, 4), false).join(""),
+        temperature = ((data[4] & 0x7F) * 256 + data[5]) / 10,
+        signbit = data[4] & 0x80,
+        batterySignalLevel = data[6],
+        evt = {
+          subtype: subtype,
+          id: id,
+          seqnbr: seqnbr,
+          temperature: temperature * (signbit ? -1 : 1),
+          batteryLevel: batterySignalLevel >> 4,
+          signalStrength: batterySignalLevel & 0x0f,
+        };
+    self.emit("temp" + subtype, evt);
+};
+
+/**
+ *
  * Called by the data event handler when data arrives from a LightwaveRF/Siemens
  * light control device.
  *
@@ -478,6 +504,7 @@ LightwaveRf.prototype.switchOn = function (deviceId, unitCode, options, callback
         cmd = options.mood || 1,
         level = options.level || 0x0,
         buffer = [0x0A, 0x14, 0, cmdId, idBytes[0], idBytes[1], idBytes[2], unitCode, cmd, level, 0];
+
     self.rfxcom.serialport.write(buffer, function (err, response) {
         if (typeof callback === "function") {
             callback(err, response, cmdId);
