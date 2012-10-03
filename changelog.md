@@ -1,3 +1,8 @@
+Version 0.2.2
+-------------
+
+- Add support for TEMP1-9 type sensors.
+
 Version 0.2.1
 -------------
 
