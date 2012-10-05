@@ -25,7 +25,8 @@ function RfxCom(device, options) {
         0x14: "lighting5Handler",
         0x5a: "elec2Handler",
         0x20: "security1Handler",
-        0x50: "temp19Handler"
+        0x50: "temp19Handler",
+        0x52: "temphumidity19Handler"
     };
 
     // Running counter for command numbers.
@@ -448,6 +449,37 @@ RfxCom.prototype.temp19Handler = function (data) {
 
 /**
  *
+ * Called by the data event handler when data arrives from th1-9
+ * devices.
+ *
+ */
+RfxCom.prototype.temphumidity19Handler = function (data) {
+    var self = this,
+        subtype = data[0],
+        seqnbr = data[1],
+        id = "0x" + self.dumpHex(data.slice(2, 4), false).join(""),
+        temperature = ((data[4] & 0x7F) * 256 + data[5]) / 10,
+        signbit = data[4] & 0x80,
+        humidity = data[6],
+        humidityStatus = data[7],
+        batterySignalLevel = data[8],
+        evt = {
+          subtype: subtype,
+          id: id,
+          seqnbr: seqnbr,
+          temperature: temperature * (signbit ? -1 : 1),
+          humidity: humidity,
+          humidityStatus: humidityStatus,
+          batteryLevel: batterySignalLevel >> 4,
+          signalStrength: batterySignalLevel & 0x0f,
+        };
+
+    self.emit("th" + subtype, evt);
+};
+
+
+/**
+ *
  * Called by the data event handler when data arrives from a LightwaveRF/Siemens
  * light control device.
  *
@@ -554,4 +586,11 @@ exports.security = {
     X10_DOOR_WINDOW_SENSOR: 0x00,
     X10_MOTION_SENSOR: 0x01,
     X10_SECURITY_REMOTE: 0x02
+};
+
+exports.humidity = {
+    DRY: 0x00,
+    COMFORT: 0x01,
+    NORMAL: 0x02,
+    WET: 0x03
 };

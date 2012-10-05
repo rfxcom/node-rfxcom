@@ -120,6 +120,17 @@ describe("RfxCom", function () {
                 device.open();
                 fakeSerialPort.emit("data", [0x08, 0x50, 0x02, 0x01, 0xFA, 0xAF, 0x80, 0x14, 0x42]);
             });
+            it("should emit a th1 message when it receives message type 0x52, with device type 1", function (done) {
+                var fakeSerialPort = new FakeSerialPort(),
+                    device = new rfxcom.RfxCom("/dev/ttyUSB0", {
+                        port: fakeSerialPort
+                    });
+                device.on("th1", function (evt) {
+                    done();
+                });
+                device.open();
+                fakeSerialPort.emit("data", [0x0A, 0x52, 0x01, 0x04, 0xAF, 0x01, 0x00, 0x90, 0x36, 0x02, 0x59]);
+            });
         });
         describe(".bytesToUint48", function () {
             it("should convert a sequence of 6 bytes to a longint", function () {
@@ -470,7 +481,7 @@ describe("RfxCom", function () {
                     expect(evt.id)
                         .toBe("0xFAAF");
                     done();
-                })
+                });
                 device.temp19Handler([0x03, 0x01, 0xFA, 0xAF, 0x00, 0x14, 0x42]);
             });
             it("should extract the temperature of the device", function (done) {
@@ -478,7 +489,7 @@ describe("RfxCom", function () {
                     expect(evt.temperature)
                         .toBe(2.0);
                     done();
-                })
+                });
                 device.temp19Handler([0x01, 0x01, 0xFA, 0xAF, 0x00, 0x14, 0x9f]);
             });
             it("should extract the temperature respecting the sign", function (done) {
@@ -486,7 +497,7 @@ describe("RfxCom", function () {
                     expect(evt.temperature)
                         .toBe(-2.0);
                     done();
-                })
+                });
                 device.temp19Handler([0x01, 0x01, 0xFA, 0xAF, 0x80, 0x14, 0x9f]);
             });
             it("should extract the battery strength correctly", function (done) {
@@ -494,7 +505,7 @@ describe("RfxCom", function () {
                     expect(evt.batteryLevel)
                         .toBe(9);
                     done();
-                })
+                });
                 device.temp19Handler([0x02, 0x01, 0xFA, 0xAF, 0x80, 0x14, 0x9f]);
             });
             it("should extract the signal strength correctly", function (done) {
@@ -502,10 +513,58 @@ describe("RfxCom", function () {
                     expect(evt.signalStrength)
                         .toBe(0xf);
                     done();
-                })
+                });
                 device.temp19Handler([0x02, 0x01, 0xFA, 0xAF, 0x80, 0x14, 0x9f]);
             });
         });
+        describe(".temphumidity19Handler", function () {
+            var device;
+            beforeEach(function () {
+                device = new rfxcom.RfxCom("/dev/ttyUSB0");
+            });
+            it("should extract the id of the device", function (done) {
+                device.on("th3", function (evt) {
+                    expect(evt.id)
+                        .toBe("0xAF01");
+                    done();
+                });
+                device.temphumidity19Handler([0x03, 0x04, 0xAF, 0x01, 0x00, 0x90, 0x36, 0x02, 0x59]);
+            });
+            it("should extract the temperature of the device", function (done) {
+                device.on("th3", function (evt) {
+                    expect(evt.temperature)
+                        .toBe(14.4);
+                    done();
+                });
+                device.temphumidity19Handler([0x03, 0x04, 0xAF, 0x01, 0x00, 0x90, 0x36, 0x02, 0x59]);
+            });
+            it("should extract the temperature respecting the sign", function (done) {
+                device.on("th3", function (evt) {
+                    expect(evt.temperature)
+                        .toBe(-14.4);
+                    done();
+                });
+                device.temphumidity19Handler([0x03, 0x04, 0xAF, 0x01, 0x80, 0x90, 0x36, 0x02, 0x59]);
+            });
+            it("should extract the humidity figure", function (done) {
+                device.on("th3", function (evt) {
+                    expect(evt.humidity)
+                        .toBe(54);
+                    done();
+                });
+                device.temphumidity19Handler([0x03, 0x04, 0xAF, 0x01, 0x00, 0x90, 0x36, 0x02, 0x59]);
+            });
+            it("should extract the humidity status", function (done) {
+                device.on("th3", function (evt) {
+                    expect(evt.humidityStatus)
+                        .toBe(rfxcom.humidity.NORMAL);
+                    done();
+                });
+                device.temphumidity19Handler([0x03, 0x04, 0xAF, 0x01, 0x00, 0x90, 0x36, 0x02, 0x59]);
+            });
+
+        });
+
     }); // describe Rfxcom Class.
 
     describe("LightwaveRf class", function () {
