@@ -1,3 +1,8 @@
+Version 0.2.3
+-------------
+
+- Add support for TH1-9 temperature and humidity sensors.
+
 Version 0.2.2
 -------------
 
