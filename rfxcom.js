@@ -517,12 +517,27 @@ function LightwaveRf(rfxcom) {
     self.rfxcom = rfxcom;
 }
 
+
+LightwaveRf.prototype._splitDeviceId = function (deviceId) {
+    var parts = deviceId.split("/");
+    if (parts.length !== 2) {
+        throw new Error("Invalid deviceId format.");
+    };
+    return {
+      idBytes: this.rfxcom.stringToBytes(parts[0]),
+      unitCode: parts[1],
+    };
+};
+
 /*
  * Switch on deviceId/unitCode
  */
-LightwaveRf.prototype.switchOn = function (deviceId, unitCode, options, callback) {
+LightwaveRf.prototype.switchOn = function (deviceId, options, callback) {
     if (typeof options === "function") {
         callback = options;
+        options = {};
+    }
+    if (typeof options === "undefined") {
         options = {};
     }
     if (typeof options.mood !== "undefined") {
@@ -530,12 +545,15 @@ LightwaveRf.prototype.switchOn = function (deviceId, unitCode, options, callback
             throw new Error("Invalid mood value must be in range 1-5.");
         }
     }
+
+
     var self = this,
+        device = self._splitDeviceId(deviceId),
         cmdId = self.rfxcom.getCmdNumber(),
-        idBytes = self.rfxcom.stringToBytes(deviceId),
         cmd = options.mood || 1,
         level = options.level || 0x0,
-        buffer = [0x0A, 0x14, 0, cmdId, idBytes[0], idBytes[1], idBytes[2], unitCode, cmd, level, 0];
+        buffer = [0x0A, 0x14, 0, cmdId, device.idBytes[0], device.idBytes[1],
+                  device.idBytes[2], device.unitCode, cmd, level, 0];
 
     self.rfxcom.serialport.write(buffer, function (err, response) {
         if (typeof callback === "function") {
@@ -547,11 +565,12 @@ LightwaveRf.prototype.switchOn = function (deviceId, unitCode, options, callback
 /*
  * Switch off deviceId/unitCode
  */
-LightwaveRf.prototype.switchOff = function (deviceId, unitCode, callback) {
+LightwaveRf.prototype.switchOff = function (deviceId, callback) {
     var self = this,
         cmdId = self.rfxcom.getCmdNumber(),
-        idBytes = self.rfxcom.stringToBytes(deviceId),
-        buffer = [0x0A, 0x14, 0, cmdId, idBytes[0], idBytes[1], idBytes[2], unitCode, 0, 0, 0];
+        device = self._splitDeviceId(deviceId),
+        buffer = [0x0A, 0x14, 0, cmdId, device.idBytes[0], device.idBytes[1],
+                  device.idBytes[2], device.unitCode, 0, 0, 0];
 
     self.rfxcom.serialport.write(buffer, function (err, response) {
         if (typeof callback === "function") {

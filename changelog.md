@@ -1,3 +1,9 @@
+Version 0.3.0
+-------------
+
+- Change the LightwaveRf device identifier format to 0x010203/1 which means that
+  it is possible to define device as strings e.g. FRONT_LIGHT = "0x010203/1".
+
 Version 0.2.3
 -------------
 
