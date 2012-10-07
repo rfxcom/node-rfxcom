@@ -603,11 +603,15 @@ describe("RfxCom", function () {
         });
         describe(".switchOn", function () {
             it("should send the correct bytes to the serialport", function (done) {
-                lightwaverf.switchOn("0xF09AC8/1", function () {
+                var sentCommandId;
+                lightwaverf.switchOn("0xF09AC8/1", function (err, response, cmdId) {
+                    sentCommandId = cmdId;
                     done();
                 });
                 expect(fakeSerialPort)
                     .toHaveSent([10, 20, 0, 0, 0xF0, 0x9A, 0xC8, 1, 1, 0, 0]);
+                expect(sentCommandId).toEqual(0);
+
             });
             it("should throw an exception with an invalid deviceId", function () {
                 expect(function () {
@@ -637,7 +641,7 @@ describe("RfxCom", function () {
                     level: 80
                 }, function () {
                     done();
-                })
+                });
                 expect(fakeSerialPort)
                     .toHaveSent([10, 20, 0, 0, 0xF0, 0x9A, 0xC8, 1, 1, 80, 0]);
             });
@@ -651,11 +655,14 @@ describe("RfxCom", function () {
         });
         describe(".switchOff", function () {
             it("should send the correct bytes to the serialport", function (done) {
-                lightwaverf.switchOff("0xF09AC8/1", function () {
+                var sentCommandId;
+                lightwaverf.switchOff("0xF09AC8/1", function (err, response, cmdId) {
+                    sentCommandId = cmdId;
                     done();
                 });
                 expect(fakeSerialPort)
                     .toHaveSent([10, 20, 0, 0, 0xF0, 0x9A, 0xC8, 1, 0, 0, 0]);
+                expect(sentCommandId).toEqual(0);
             });
             it("should handle no callback", function () {
                 lightwaverf.switchOff("0xF09AC8/1");

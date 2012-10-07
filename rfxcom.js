@@ -559,7 +559,6 @@ LightwaveRf.prototype.switchOn = function (deviceId, options, callback) {
         }
     }
 
-
     var self = this,
         device = self._splitDeviceId(deviceId),
         cmdId = self.rfxcom.getCmdNumber(),

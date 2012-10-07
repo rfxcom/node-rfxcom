@@ -26,16 +26,9 @@ var rfxcom = require('./rfxcom'),
 
 var rfxtrx = new rfxcom.RfxCom("/dev/ttyUSB0", {debug: true});
 
-rfxtrx.on("ready", function() {
-  console.log("RfxCom ready for further behaviour.");
-  rfxtrx.reset(function() {
-    rfxtrx.delay(500);
-    rfxtrx.flush();
-    rfxtrx.getStatus(function(){
-      console.log("Status completed.");
-    });
-  });
-});
+rfxtrx.initialise(function () {
+    console.log("Device initialised");
+})
 
 /*
  * This reports security updates from X10 security devices.
@@ -56,10 +49,26 @@ rfxtrx.on("elec2", function (evt) {
                 [evt.id, evt.currentWatts]);
 });
 
-
 rfxtrx.open();
-
 </pre>
+
+There's a specialised LightwaveRf prototype, which uses an RfxCom object.
+
+<pre>
+    var rfxtrx = new rfxcom.RfxCom("/dev/ttyUSB0", {debug: true}),
+        lightwaverf = new rfxcom.LightwaveRf(rfxtrx);
+
+    lightwaverf.switchOn("0xF09AC8/1", {mood: 0x03});
+    lightwaverf.switchOn("0xF09AC8/2", {level: 80});
+</pre>
+
+I've tested it with both LightwaveRf lights, and the relay switch.
+
+LightwaveRf lights get their identity from the remote used to pair, if you don't
+have a remote, or if you want to specify the address manually, you can pair the
+device and send lightwaverf.switchOn("<insert address>") to unpair, send
+lightwave.switchOff("<insert address>") while the device is awaiting pairing.
+
 
 RfxCom events
 =============
@@ -72,8 +81,9 @@ Emitted when the RFXcom has successfully opened the serial port.
 
 "response"
 ----------
-Emitted when a response message is received from the RFXtrx 433, sends the status
-(from the RFXtrx433) and the sequence number of the message the response is for.
+Emitted when a response message is received from the RFXtrx 433, sends the
+status (from the RFXtrx433) and the sequence number of the message the response
+is for.
 
 "status"
 --------
@@ -91,3 +101,13 @@ Emitted when an X10 security device reports a status change.
 "lighting5"
 -----------
 Emitted when a message is received from LightwaveRF type devices.
+
+"th1-9"
+-------
+Emitted when a message is received from Oregon Scientific
+Temperature/Humidifity sensors.
+
+"temp1-9"
+---------
+Emitted when a message is received from an Oregon Scientific temperature
+sensor.
