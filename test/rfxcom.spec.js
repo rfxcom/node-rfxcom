@@ -132,6 +132,27 @@ describe("RfxCom", function () {
                 fakeSerialPort.emit("data", [0x0A, 0x52, 0x01, 0x04, 0xAF, 0x01, 0x00, 0x90, 0x36, 0x02, 0x59]);
             });
         });
+        it(".initialise should prepare the device for use", function (done) {
+            var fakeSerialPort = new FakeSerialPort(),
+                device = new rfxcom.RfxCom("/dev/ttyUSB0", {
+                    port: fakeSerialPort
+                }),
+                resetSpy = spyOn(device, "reset").andCallThrough(),
+                delaySpy = spyOn(device, "delay"),
+                flushSpy = spyOn(device, "flush"),
+                getStatusSpy = spyOn(device, "getStatus").andCallThrough();
+
+            var handler = function () {
+                done();
+            }
+            device.initialise(handler);
+            device.emit("ready");
+
+            expect(resetSpy).toHaveBeenCalled();
+            expect(delaySpy).toHaveBeenCalledWith(500);
+            expect(flushSpy).toHaveBeenCalled();
+            expect(getStatusSpy).toHaveBeenCalledWith(handler);
+        });
         describe(".bytesToUint48", function () {
             it("should convert a sequence of 6 bytes to a longint", function () {
                 var device = new rfxcom.RfxCom("/dev/ttyUSB0");
@@ -244,7 +265,8 @@ describe("RfxCom", function () {
                     done();
                 });
                 expect(fakeSerialPort)
-                    .toHaveSent([0x0D, 0x00, 0x00, 0x00, 0x03, 0x53, 0x00, 0x00, 0x08, 0x27, 0x0, 0x0, 0x0, 0x0]);
+                    .toHaveSent([0x0D, 0x00, 0x00, 0x00, 0x03, 0x53, 0x00,
+                                 0x00, 0x08, 0x27, 0x0, 0x0, 0x0, 0x0]);
             });
         });
 
@@ -287,11 +309,12 @@ describe("RfxCom", function () {
                     expect(evt.currentWatts)
                         .toBe(370);
                     expect(evt.totalWatts)
-                        .toBe(30225.82);
+                        .toBe(30225.82);    
                     done();
                 });
-                device.elec2Handler([0x01, 0x00, 0xA4, 0x12, 0x02, 0x00, 0x00, 0x01, 0x72,
-                0x00, 0x00, 0x00, 0x67, 0x28, 0x97, 0x79]);
+                device.elec2Handler([0x01, 0x00, 0xA4, 0x12, 0x02, 0x00,
+                                     0x00, 0x01, 0x72, 0x00, 0x00, 0x00,
+                                     0x67, 0x28, 0x97, 0x79]);
             });
         });
 

@@ -1,3 +1,9 @@
+Version 0.3.1
+-------------
+
+- Added .initialise to the RfxCom prototype, which handles bootstrapping the
+  device.
+
 Version 0.3.0
 -------------
 

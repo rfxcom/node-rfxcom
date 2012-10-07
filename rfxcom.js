@@ -124,6 +124,19 @@ RfxCom.prototype.messageHandler = function (data) {
     self.emit("response", responses[message], seqnbr);
 };
 
+RfxCom.prototype.initialise = function (callback) {
+    var self = this;
+
+    self.on("ready", function () {
+        self.reset(function () {
+          self.delay(500);
+          self.flush();
+          self.getStatus(callback);
+        });
+    });
+};
+
+
 /**
  *
  * Called by the data event handler when data arrives from the device with
