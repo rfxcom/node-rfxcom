@@ -585,9 +585,7 @@ describe("RfxCom", function () {
                 });
                 device.temphumidity19Handler([0x03, 0x04, 0xAF, 0x01, 0x00, 0x90, 0x36, 0x02, 0x59]);
             });
-
         });
-
     }); // describe Rfxcom Class.
 
     describe("LightwaveRf class", function () {

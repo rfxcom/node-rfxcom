@@ -105,7 +105,7 @@ Emitted when a message is received from LightwaveRF type devices.
 "th1-9"
 -------
 Emitted when a message is received from Oregon Scientific
-Temperature/Humidifity sensors.
+Temperature/Humidity sensors.
 
 "temp1-9"
 ---------
