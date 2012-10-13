@@ -140,18 +140,20 @@ describe("RfxCom", function () {
                 resetSpy = spyOn(device, "reset").andCallThrough(),
                 delaySpy = spyOn(device, "delay"),
                 flushSpy = spyOn(device, "flush"),
-                getStatusSpy = spyOn(device, "getStatus").andCallThrough();
+                getStatusSpy = spyOn(device, "getStatus").andCallThrough(),
+                openSpy = spyOn(device, "open").andCallFake(function () {
+                    device.emit("ready");
+                });
 
             var handler = function () {
                 done();
-            }
+            };
             device.initialise(handler);
-            device.emit("ready");
-
             expect(resetSpy).toHaveBeenCalled();
             expect(delaySpy).toHaveBeenCalledWith(500);
             expect(flushSpy).toHaveBeenCalled();
             expect(getStatusSpy).toHaveBeenCalledWith(handler);
+            expect(openSpy).toHaveBeenCalled();
         });
         describe(".bytesToUint48", function () {
             it("should convert a sequence of 6 bytes to a longint", function () {

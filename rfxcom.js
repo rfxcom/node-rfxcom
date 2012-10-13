@@ -134,6 +134,7 @@ RfxCom.prototype.initialise = function (callback) {
           self.getStatus(callback);
         });
     });
+    self.open();
 };
 
 
