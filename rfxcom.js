@@ -22,6 +22,7 @@ function RfxCom(device, options) {
     self.handlers = {
         0x01: "statusHandler",
         0x02: "messageHandler",
+        0x11: "lighting2Handler",
         0x14: "lighting5Handler",
         0x5a: "elec2Handler",
         0x20: "security1Handler",
@@ -491,6 +492,36 @@ RfxCom.prototype.temphumidity19Handler = function (data) {
     self.emit("th" + subtype, evt);
 };
 
+/**
+ *
+ * Called by the data event handler when data arrives from a LightwaveRF/Siemens
+ * light control device.
+ *
+ */
+RfxCom.prototype.lighting2Handler = function (data) {
+    var self = this,
+        subtypes = {
+            0x00: "AC",
+            0x01: "HomeEasy EU",
+            0x002: "ANSLUT"
+        },
+        commands = {
+            0x00: "Off",
+            0x01: "On"
+        },
+        subtype = subtypes[data[0]],
+        seqnbr = data[1],
+        id = "0x" + self.dumpHex(data.slice(2, 5), false).join(""),
+        unitcode = data[5],
+        command = commands[data[6]],
+        evt = {
+            subtype: subtype,
+            id: id,
+            unitcode: unitcode,
+            command: command
+        };
+    self.emit("lighting2", evt);
+};
 
 /**
  *

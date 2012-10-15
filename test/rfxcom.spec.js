@@ -131,6 +131,17 @@ describe("RfxCom", function () {
                 device.open();
                 fakeSerialPort.emit("data", [0x0A, 0x52, 0x01, 0x04, 0xAF, 0x01, 0x00, 0x90, 0x36, 0x02, 0x59]);
             });
+            it("should emit a lighting2 message when it receives message type 0x11", function (done) {
+                var fakeSerialPort = new FakeSerialPort(),
+                    device = new rfxcom.RfxCom("/dev/ttyUSB0", {
+                        port: fakeSerialPort
+                    });
+                device.on("lighting2", function (evt) {
+                    done();
+                });
+                device.open();
+                fakeSerialPort.emit("data", [0x0B, 0x11, 0x01, 0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0xF, 0xF, 0x0F]);
+            });
         });
         it(".initialise should prepare the device for use", function (done) {
             var fakeSerialPort = new FakeSerialPort(),
@@ -359,6 +370,26 @@ describe("RfxCom", function () {
             });
         });
 
+        describe(".lighting2Handler", function () {
+            var device;
+            beforeEach(function () {
+                device = new rfxcom.RfxCom("/dev/ttyUSB0");
+            });
+            it("should emit a lighting2 message when called", function (done) {
+                device.on("lighting2", function (evt) {
+                    expect(evt.subtype)
+                        .toBe("AC");
+                    expect(evt.id)
+                        .toBe("0xF09AC7");
+                    expect(evt.unitcode)
+                        .toBe(1);
+                    expect(evt.command)
+                        .toBe("Off");
+                    done();
+                });
+                device.lighting2Handler([0x00, 0x01, 0xF0, 0x9A, 0xC7, 0x01, 0x00, 0x00, 0x80]);
+            });
+        });
         describe(".security1Handler", function () {
             var device;
             beforeEach(function () {
