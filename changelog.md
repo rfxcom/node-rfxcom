@@ -1,3 +1,14 @@
+Version 0.4.1
+-------------
+
+- Added support for lighting2 received messages.
+
+Version 0.4.0
+-------------
+
+- Fixed initialise to also run .open() which means you can bootstrap the device
+  with one line.
+
 Version 0.3.1
 -------------
 

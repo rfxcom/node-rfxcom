@@ -430,7 +430,7 @@ RfxCom.prototype.security1Handler = function (data) {
           id: id,
           deviceStatus: deviceStatus,
           batteryLevel: batterySignalLevel >> 4,
-          signalStrength: batterySignalLevel & 0x0f,
+          rssi: batterySignalLevel & 0x0F,
           tampered: deviceStatus & 0x80
         };
 
@@ -457,7 +457,7 @@ RfxCom.prototype.temp19Handler = function (data) {
           seqnbr: seqnbr,
           temperature: temperature * (signbit ? -1 : 1),
           batteryLevel: batterySignalLevel >> 4,
-          signalStrength: batterySignalLevel & 0x0f,
+          rssi: batterySignalLevel & 0x0F,
         };
     self.emit("temp" + subtype, evt);
 };
@@ -486,7 +486,7 @@ RfxCom.prototype.temphumidity19Handler = function (data) {
           humidity: humidity,
           humidityStatus: humidityStatus,
           batteryLevel: batterySignalLevel >> 4,
-          signalStrength: batterySignalLevel & 0x0f,
+          rssi: batterySignalLevel & 0x0F,
         };
 
     self.emit("th" + subtype, evt);
@@ -507,19 +507,31 @@ RfxCom.prototype.lighting2Handler = function (data) {
         },
         commands = {
             0x00: "Off",
-            0x01: "On"
+            0x01: "On",
+            0x02: "Set Level",
+            0x03: "Group Off",
+            0x04: "Group On",
+            0x05: "Set Group Level"
         },
         subtype = subtypes[data[0]],
         seqnbr = data[1],
-        id = "0x" + self.dumpHex(data.slice(2, 5), false).join(""),
-        unitcode = data[5],
-        command = commands[data[6]],
-        evt = {
-            subtype: subtype,
-            id: id,
-            unitcode: unitcode,
-            command: command
-        };
+        idBytes = data.slice(2, 6),
+        unitcode = data[6],
+        command = commands[data[7]],
+        level = data[8],
+        rssi = data[9] & 0x0F,
+        evt;
+
+    idBytes[0] &= ~0xFC; // "id1 : 2"
+    evt = {
+        subtype: subtype,
+        seqnbr: seqnbr,
+        id: "0x" + self.dumpHex(idBytes, false).join(""),
+        unitcode: unitcode,
+        command: command,
+        level: Math.round((level/15) * 100),
+        rssi: rssi
+    };
     self.emit("lighting2", evt);
 };
 
