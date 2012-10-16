@@ -69,6 +69,23 @@ have a remote, or if you want to specify the address manually, you can pair the
 device and send lightwaverf.switchOn("<insert address>") to unpair, send
 lightwave.switchOff("<insert address>") while the device is awaiting pairing.
 
+There's a specialised Lighting2 prototype, which uses an RfxCom object.
+
+<pre>
+    var rfxtrx = new rfxcom.RfxCom("/dev/ttyUSB0", {debug: true}),
+        lighting2 = new rfxcom.Lighting2(rfxtrx);
+
+    lighting2.switchOn("0xF09AC8AA/1");
+    lighting2.switchOff("0xF09AC8AA/1");
+</pre>
+
+I've tested it with both LightwaveRf lights, and the relay switch.
+
+LightwaveRf lights get their identity from the remote used to pair, if you don't
+have a remote, or if you want to specify the address manually, you can pair the
+device and send lightwaverf.switchOn("<insert address>") to unpair, send
+lightwave.switchOff("<insert address>") while the device is awaiting pairing.
+
 
 RfxCom events
 =============
@@ -111,3 +128,7 @@ Temperature/Humidity sensors.
 ---------
 Emitted when a message is received from an Oregon Scientific temperature
 sensor.
+
+"lighting2"
+-----------
+Emitted when a message is received from AC/HomeEasy type devices.
