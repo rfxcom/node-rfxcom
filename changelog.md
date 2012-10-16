@@ -2,6 +2,7 @@ Version 0.4.1
 -------------
 
 - Added support for lighting2 received messages.
+- Renamed signalStrength to rssi in keeping with the RFX TRX SDK document.
 
 Version 0.4.0
 -------------
