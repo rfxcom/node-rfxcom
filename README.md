@@ -69,6 +69,13 @@ have a remote, or if you want to specify the address manually, you can pair the
 device and send lightwaverf.switchOn("<insert address>") to unpair, send
 lightwave.switchOff("<insert address>") while the device is awaiting pairing.
 
+Google Group
+============
+
+I've created  a Google Group for discussion of Node.js based home automation
+software.
+
+The group is nodejs-automation @ google's groups.
 
 RfxCom events
 =============
@@ -111,3 +118,7 @@ Temperature/Humidity sensors.
 ---------
 Emitted when a message is received from an Oregon Scientific temperature
 sensor.
+
+"lighting2"
+-----------
+Emitted when a message is received from various Home Easy devices.
