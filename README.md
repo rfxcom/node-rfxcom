@@ -73,11 +73,15 @@ There's a specialised Lighting2 prototype, which uses an RfxCom object.
 
 <pre>
     var rfxtrx = new rfxcom.RfxCom("/dev/ttyUSB0", {debug: true}),
-        lighting2 = new rfxcom.Lighting2(rfxtrx);
+        lighting2 = new rfxcom.Lighting2(rfxtrx, rfxcom.lighting2.HOMEEASY_EU);
 
     lighting2.switchOn("0xF09AC8AA/1");
     lighting2.switchOff("0xF09AC8AA/1");
 </pre>
+
+The lighting2 message controls one of three subtypes, you need to specify the
+subtype to the constructor, the options are in rfxcom.lighting2.
+
 
 RfxCom events
 =============
