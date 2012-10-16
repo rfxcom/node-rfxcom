@@ -7,13 +7,13 @@ var _ = require("underscore"),
     util = require("util");
 
 
-const INTERFACE_CONTROL = 0,
-      INTERFACE_MESSAGE = 1,
-      TRANSCEIVER_MESSAGE = 0x2,
-      ELEC2 = 0x5a,
-      LIGHTING2 = 0x11,
-      LIGHTING5 = 0x14,
-      SECURITY1 = 0x20;
+var INTERFACE_CONTROL = 0,
+    INTERFACE_MESSAGE = 1,
+    TRANSCEIVER_MESSAGE = 0x2,
+    ELEC2 = 0x5a,
+    LIGHTING2 = 0x11,
+    LIGHTING5 = 0x14,
+    SECURITY1 = 0x20;
 
 
 function RfxCom(device, options) {
@@ -747,7 +747,7 @@ exports.protocols = {
     LIGHTWAVERF: {bit: 2, msg: 4},
     HIDEKI: {bit: 4, msg: 4},
     LACROSSE: {bit: 8, msg: 4},
-    FS20: {bit: x10, msg: 4},
+    FS20: {bit: 0x10, msg: 4},
     PROGUARD: {bit: 0x20, msg: 4},
     ROLLERTROL: {bit: 0x40, msg: 4},
     X10: {bit: 1, msg: 5 },
