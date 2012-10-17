@@ -1,9 +1,9 @@
 'use strict';
 
 var rfxcom = require("../rfxcom"),
-protocols = rfxcom.protocols,
-events = require("events"),
-util = require("util");
+    protocols = rfxcom.protocols,
+    events = require("events"),
+    util = require("util");
 
 var FakeSerialPort = function() {
     var self = this;
