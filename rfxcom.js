@@ -688,30 +688,14 @@ Lighting2.prototype._splitDeviceId = function (deviceId) {
   };
 };
 
-/*
- * Switch on deviceId/unitCode
- */
-Lighting2.prototype.switchOn = function (deviceId, options, callback) {
-  if (typeof options === "function") {
-    callback = options;
-    options = {};
-  }
-  if (typeof options === "undefined") {
-    options = {};
-  }
-  if (typeof options.level !== "undefined") {
-    if (options.level < 1 || options.level > 15) {
-      throw new Error("Invalid level value must be in range 0-15.");
-    }
-  }
-
+Lighting2.prototype._sendCommand = function (deviceId, command, level, callback) {
   var self = this,
       device = self._splitDeviceId(deviceId),
       cmdId = self.rfxcom.getCmdNumber(),
-      level = options.level || 0xf,
+      level = level || 0xf,
       buffer = [0x0b, LIGHTING2, self.subtype, cmdId, device.idBytes[0],
                 device.idBytes[1], device.idBytes[2], device.idBytes[3],
-                device.unitCode, 1, level, 0];
+                device.unitCode, command, level, 0];
 
   if (self.rfxcom.options.debug) {
     console.log("Sending %j", self.rfxcom.dumpHex(buffer));
@@ -721,26 +705,32 @@ Lighting2.prototype.switchOn = function (deviceId, options, callback) {
       callback(err, response, cmdId);
     }
   });
+  return cmdId;
 };
 
 /*
  * Switch on deviceId/unitCode
  */
-Lighting2.prototype.switchOff = function (deviceId, callback) {
-  var self = this,
-      device = self._splitDeviceId(deviceId),
-      cmdId = self.rfxcom.getCmdNumber(),
-      buffer = [0x0b, LIGHTING2, self.subtype, cmdId, device.idBytes[0],
-                device.idBytes[1], device.idBytes[2], device.idBytes[3],
-                device.unitCode, 0, 0, 0];
-
-  self.rfxcom.serialport.write(buffer, function (err, response) {
-    if (typeof callback === "function") {
-      callback(err, response, cmdId);
-    }
-  });
+Lighting2.prototype.switchOn = function (deviceId, callback) {
+  return this._sendCommand(deviceId, 1, undefined, callback);
 };
 
+/*
+ * Switch off deviceId/unitCode
+ */
+Lighting2.prototype.switchOff = function (deviceId, callback) {
+  return this._sendCommand(deviceId, 0, undefined, callback);
+};
+
+/*
+ * Switch off deviceId/unitCode
+ */
+Lighting2.prototype.setLevel = function (deviceId, level, callback) {
+  if ((level < 0) || (level > 0xf)) {
+    throw new Error("Invalid level value must be in range 0-15.");
+  };
+  return this._sendCommand(deviceId, 2, level, callback);
+};
 
 exports.RfxCom = RfxCom;
 exports.LightwaveRf = LightwaveRf;
