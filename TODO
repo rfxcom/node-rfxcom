@@ -2,6 +2,8 @@ TODO
 ----
 
 * Improve testing of the rfxtrxParser.
+* Make the Lightwave/Lighting2 prototypes delegate to the rfxcom to send and
+  centralise logging of data being sent.
 
 For v1.0
 

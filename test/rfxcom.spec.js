@@ -757,7 +757,7 @@ describe("RfxCom", function () {
         beforeEach(function () {
             fakeSerialPort = new FakeSerialPort();
             device = new rfxcom.RfxCom("/dev/ttyUSB0", {
-                port: fakeSerialPort
+                port: fakeSerialPort,
             });
         });
         describe("instantiation", function () {
@@ -781,6 +781,19 @@ describe("RfxCom", function () {
                 expect(fakeSerialPort)
                     .toHaveSent([0x0B, 0x11, 0x02, 0x00, 0x03, 0xFF, 0xFF, 0xFF, 0x01, 0x01, 0x0F, 0x00]);
                 expect(sentCommandId).toEqual(0);
+            });
+            it("should log the bytes being sent in debug mode", function(done) {
+                var debugDevice = new rfxcom.RfxCom("/dev/ttyUSB0", {
+                    port: fakeSerialPort,
+                    debug: true}),
+                    debugLight = new rfxcom.Lighting2(debugDevice, rfxcom.lighting2.ANSLUT);
+
+                var consoleSpy = spyOn(console, "log");
+                debugLight.switchOn("0x03FFFFFF/1", done);
+                expect(consoleSpy).toHaveBeenCalledWith(
+                  "Sending %j",
+                  ["0B", "11", "02", "00", "03", "FF", "FF", "FF", "01", "01",
+                   "0F", "00"]);
             });
             it("should throw an exception with an invalid deviceId", function () {
                 expect(function () {
@@ -846,5 +859,4 @@ describe("RfxCom", function () {
             });
         });
     });
-
 });

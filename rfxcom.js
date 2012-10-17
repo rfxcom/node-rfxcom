@@ -9,7 +9,7 @@ var _ = require("underscore"),
 
 var INTERFACE_CONTROL = 0,
     INTERFACE_MESSAGE = 1,
-    TRANSCEIVER_MESSAGE = 0x2,
+    TRANSCEIVER_MESSAGE = 2,
     ELEC2 = 0x5a,
     LIGHTING2 = 0x11,
     LIGHTING5 = 0x14,
@@ -277,7 +277,7 @@ RfxCom.prototype.lightOn = function (id, unit, callback) {
   var self = this,
       cmdId = self.getCmdNumber(),
       idBytes = self.stringToBytes(id),
-      buffer = [0x0A, LIGHTING5, 0, cmdId, idBytes[0], idBytes[1], idBytes[2], unit, 1, 0, 0];
+      buffer = [0x0a, LIGHTING5, 0, cmdId, idBytes[0], idBytes[1], idBytes[2], unit, 1, 0, 0];
 
   if (self.options.debug) {
     console.log("Sending lightOn data: %s", self.dumpHex(buffer));
@@ -299,7 +299,7 @@ RfxCom.prototype.lightOff = function (id, unit, callback) {
   var self = this,
       cmdId = self.getCmdNumber(),
       idBytes = self.stringToBytes(id),
-      buffer = [0x0A, LIGHTING5, 0, cmdId, idBytes[0], idBytes[1], idBytes[2],
+      buffer = [0x0a, LIGHTING5, 0, cmdId, idBytes[0], idBytes[1], idBytes[2],
                 unit, 0, 0, 0];
 
   if (self.options.debug) {
@@ -435,7 +435,7 @@ RfxCom.prototype.security1Handler = function (data) {
         id: id,
         deviceStatus: deviceStatus,
         batteryLevel: batterySignalLevel >> 4,
-        rssi: batterySignalLevel & 0x0F,
+        rssi: batterySignalLevel & 0x0f,
         tampered: deviceStatus & 0x80
       };
 
@@ -453,7 +453,7 @@ RfxCom.prototype.temp19Handler = function (data) {
       subtype = data[0],
       seqnbr = data[1],
       id = "0x" + self.dumpHex(data.slice(2, 4), false).join(""),
-      temperature = ((data[4] & 0x7F) * 256 + data[5]) / 10,
+      temperature = ((data[4] & 0x7f) * 256 + data[5]) / 10,
       signbit = data[4] & 0x80,
       batterySignalLevel = data[6],
       evt = {
@@ -462,7 +462,7 @@ RfxCom.prototype.temp19Handler = function (data) {
         seqnbr: seqnbr,
         temperature: temperature * (signbit ? -1 : 1),
         batteryLevel: batterySignalLevel >> 4,
-        rssi: batterySignalLevel & 0x0F,
+        rssi: batterySignalLevel & 0x0f,
       };
   self.emit("temp" + subtype, evt);
 };
@@ -478,7 +478,7 @@ RfxCom.prototype.temphumidity19Handler = function (data) {
       subtype = data[0],
       seqnbr = data[1],
       id = "0x" + self.dumpHex(data.slice(2, 4), false).join(""),
-      temperature = ((data[4] & 0x7F) * 256 + data[5]) / 10,
+      temperature = ((data[4] & 0x7f) * 256 + data[5]) / 10,
       signbit = data[4] & 0x80,
       humidity = data[6],
       humidityStatus = data[7],
@@ -491,7 +491,7 @@ RfxCom.prototype.temphumidity19Handler = function (data) {
         humidity: humidity,
         humidityStatus: humidityStatus,
         batteryLevel: batterySignalLevel >> 4,
-        rssi: batterySignalLevel & 0x0F,
+        rssi: batterySignalLevel & 0x0f,
       };
 
   self.emit("th" + subtype, evt);
@@ -524,10 +524,10 @@ RfxCom.prototype.lighting2Handler = function (data) {
       unitcode = data[6],
       command = commands[data[7]],
       level = data[8],
-      rssi = data[9] & 0x0F,
+      rssi = data[9] & 0x0f,
       evt;
 
-  idBytes[0] &= ~0xFC; // "id1 : 2"
+  idBytes[0] &= ~0xfc; // "id1 : 2"
   evt = {
     subtype: subtype,
     seqnbr: seqnbr,
@@ -621,7 +621,7 @@ LightwaveRf.prototype.switchOn = function (deviceId, options, callback) {
       cmdId = self.rfxcom.getCmdNumber(),
       cmd = options.mood || 1,
       level = options.level || 0,
-      buffer = [0x0A, LIGHTING5, 0, cmdId, device.idBytes[0],
+      buffer = [0x0a, LIGHTING5, 0, cmdId, device.idBytes[0],
                 device.idBytes[1], device.idBytes[2], device.unitCode,
                 cmd, level, 0];
 
@@ -639,7 +639,7 @@ LightwaveRf.prototype.switchOff = function (deviceId, callback) {
   var self = this,
       cmdId = self.rfxcom.getCmdNumber(),
       device = self._splitDeviceId(deviceId),
-      buffer = [0x0A, LIGHTING5, 0, cmdId, device.idBytes[0],
+      buffer = [0x0a, LIGHTING5, 0, cmdId, device.idBytes[0],
                 device.idBytes[1], device.idBytes[2], device.unitCode,
                 0, 0, 0];
 
@@ -708,11 +708,14 @@ Lighting2.prototype.switchOn = function (deviceId, options, callback) {
   var self = this,
       device = self._splitDeviceId(deviceId),
       cmdId = self.rfxcom.getCmdNumber(),
-      level = options.level || 0xF,
-      buffer = [0x0B, LIGHTING2, self.subtype, cmdId, device.idBytes[0],
+      level = options.level || 0xf,
+      buffer = [0x0b, LIGHTING2, self.subtype, cmdId, device.idBytes[0],
                  device.idBytes[1], device.idBytes[2], device.idBytes[3],
                  device.unitCode, 1, level, 0];
 
+  if (self.rfxcom.options.debug) {
+    console.log("Sending %j", self.rfxcom.dumpHex(buffer));
+  }
   self.rfxcom.serialport.write(buffer, function (err, response) {
     if (typeof callback === "function") {
       callback(err, response, cmdId);
@@ -727,7 +730,7 @@ Lighting2.prototype.switchOff = function (deviceId, callback) {
   var self = this,
       device = self._splitDeviceId(deviceId),
       cmdId = self.rfxcom.getCmdNumber(),
-      buffer = [0x0B, LIGHTING2, self.subtype, cmdId, device.idBytes[0],
+      buffer = [0x0b, LIGHTING2, self.subtype, cmdId, device.idBytes[0],
                 device.idBytes[1], device.idBytes[2], device.idBytes[3],
                 device.unitCode, 0, 0, 0];
 
