@@ -26,10 +26,6 @@ var rfxcom = require('./rfxcom'),
 
 var rfxtrx = new rfxcom.RfxCom("/dev/ttyUSB0", {debug: true});
 
-rfxtrx.initialise(function () {
-    console.log("Device initialised");
-})
-
 /*
  * This reports security updates from X10 security devices.
  */
@@ -49,7 +45,9 @@ rfxtrx.on("elec2", function (evt) {
                 [evt.id, evt.currentWatts]);
 });
 
-rfxtrx.open();
+rfxtrx.initialise(function () {
+    console.log("Device initialised");
+});
 </pre>
 
 There's a specialised LightwaveRf prototype, which uses an RfxCom object.
