@@ -710,8 +710,8 @@ Lighting2.prototype.switchOn = function (deviceId, options, callback) {
       cmdId = self.rfxcom.getCmdNumber(),
       level = options.level || 0xf,
       buffer = [0x0b, LIGHTING2, self.subtype, cmdId, device.idBytes[0],
-                 device.idBytes[1], device.idBytes[2], device.idBytes[3],
-                 device.unitCode, 1, level, 0];
+                device.idBytes[1], device.idBytes[2], device.idBytes[3],
+                device.unitCode, 1, level, 0];
 
   if (self.rfxcom.options.debug) {
     console.log("Sending %j", self.rfxcom.dumpHex(buffer));

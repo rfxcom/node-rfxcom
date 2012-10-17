@@ -52,6 +52,8 @@ rfxtrx.on("elec2", function (evt) {
 rfxtrx.open();
 </pre>
 
+LightwaveRf
+-----------
 There's a specialised LightwaveRf prototype, which uses an RfxCom object.
 
 <pre>
@@ -69,6 +71,8 @@ have a remote, or if you want to specify the address manually, you can pair the
 device and send lightwaverf.switchOn("<insert address>") to unpair, send
 lightwave.switchOff("<insert address>") while the device is awaiting pairing.
 
+Lighting2
+---------
 There's a specialised Lighting2 prototype, which uses an RfxCom object.
 
 <pre>
@@ -82,6 +86,14 @@ There's a specialised Lighting2 prototype, which uses an RfxCom object.
 The lighting2 message controls one of three subtypes, you need to specify the
 subtype to the constructor, the options are in rfxcom.lighting2.
 
+
+Google Group
+============
+
+I've created  a Google Group for discussion of Node.js based home automation
+software.
+
+The group is nodejs-automation @ google's groups.
 
 RfxCom events
 =============

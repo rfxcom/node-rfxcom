@@ -757,7 +757,7 @@ describe("RfxCom", function () {
         beforeEach(function () {
             fakeSerialPort = new FakeSerialPort();
             device = new rfxcom.RfxCom("/dev/ttyUSB0", {
-                port: fakeSerialPort,
+                port: fakeSerialPort
             });
         });
         describe("instantiation", function () {

@@ -1,4 +1,6 @@
 Version 0.4.2
+-------------
+
  - Added Lighting2 class, which can control devices controlled by the lighting2
    message.
 
