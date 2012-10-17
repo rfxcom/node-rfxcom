@@ -599,6 +599,24 @@ LightwaveRf.prototype._splitDeviceId = function (deviceId) {
   };
 };
 
+
+LightwaveRf.prototype._sendCommand = function (deviceId, command, level, callback) {
+  var self = this,
+      device = self._splitDeviceId(deviceId),
+      cmdId = self.rfxcom.getCmdNumber(),
+      level = level || 0x1f,
+      buffer = [0x0a, LIGHTING5, 0, cmdId, device.idBytes[0],
+                device.idBytes[1], device.idBytes[2], device.unitCode,
+                command, level, 0];
+
+  self.rfxcom.serialport.write(buffer, function (err, response) {
+    if (typeof callback === "function") {
+        callback(err, response, cmdId);
+    }
+  });
+  return cmdId;
+};
+
 /*
  * Switch on deviceId/unitCode
  */
@@ -613,43 +631,21 @@ LightwaveRf.prototype.switchOn = function (deviceId, options, callback) {
   if (typeof options.mood !== "undefined") {
     if (options.mood < 1 || options.mood > 5) {
       throw new Error("Invalid mood value must be in range 1-5.");
-    }
+      }
   };
+  var command = options.mood || 1,
+      level = options.level || 0;
 
-  var self = this,
-      device = self._splitDeviceId(deviceId),
-      cmdId = self.rfxcom.getCmdNumber(),
-      cmd = options.mood || 1,
-      level = options.level || 0,
-      buffer = [0x0a, LIGHTING5, 0, cmdId, device.idBytes[0],
-                device.idBytes[1], device.idBytes[2], device.unitCode,
-                cmd, level, 0];
-
-  self.rfxcom.serialport.write(buffer, function (err, response) {
-    if (typeof callback === "function") {
-        callback(err, response, cmdId);
-    }
-  });
+  return this._sendCommand(deviceId, command, level, callback);
 };
 
 /*
  * Switch off deviceId/unitCode
  */
 LightwaveRf.prototype.switchOff = function (deviceId, callback) {
-  var self = this,
-      cmdId = self.rfxcom.getCmdNumber(),
-      device = self._splitDeviceId(deviceId),
-      buffer = [0x0a, LIGHTING5, 0, cmdId, device.idBytes[0],
-                device.idBytes[1], device.idBytes[2], device.unitCode,
-                0, 0, 0];
 
-  self.rfxcom.serialport.write(buffer, function (err, response) {
-    if (typeof callback === "function") {
-      callback(err, response, cmdId);
-    }
-  });
+  return this._sendCommand(deviceId, 0, undefined, callback);
 };
-
 
 /*
  * This is a class for controlling Lighting2 lights.
