@@ -302,7 +302,7 @@ describe("RfxCom", function () {
         })
 
         describe(".lightOn", function () {
-            it("should send the correct bytes to the serialport", function (done) {
+            it("should send the correct bytes to the serialport for lightwaverf devices", function (done) {
                 var fakeSerialPort = new FakeSerialPort(),
                     device = new rfxcom.RfxCom("/dev/ttyUSB0", {
                         port: fakeSerialPort
@@ -392,7 +392,7 @@ describe("RfxCom", function () {
                     expect(evt.command)
                         .toBe("Off");
                     expect(evt.level)
-                        .toBe(100);
+                        .toBe(0x0F);
                     expect(evt.rssi)
                         .toBe(0x0F);
                     done();
@@ -406,15 +406,6 @@ describe("RfxCom", function () {
                     done()
                 });
                 device.lighting2Handler([0x00, 0x01, 0xCE, 0x9A, 0xC7, 0xA1, 0x01, 0x00, 0x0F, 0x0F]);
-            });
-            it("should calculate the level correctly", function (done) {
-                // The level appears to be 0x-0F = 1-100 so, level/0x0F%
-                device.on("lighting2", function (evt) {
-                    expect(evt.level)
-                        .toBe(47);
-                    done();
-                });
-                device.lighting2Handler([0x00, 0x01, 0xC3, 0x9A, 0xC7, 0xA1, 0x01, 0x00, 0x07, 0x0F]);
             });
             it("should calculate the rssi correctly", function (done) {
                 device.on("lighting2", function (evt) {
@@ -681,8 +672,8 @@ describe("RfxCom", function () {
 
     describe("LightwaveRf class", function () {
         var lightwaverf,
-        fakeSerialPort,
-        device;
+            fakeSerialPort,
+            device;
         beforeEach(function () {
             fakeSerialPort = new FakeSerialPort();
             device = new rfxcom.RfxCom("/dev/ttyUSB0", {
@@ -757,6 +748,116 @@ describe("RfxCom", function () {
                 lightwaverf.switchOff("0xF09AC8/1");
                 expect(fakeSerialPort)
                     .toHaveSent([10, 20, 0, 0, 0xF0, 0x9A, 0xC8, 1, 0, 0, 0]);
+            });
+        });
+    });
+
+    describe("Lighting2 class", function () {
+        var lighting2,
+            fakeSerialPort,
+            device;
+        beforeEach(function () {
+            fakeSerialPort = new FakeSerialPort();
+            device = new rfxcom.RfxCom("/dev/ttyUSB0", {
+                port: fakeSerialPort
+            });
+        });
+        describe("instantiation", function () {
+            it("should throw an error if no subtype is specified", function () {
+                expect(function () {
+                    lighting2 = new rfxcom.Lighting2(device);
+                })
+                    .toThrow(new Error("Must provide a subtype."));
+            });
+        });
+        describe(".switchOn", function () {
+            beforeEach(function () {
+                lighting2 = new rfxcom.Lighting2(device, rfxcom.lighting2.ANSLUT);
+            });
+            it("should send the correct bytes to the serialport", function (done) {
+                var sentCommandId;
+                lighting2.switchOn("0x03FFFFFF/1", function (err, response, cmdId) {
+                    sentCommandId = cmdId;
+                    done();
+                });
+                expect(fakeSerialPort)
+                    .toHaveSent([0x0B, 0x11, 0x02, 0x00, 0x03, 0xFF, 0xFF, 0xFF, 0x01, 0x01, 0x0F, 0x00]);
+                expect(sentCommandId).toEqual(0);
+            });
+            it("should log the bytes being sent in debug mode", function(done) {
+                var debugDevice = new rfxcom.RfxCom("/dev/ttyUSB0", {
+                    port: fakeSerialPort,
+                    debug: true}),
+                    debugLight = new rfxcom.Lighting2(debugDevice, rfxcom.lighting2.ANSLUT);
+
+                var consoleSpy = spyOn(console, "log");
+                debugLight.switchOn("0x03FFFFFF/1", done);
+                expect(consoleSpy).toHaveBeenCalledWith(
+                  "Sending %j",
+                  ["0B", "11", "02", "00", "03", "FF", "FF", "FF", "01", "01",
+                   "0F", "00"]);
+            });
+            it("should throw an exception with an invalid deviceId", function () {
+                expect(function () {
+                    lighting2.switchOn("0xF09AC8");
+                })
+                    .toThrow(new Error("Invalid deviceId format."));
+            });
+            it("should throw an exception with an invalid deviceId", function () {
+                expect(function () {
+                    lighting2.switchOn("0xF09AC8/1");
+                })
+                    .toThrow(new Error("Invalid deviceId format."));
+            });
+            it("should throw an exception with an invalid level value", function () {
+                expect(function () {
+                    lighting2.switchOn("0xF09AC8/1", {
+                        level: 0x10,
+                    });
+                })
+                    .toThrow(new Error("Invalid level value must be in range 0-15."));
+            });
+            it("should send the level if one is specified", function (done) {
+                lighting2.switchOn("0x03FFFFFF/1", {
+                    level: 7
+                }, function () {
+                    done();
+                });
+                expect(fakeSerialPort)
+                    .toHaveSent([0x0B, 0x11, 0x02, 0x00, 0x03, 0xFF, 0xFF, 0xFF, 0x01, 0x01, 0x07, 0x00]);
+            });
+            it("should handle no callback", function () {
+                lighting2.switchOn("0x03FFFFFF/1", {
+                    level: 7,
+                });
+                expect(fakeSerialPort)
+                    .toHaveSent([0x0B, 0x11, 0x02, 0x00, 0x03, 0xFF, 0xFF, 0xFF, 0x01, 0x01, 0x07, 0x00]);
+            });
+        });
+        describe(".switchOff", function () {
+          beforeEach(function () {
+                lighting2 = new rfxcom.Lighting2(device, rfxcom.lighting2.ANSLUT);
+            });
+            it("should send the correct bytes to the serialport", function (done) {
+                var sentCommandId;
+                lighting2.switchOff("0x03FFFFFF/1", function (err, response, cmdId) {
+                    sentCommandId = cmdId;
+                    done();
+                });
+                expect(fakeSerialPort)
+                    .toHaveSent([0x0B, 0x11, 0x02, 0x00, 0x03, 0xFF, 0xFF, 0xFF, 0x01, 0x00, 0x00, 0x00]);
+                expect(sentCommandId).toEqual(0);
+            });
+            it("should throw an exception with an invalid deviceId", function () {
+                expect(function () {
+                    lighting2.switchOff("0xF09AC8");
+                })
+                    .toThrow(new Error("Invalid deviceId format."));
+            });
+            it("should handle no callback", function () {
+                lighting2.switchOff("0x03FFFFFF/1");
+                expect(fakeSerialPort)
+                    .toHaveSent([0x0B, 0x11, 0x02, 0x00, 0x03, 0xFF, 0xFF, 0xFF, 0x01, 0x00, 0x00, 0x00]);
             });
         });
     });

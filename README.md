@@ -50,6 +50,8 @@ rfxtrx.initialise(function () {
 });
 </pre>
 
+LightwaveRf
+-----------
 There's a specialised LightwaveRf prototype, which uses an RfxCom object.
 
 <pre>
@@ -66,6 +68,22 @@ LightwaveRf lights get their identity from the remote used to pair, if you don't
 have a remote, or if you want to specify the address manually, you can pair the
 device and send lightwaverf.switchOn("<insert address>") to unpair, send
 lightwave.switchOff("<insert address>") while the device is awaiting pairing.
+
+Lighting2
+---------
+There's a specialised Lighting2 prototype, which uses an RfxCom object.
+
+<pre>
+    var rfxtrx = new rfxcom.RfxCom("/dev/ttyUSB0", {debug: true}),
+        lighting2 = new rfxcom.Lighting2(rfxtrx, rfxcom.lighting2.HOMEEASY_EU);
+
+    lighting2.switchOn("0xF09AC8AA/1");
+    lighting2.switchOff("0xF09AC8AA/1");
+</pre>
+
+The lighting2 message controls one of three subtypes, you need to specify the
+subtype to the constructor, the options are in rfxcom.lighting2.
+
 
 Google Group
 ============
@@ -119,4 +137,4 @@ sensor.
 
 "lighting2"
 -----------
-Emitted when a message is received from various Home Easy devices.
+Emitted when a message is received from AC/HomeEasy type devices.
