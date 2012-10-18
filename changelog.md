@@ -1,8 +1,14 @@
+Version 0.4.3
+-------------
+
+- Added Lighting2 class, which can control devices controlled by the lighting2
+  message.
+
 Version 0.4.2
 -------------
 
- - Added Lighting2 class, which can control devices controlled by the lighting2
-   message.
+- Fix the tamper detection for security1 devices to report status and tamper
+  separately.
 
 Version 0.4.1
 -------------

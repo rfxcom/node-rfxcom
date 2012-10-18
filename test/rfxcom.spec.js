@@ -464,9 +464,12 @@ describe("RfxCom", function() {
                 })
                     device.security1Handler([0x00, 0x00, 0xFF, 0xAA, 0x00, 0x04, 0x89]);
             });
-            it("should correctly identify the tamper notification from a device", function(done) {
-                device.on("security1", function(evt) {
-                    expect(evt.tampered).toBeTruthy();
+            it("should correctly identify the tamper notification from a device", function (done) {
+                device.on("security1", function (evt) {
+                    expect(evt.deviceStatus)
+                        .toBe(rfxcom.security.MOTION);
+                    expect(evt.tampered)
+                        .toBeTruthy();
                     done();
                 })
                     device.security1Handler([0x01, 0x00, 0xFF, 0xAA, 0x00, 0x84, 0x89]);

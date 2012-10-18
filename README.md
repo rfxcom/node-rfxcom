@@ -30,9 +30,9 @@ var rfxtrx = new rfxcom.RfxCom("/dev/ttyUSB0", {debug: true});
  * This reports security updates from X10 security devices.
  */
 rfxtrx.on("security1", function (evt) {
-  if (evt.deviceStatus==rfxcom.security.MOTION) {
+  if (evt.deviceStatus === rfxcom.security.MOTION) {
     console.log("Device %s %s detected motion.", evt.subtype, evt.id);
-  } else if (deviceStatus==rfxcom.security.NOMOTION)
+  } else if (evt.deviceStatus === rfxcom.security.NOMOTION) {
     console.log("Device %s %s reported motion stopped.", evt.subtype, evt.id);
   }
 });

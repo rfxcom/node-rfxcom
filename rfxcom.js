@@ -424,20 +424,20 @@ RfxCom.prototype.elec2Handler = function (data) {
  *
  */
 RfxCom.prototype.security1Handler = function (data) {
-  var self = this,
-      subtype = data[0],
-      seqnbr = data[1],
-      id = "0x" + self.dumpHex(data.slice(2, 5), false).join(""),
-      deviceStatus = data[5],
-      batterySignalLevel = data[6],
-      evt = {
-        subtype: subtype,
-        id: id,
-        deviceStatus: deviceStatus,
-        batteryLevel: batterySignalLevel >> 4,
-        rssi: batterySignalLevel & 0x0f,
-        tampered: deviceStatus & 0x80
-      };
+    var self = this,
+        subtype = data[0],
+        seqnbr = data[1],
+        id = "0x" + self.dumpHex(data.slice(2, 5), false).join(""),
+        deviceStatus = data[5] & ~0x80,
+        batterySignalLevel = data[6],
+        evt = {
+          subtype: subtype,
+          id: id,
+          deviceStatus: deviceStatus,
+          batteryLevel: batterySignalLevel >> 4,
+          rssi: batterySignalLevel & 0x0f,
+          tampered: data[5] & 0x80
+        };
 
     self.emit("security1", evt);
 };
