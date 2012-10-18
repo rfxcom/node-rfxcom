@@ -423,7 +423,7 @@ RfxCom.prototype.security1Handler = function (data) {
         subtype = data[0],
         seqnbr = data[1],
         id = "0x" + self.dumpHex(data.slice(2, 5), false).join(""),
-        deviceStatus = data[5],
+        deviceStatus = data[5] & ~0x80,
         batterySignalLevel = data[6],
         evt = {
           subtype: subtype,
@@ -431,7 +431,7 @@ RfxCom.prototype.security1Handler = function (data) {
           deviceStatus: deviceStatus,
           batteryLevel: batterySignalLevel >> 4,
           rssi: batterySignalLevel & 0x0F,
-          tampered: deviceStatus & 0x80
+          tampered: data[5] & 0x80
         };
 
     self.emit("security1", evt);

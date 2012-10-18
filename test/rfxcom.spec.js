@@ -527,6 +527,8 @@ describe("RfxCom", function () {
             });
             it("should correctly identify the tamper notification from a device", function (done) {
                 device.on("security1", function (evt) {
+                    expect(evt.deviceStatus)
+                        .toBe(rfxcom.security.MOTION);
                     expect(evt.tampered)
                         .toBeTruthy();
                     done();

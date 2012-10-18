@@ -1,3 +1,9 @@
+Version 0.4.2
+-------------
+
+- Fix the tamper detection for security1 devices to report status and tamper
+  separately.
+
 Version 0.4.1
 -------------
 
