@@ -529,18 +529,18 @@ RfxCom.prototype.lighting1Handler = function (data) {
       housecode = String.fromCharCode(data[2]),
       unitcode = data[3],
       command = commands[data[4]],
-      signallevel = data[5] >> 4,
+      rssi = data[5] >> 4,
       id = self.dumpHex(data.slice(2,4), false).join(""),
       evt;
 
   evt = {
-	id: "0x" + id,
+    id: "0x" + id,
     subtype: subtype,
     seqnbr: seqnbr,
     housecode: housecode,
     unitcode: unitcode,
     command: command,
-    signallevel: signallevel
+    rssi: rssi
   };
 
   self.emit("lighting1", evt);

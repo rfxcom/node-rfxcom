@@ -354,7 +354,7 @@ describe("RfxCom", function() {
                     expect(evt.housecode).toBe("D");
                     expect(evt.unitcode).toBe(2);
                     expect(evt.command).toBe("On");
-                    expect(evt.signallevel).toBe(7);
+                    expect(evt.rssi).toBe(7);
                     expect(evt.id).toBe("0x4402");
                     done();
                 });
@@ -369,9 +369,9 @@ describe("RfxCom", function() {
                     });
                 device.lighting1Handler([0x01, 0x01, 0x43, 0x05, 0x01, 0x70]);
             });
-            it("should calculate the signallevel correctly", function(done) {
+            it("should calculate the rssi correctly", function(done) {
                 device.on("lighting1", function(evt) {
-                    expect(evt.signallevel).toBe(8);
+                    expect(evt.rssi).toBe(8);
                     done();
                 });
                 device.lighting1Handler([0x01, 0x01, 0x43, 0x05, 0x01, 0x80]);
