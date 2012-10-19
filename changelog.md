@@ -1,3 +1,8 @@
+Version 0.4.4
+-------------
+
+- Added support for lighting1 received messages contributed by stianeikeland.
+
 Version 0.4.3
 -------------
 
