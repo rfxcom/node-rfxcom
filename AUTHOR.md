@@ -1,3 +1,3 @@
-[bigkevmcd](https://github.com/bigkevmcd)
+Kevin McDermott [bigkevmcd](https://github.com/bigkevmcd)
 
-[stianeikeland](https://github.com/stianeikeland)
+Stian Eikeland [stianeikeland](https://github.com/stianeikeland)
