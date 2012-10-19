@@ -11,6 +11,7 @@ var INTERFACE_CONTROL = 0,
     INTERFACE_MESSAGE = 1,
     TRANSCEIVER_MESSAGE = 2,
     ELEC2 = 0x5a,
+    LIGHTING1 = 0x10,
     LIGHTING2 = 0x11,
     LIGHTING5 = 0x14,
     SECURITY1 = 0x20;
@@ -23,6 +24,7 @@ function RfxCom(device, options) {
   self.handlers = {
     0x01: "statusHandler",
     0x02: "messageHandler",
+    0x10: "lighting1Handler",
     0x11: "lighting2Handler",
     0x14: "lighting5Handler",
     0x5a: "elec2Handler",
@@ -495,6 +497,53 @@ RfxCom.prototype.temphumidity19Handler = function (data) {
       };
 
   self.emit("th" + subtype, evt);
+};
+
+/**
+ *
+ * Called by the data event handler when data arrives from a Lighting1
+ * light control device.
+ *
+ */
+RfxCom.prototype.lighting1Handler = function (data) {
+  var self = this,
+      subtypes = {
+          0: "X10",
+          1: "ARC",
+          2: "ELRO AB400D",
+          3: "Waveman",
+          4: "EMW200",
+          5: "Impuls",
+          6: "RisingSun",
+          7: "Philips SBC"
+      },
+      commands = {
+          0: "Off",
+          1: "On",
+          5: "All Off",
+          6: "All On",
+          7: "Chime"
+      },
+      subtype = subtypes[data[0]],
+      seqnbr = data[1],
+      housecode = String.fromCharCode(data[2]),
+      unitcode = data[3],
+      command = commands[data[4]],
+      rssi = data[5] >> 4,
+      id = self.dumpHex(data.slice(2,4), false).join(""),
+      evt;
+
+  evt = {
+    id: "0x" + id,
+    subtype: subtype,
+    seqnbr: seqnbr,
+    housecode: housecode,
+    unitcode: unitcode,
+    command: command,
+    rssi: rssi
+  };
+
+  self.emit("lighting1", evt);
 };
 
 /**

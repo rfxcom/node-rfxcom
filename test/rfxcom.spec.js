@@ -342,6 +342,58 @@ describe("RfxCom", function() {
                 });
         });
 
+        describe(".lighting1Handler", function() {
+            var device;
+            beforeEach(function() {
+                device = new rfxcom.RfxCom("/dev/ttyUSB0");
+            });
+            it("should emit a lighting1 message when called", function(done) {
+                device.on("lighting1", function(evt) {
+                    expect(evt.subtype).toBe("ARC");
+                    expect(evt.seqnbr).toBe(1);
+                    expect(evt.housecode).toBe("D");
+                    expect(evt.unitcode).toBe(2);
+                    expect(evt.command).toBe("On");
+                    expect(evt.rssi).toBe(7);
+                    expect(evt.id).toBe("0x4402");
+                    done();
+                });
+                device.lighting1Handler([0x01, 0x01, 0x44, 0x02, 0x01, 0x70]);
+            });
+            it("should calculate the id correctly", function(done) {
+                device.on("lighting1", function(evt) {
+                    expect(evt.id).toBe("0x4305");
+                    expect(evt.housecode).toBe("C");
+                    expect(evt.unitcode).toBe(5);
+                    done()
+                    });
+                device.lighting1Handler([0x01, 0x01, 0x43, 0x05, 0x01, 0x70]);
+            });
+            it("should calculate the rssi correctly", function(done) {
+                device.on("lighting1", function(evt) {
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.lighting1Handler([0x01, 0x01, 0x43, 0x05, 0x01, 0x80]);
+            });
+            describe("device type identification", function() {
+                it("should identify X10 devices", function(done) {
+                    device.on("lighting1", function(evt) {
+                        expect(evt.subtype).toBe("X10");
+                        done();
+                    });
+                    device.lighting1Handler([0x00, 0x01, 0x43, 0x05, 0x01, 0x80]);
+                });
+                it("should identify Waveman devices", function(done) {
+                    device.on("lighting1", function(evt) {
+                        expect(evt.subtype).toBe("Waveman");
+                        done();
+                    });
+                    device.lighting1Handler([0x03, 0x01, 0x43, 0x05, 0x01, 0x80]);
+                });
+            });
+        });
+
         describe(".lighting2Handler", function() {
             var device;
             beforeEach(function() {
