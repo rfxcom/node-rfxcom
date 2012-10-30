@@ -52,11 +52,11 @@ rfxtrx.initialise(function () {
 
 LightwaveRf
 -----------
-There's a specialised LightwaveRf prototype, which uses an RfxCom object.
+There's a specialised Lighting5 prototype, which uses an RfxCom object.
 
 <pre>
     var rfxtrx = new rfxcom.RfxCom("/dev/ttyUSB0", {debug: true}),
-        lightwaverf = new rfxcom.LightwaveRf(rfxtrx);
+        lightwaverf = new rfxcom.Lighting5(rfxtrx, rfxcom.lighting5.LIGHTWAVERF);
 
     lightwaverf.switchOn("0xF09AC8/1", {mood: 0x03});
     lightwaverf.switchOn("0xF09AC8/2", {level: 80});
@@ -83,7 +83,6 @@ There's a specialised Lighting2 prototype, which uses an RfxCom object.
 
 The lighting2 message controls one of three subtypes, you need to specify the
 subtype to the constructor, the options are in rfxcom.lighting2.
-
 
 Google Group
 ============

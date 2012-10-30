@@ -1,10 +1,12 @@
 Version 0.5.0
 -------------
 
-- Split the various prototypes out into separate files.
+- Split the various classes out into separate files.
 - Split the tests appropriately.
-- Rename the LightwaveRf prototype to Lighting5.
+- Rename the LightwaveRf prototype to Lighting5. *backwards incompatible*
 - Made the new Lighting5 prototype accept different types.
+- Removed RfxCom.lightOn and RfxCom.lightOff because these were LightwaveRf
+  specific.
 
 Version 0.4.4
 -------------
