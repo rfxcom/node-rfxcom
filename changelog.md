@@ -1,3 +1,11 @@
+Version 0.5.0
+-------------
+
+- Split the various prototypes out into separate files.
+- Split the tests appropriately.
+- Rename the LightwaveRf prototype to Lighting5.
+- Made the new Lighting5 prototype accept different types.
+
 Version 0.4.4
 -------------
 

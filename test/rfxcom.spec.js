@@ -4,36 +4,36 @@ var rfxcom = require('../lib'),
     protocols = rfxcom.protocols;
 
 describe("RfxCom", function() {
-    beforeEach(function() {
-        this.addMatchers({
-          toHaveSent: matchers.toHaveSent
-        });
+  beforeEach(function() {
+    this.addMatchers({
+      toHaveSent: matchers.toHaveSent
     });
+  });
 
-    describe("RfxCom class", function() {
-        describe("data event handler", function() {
-            it("should emit a response message when it receives message type 0x02", function(done) {
-                var fakeSerialPort = new FakeSerialPort(),
-                device = new rfxcom.RfxCom("/dev/ttyUSB0", {
-                    port: fakeSerialPort
-                });
-                device.on("response", function(evt) {
-                    done();
-                });
-                device.open();
-                fakeSerialPort.emit("data", [0x04, 0x02, 0x01, 0x00, 0x00]);
+  describe("RfxCom class", function() {
+    describe("data event handler", function() {
+      it("should emit a response message when it receives message type 0x02", function(done) {
+        var fakeSerialPort = new FakeSerialPort(),
+            device = new rfxcom.RfxCom("/dev/ttyUSB0", {
+              port: fakeSerialPort
             });
-            it("should emit a status message when it receives message type 0x01", function(done) {
-                var fakeSerialPort = new FakeSerialPort(),
-                device = new rfxcom.RfxCom("/dev/ttyUSB0", {
-                    port: fakeSerialPort
-                });
-                device.on("status", function(evt) {
-                    done();
-                });
-                device.open();
-                fakeSerialPort.emit("data", [0x0D, 0x01, 0x00, 0x01, 0x02, 0x53, 0x30, 0x00, 0x02, 0x21, 0x01, 0x00, 0x00, 0x00]);
-            });
+        device.on("response", function(evt) {
+          done();
+        });
+        device.open();
+        fakeSerialPort.emit("data", [0x04, 0x02, 0x01, 0x00, 0x00]);
+      });
+      it("should emit a status message when it receives message type 0x01", function(done) {
+         var fakeSerialPort = new FakeSerialPort(),
+             device = new rfxcom.RfxCom("/dev/ttyUSB0", {
+               port: fakeSerialPort
+             });
+         device.on("status", function(evt) {
+           done();
+         });
+         device.open();
+         fakeSerialPort.emit("data", [0x0D, 0x01, 0x00, 0x01, 0x02, 0x53, 0x30, 0x00, 0x02, 0x21, 0x01, 0x00, 0x00, 0x00]);
+      });
             it("should emit a lighting5 message when it receives message type 0x14", function(done) {
                 var fakeSerialPort = new FakeSerialPort(),
                 device = new rfxcom.RfxCom("/dev/ttyUSB0", {
@@ -238,32 +238,6 @@ describe("RfxCom", function() {
                 expect(fakeSerialPort).toHaveSent([0x0D, 0x00, 0x00, 0x00, 0x03, 0x53, 0x00, 0x00, 0x08, 0x27, 0x0, 0x0, 0x0, 0x0]);
             });
         });
-
-        describe(".lightOff", function() {
-            it("should send the correct bytes to the serialport", function(done) {
-                var fakeSerialPort = new FakeSerialPort(),
-                device = new rfxcom.RfxCom("/dev/ttyUSB0", {
-                    port: fakeSerialPort
-                });
-                device.lightOff("0xF09AC6", 1, function() {
-                    done();
-                });
-                expect(fakeSerialPort).toHaveSent([10, 20, 0, 0, 0xF0, 0x9A, 0xC6, 1, 0, 0, 0]);
-            });
-        })
-
-            describe(".lightOn", function() {
-            it("should send the correct bytes to the serialport for lightwaverf devices", function(done) {
-                var fakeSerialPort = new FakeSerialPort(),
-                device = new rfxcom.RfxCom("/dev/ttyUSB0", {
-                    port: fakeSerialPort
-                });
-                device.lightOn("0xF09AC8", 1, function() {
-                    done();
-                });
-                expect(fakeSerialPort).toHaveSent([10, 20, 0, 0, 0xF0, 0x9A, 0xC8, 1, 1, 0, 0]);
-            });
-        })
 
             describe(".elec2Handler", function() {
             it("should emit an elec2 message when called", function(done) {
