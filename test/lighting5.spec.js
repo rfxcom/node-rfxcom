@@ -52,7 +52,7 @@ describe('Lighting5 class', function(){
     });
     it('should handle mood lighting', function(done){
       lighting5.switchOn('0xF09AC8/1', {
-        mood: 0x03
+        mood: 1
       }, function(){
         done();
       });
