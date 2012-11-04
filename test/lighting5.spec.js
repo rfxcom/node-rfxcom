@@ -52,32 +52,32 @@ describe('Lighting5 class', function(){
     });
     it('should handle mood lighting', function(done){
       lighting5.switchOn('0xF09AC8/1', {
-        mood: 1
+        command: lighting5.MOOD1
       }, function(){
         done();
       });
       expect(fakeSerialPort).toHaveSent([10, 20, 0, 0, 0xF0, 0x9A, 0xC8, 1, 3, 0x1f, 0]);
     });
-    it('should throw an exception with an invalid mood value', function(){
+    it('should throw an exception with an invalid level value', function(){
       expect(function(){
         lighting5.switchOn('0xF09AC8/1', {
-          mood: 6
+          level: 32
         });
-      }).toThrow(new Error('Invalid mood value must be in range 1-5.'));
+      }).toThrow(new Error("Invalid 'level' value: must be in range 1-31."));
     });
     it('should send the level if one is specified', function(done){
       lighting5.switchOn('0xF09AC8/1', {
-        level: 80
+        level: 20
       }, function(){
         done();
       });
-      expect(fakeSerialPort).toHaveSent([10, 20, 0, 0, 0xF0, 0x9A, 0xC8, 1, 1, 80, 0]);
+      expect(fakeSerialPort).toHaveSent([10, 20, 0, 0, 0xF0, 0x9A, 0xC8, 1, 1, 20, 0]);
     });
     it('should handle no callback', function(){
       lighting5.switchOn('0xF09AC8/1', {
-        level: 80
+        level: 30
       });
-      expect(fakeSerialPort).toHaveSent([10, 20, 0, 0, 0xF0, 0x9A, 0xC8, 1, 1, 80, 0]);
+      expect(fakeSerialPort).toHaveSent([10, 20, 0, 0, 0xF0, 0x9A, 0xC8, 1, 1, 30, 0]);
     });
   });
   describe('.switchOff', function(){
