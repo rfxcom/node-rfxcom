@@ -1,3 +1,8 @@
+Version 0.5.1
+-------------
+
+- Removed dependency on underscore.js.
+
 Version 0.5.0
 -------------
 
