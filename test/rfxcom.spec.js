@@ -263,7 +263,8 @@ describe("RfxCom", function() {
                     expect(evt.subtype).toBe("LightwaveRF, Siemens");
                     expect(evt.id).toBe("0xF09AC7");
                     expect(evt.unitcode).toBe(1);
-                    expect(evt.command).toBe("Off");
+                    expect(evt.command).toBe(device.lighting5.OFF);
+                    expect(evt.commandName).toBe("Off");
                     done();
                 });
                 device.lighting5Handler([0x00, 0x01, 0xF0, 0x9A, 0xC7, 0x01, 0x00, 0x00, 0x80]);
@@ -279,7 +280,8 @@ describe("RfxCom", function() {
 
             it("should identify the command correctly", function(done) {
                 device.on("lighting5", function(evt) {
-                    expect(evt.command).toBe("On");
+                    expect(evt.command).toBe(device.lighting5.ON);
+                    expect(evt.commandName).toBe("On");
                     done();
                 });
                 device.lighting5Handler([0x01, 0x01, 0xF0, 0x9A, 0xC7, 0x01, 0x01, 0x00, 0x80])
