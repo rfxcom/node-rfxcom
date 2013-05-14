@@ -13,7 +13,7 @@ To install
   npm install rfxcom
 </pre>
 
-This will pull in the two dependencies, serialport 1.0.6+ and underscore.js.
+The only dependency is serialport 1.0.6+.
 
 To Use
 ------
