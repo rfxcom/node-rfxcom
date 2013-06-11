@@ -1,3 +1,8 @@
+Version 0.6.0
+-------------
+
+- Bumped serialport version to be compatible with Node 0.10.x.
+
 Version 0.5.1
 -------------
 
