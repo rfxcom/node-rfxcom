@@ -84,13 +84,6 @@ There's a specialised Lighting2 prototype, which uses an RfxCom object.
 The lighting2 message controls one of three subtypes, you need to specify the
 subtype to the constructor, the options are in rfxcom.lighting2.
 
-Google Group
-============
-
-I've created  a Google Group for discussion of Node.js based home automation
-software.
-
-The group is nodejs-automation @ google's groups.
 
 RfxCom events
 =============
