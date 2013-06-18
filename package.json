@@ -4,6 +4,7 @@
   "author": "Kevin McDermott <kevin@bigkevmcd.com>",
   "dependencies": {
     "serialport": "~1.1.0"
+    "underscore": "~1.1.4"
   },
   "main": "rfxcom.js",
   "devDependencies": {
