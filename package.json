@@ -3,7 +3,7 @@
   "version": "0.6.0",
   "author": "Kevin McDermott <kevin@bigkevmcd.com>",
   "dependencies": {
-    "serialport": "~1.1.0"
+    "serialport": "~1.1.0",
     "underscore": "~1.1.4"
   },
   "main": "rfxcom.js",
