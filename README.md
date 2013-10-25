@@ -59,7 +59,7 @@ There's a specialised Lighting5 prototype, which uses an RfxCom object.
         lightwaverf = new rfxcom.Lighting5(rfxtrx, rfxcom.lighting5.LIGHTWAVERF);
 
     lightwaverf.switchOn("0xF09AC8/1", {mood: 0x03});
-    lightwaverf.switchOn("0xF09AC8/2", {level: 80});
+    lightwaverf.switchOn("0xF09AC8/2", {level: 0x10});
 </pre>
 
 I've tested it with both LightwaveRf lights, and the relay switch.
