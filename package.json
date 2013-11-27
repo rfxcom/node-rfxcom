@@ -1,7 +1,10 @@
 {
   "name": "rfxcom",
-  "version": "0.6.0",
-  "author": "Kevin McDermott <kevin@bigkevmcd.com>",
+  "version": "0.6.2",
+  "author": {
+    "name": "Kevin McDermott",
+    "email": "kevin@bigkevmcd.com"
+  },
   "dependencies": {
     "serialport": "~1.1.0"
   },
