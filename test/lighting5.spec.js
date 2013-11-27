@@ -38,10 +38,10 @@ describe('Lighting5 class', function(){
     });
     it('should send the correct bytes to the serialport', function(done){
       var sentCommandId;
-          lighting5.switchOn('0xF09AC8/1', function(err, response, cmdId){
-            sentCommandId = cmdId;
-            done();
-          });
+      lighting5.switchOn('0xF09AC8/1', function(err, response, cmdId){
+          sentCommandId = cmdId;
+          done();
+      });
       expect(fakeSerialPort).toHaveSent([10, 20, 0, 0, 0xF0, 0x9A, 0xC8, 1, 1, 0x1f, 0]);
       expect(sentCommandId).toEqual(0);
     });
@@ -67,17 +67,17 @@ describe('Lighting5 class', function(){
     });
     it('should send the level if one is specified', function(done){
       lighting5.switchOn('0xF09AC8/1', {
-        level: 80
+        level: 0x10
       }, function(){
         done();
       });
-      expect(fakeSerialPort).toHaveSent([10, 20, 0, 0, 0xF0, 0x9A, 0xC8, 1, 1, 80, 0]);
+      expect(fakeSerialPort).toHaveSent([10, 20, 0, 0, 0xF0, 0x9A, 0xC8, 1, 0x10, 0x10, 0]);
     });
     it('should handle no callback', function(){
       lighting5.switchOn('0xF09AC8/1', {
-        level: 80
+        level: 0x10
       });
-      expect(fakeSerialPort).toHaveSent([10, 20, 0, 0, 0xF0, 0x9A, 0xC8, 1, 1, 80, 0]);
+      expect(fakeSerialPort).toHaveSent([10, 20, 0, 0, 0xF0, 0x9A, 0xC8, 1, 0x10, 0x10, 0]);
     });
   });
   describe('.switchOff', function(){

@@ -1,3 +1,8 @@
+Version 0.6.1
+-------------
+
+- Send a "level" command when we are trying to set the level.
+
 Version 0.6.0
 -------------
 

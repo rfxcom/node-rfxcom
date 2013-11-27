@@ -1,10 +1,12 @@
 {
   "name": "rfxcom",
-  "version": "0.6.0",
-  "author": "Kevin McDermott <kevin@bigkevmcd.com>",
+  "version": "0.6.2",
+  "author": {
+    "name": "Kevin McDermott",
+    "email": "kevin@bigkevmcd.com"
+  },
   "dependencies": {
-    "serialport": "~1.1.0",
-    "underscore": "~1.1.4"
+    "serialport": "~1.1.0"
   },
   "main": "rfxcom.js",
   "devDependencies": {
