@@ -1,3 +1,9 @@
+Version 0.7.0
+-------------
+
+- Changes the format of the lighting2 event, the subtype will correspond to the
+  values in rfxcom.lighting2.
+
 Version 0.6.1
 -------------
 
