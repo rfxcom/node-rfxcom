@@ -71,8 +71,9 @@ I've tested it with both LightwaveRf lights, and the relay switch.
 
 LightwaveRf lights get their identity from the remote used to pair, if you don't
 have a remote, or if you want to specify the address manually, you can pair the
-device and send lightwaverf.switchOn("<insert address>") to unpair, send
-lightwave.switchOff("<insert address>") while the device is awaiting pairing.
+device by putting the device into pairing mode and turning on a device id, lightwaverf.switchOn("0xFFFFFF/1").
+
+The device ids don't have to be unique, but it's advisable.
 
 Lighting2
 ---------
