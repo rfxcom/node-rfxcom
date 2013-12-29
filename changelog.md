@@ -1,3 +1,9 @@
+Version 0.7.1
+-------------
+
+- Add additional protocol defines for use when configuring the device,
+  contributed by @njh.
+
 Version 0.7.0
 -------------
 
