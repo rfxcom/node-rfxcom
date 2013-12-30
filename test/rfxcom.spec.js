@@ -250,6 +250,19 @@ describe("RfxCom", function() {
             });
         });
 
+        describe(".save", function() {
+            it("should send the correct bytes to the serialport", function(done) {
+                var fakeSerialPort = new FakeSerialPort(),
+                    device = new rfxcom.RfxCom("/dev/ttyUSB0", {
+                        port: fakeSerialPort
+                    });
+                device.save(function() {
+                    done();
+                });
+                expect(fakeSerialPort).toHaveSent([0x0D, 0x00, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0, 0x00, 0x00, 0x00]);
+            });
+        });
+
         describe(".elec2Handler", function() {
             it("should emit an elec2 message when called", function(done) {
                 var device = new rfxcom.RfxCom("/dev/ttyUSB0");
