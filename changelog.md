@@ -1,3 +1,12 @@
+Version 0.7.2
+-------------
+
+- Added additional event "received" with the raw data that was received from the
+  device contributed by @iangregory.
+- Added save() method to the rfxcom object, allowing saving the configured
+  protocols to the NVRAM of the rfxtrx433, the SDK cautions against using this
+  too often as there is a limited number of writes (10K).
+
 Version 0.7.1
 -------------
 

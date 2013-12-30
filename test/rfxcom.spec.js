@@ -111,17 +111,17 @@ describe("RfxCom", function() {
                 device.open();
                 fakeSerialPort.emit("data", [0x0B, 0x11, 0x01, 0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0xF, 0xF, 0x0F]);
             });
-	    it("should emit a receive message when it receives a message", function(done) {
-		var fakeSerialPort = new FakeSerialPort(),
-                device = new rfxcom.RfxCom("/dev/ttyUSB0", {
-                    port: fakeSerialPort
-                });
+            it("should emit a receive message when it receives a message", function(done) {
+                var fakeSerialPort = new FakeSerialPort(),
+                    device = new rfxcom.RfxCom("/dev/ttyUSB0", {
+                        port: fakeSerialPort
+                    });
                 device.on("receive", function(evt) {
                     done();
                 });
                 device.open();
                 fakeSerialPort.emit("data", [0x01]);
-            });	
+            });
         });
 
         describe(".initialise should prepare the device for use", function() {
