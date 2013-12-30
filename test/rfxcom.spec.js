@@ -237,6 +237,17 @@ describe("RfxCom", function() {
                 });
                 expect(fakeSerialPort).toHaveSent([0x0D, 0x00, 0x00, 0x00, 0x03, 0x53, 0x00, 0x00, 0x08, 0x27, 0x0, 0x0, 0x0, 0x0]);
             });
+
+            it("should send the correct bytes to the serialport for a single protocol", function(done) {
+                var fakeSerialPort = new FakeSerialPort(),
+                    device = new rfxcom.RfxCom("/dev/ttyUSB0", {
+                        port: fakeSerialPort
+                    });
+                device.enable(protocols.LIGHTWAVERF, function() {
+                    done();
+                });
+                expect(fakeSerialPort).toHaveSent([0x0D, 0x00, 0x00, 0x00, 0x03, 0x53, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00]);
+            });
         });
 
         describe(".elec2Handler", function() {
