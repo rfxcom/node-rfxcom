@@ -110,6 +110,10 @@ is for.
 --------
 Emitted when a "status" message is received from the RFXtrx 433.
 
+"receive"
+---------
+Emitted when any message is received from the RFXtrx 433, sends the raw bytes that were received.
+
 "elec2"
 -------
 Emitted when data is received from OWL electricity monitoring devices
