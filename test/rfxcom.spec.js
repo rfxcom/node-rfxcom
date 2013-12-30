@@ -505,7 +505,7 @@ describe("RfxCom", function() {
                     expect(evt.cmnd).toBe(0x20);
                     expect(evt.receiverType).toBe("433.92MHz transceiver");
                     expect(evt.firmwareVersion).toBe(0x30);
-                    expect(evt.enabledProtocols).toEqual(['RSL', 'BYRONSX']);
+                    expect(evt.enabledProtocols).toEqual(["RSL", "BYRONSX"]);
                     done();
                 })
                 device.statusHandler([0, 1, 0x20, 0x53, 0x30, 0x30, 0, 0, 0, 0, 0, 0, 0])
