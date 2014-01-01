@@ -1,3 +1,8 @@
+Version 0.7.3
+-------------
+
+- Fix bug in emitting "received" events.
+
 Version 0.7.2
 -------------
 
