@@ -132,7 +132,7 @@ describe("RfxCom", function() {
                     }),
                     resetSpy = spyOn(device, "reset").andCallThrough(),
                     delaySpy = spyOn(device, "delay"),
-                    flushSpy = spyOn(device, "flush"),
+                    flushSpy = spyOn(device, "flush").andCallThrough(),
                     getStatusSpy = spyOn(device, "getStatus").andCallThrough(),
                     openSpy = spyOn(device, "open").andCallFake(function() {
                         device.emit("ready");
@@ -144,7 +144,7 @@ describe("RfxCom", function() {
                 device.initialise(handler);
                 expect(resetSpy).toHaveBeenCalled();
                 expect(delaySpy).toHaveBeenCalledWith(500);
-                expect(flushSpy).toHaveBeenCalled();
+                expect(flushSpy).toHaveBeenCalledWith(jasmine.any(Function));
                 expect(getStatusSpy).toHaveBeenCalledWith(handler);
                 expect(openSpy).toHaveBeenCalled();
             });

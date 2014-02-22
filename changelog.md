@@ -1,3 +1,9 @@
+Version 0.7.4
+-------------
+
+- Support for serialport 1.3.0 which requires a callback for flush this fixes
+  bigkevmcd/node-rfxcom#26.
+
 Version 0.7.3
 -------------
 

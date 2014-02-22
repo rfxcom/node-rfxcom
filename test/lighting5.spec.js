@@ -99,4 +99,3 @@ describe('Lighting5 class', function(){
     });
   });
 });
-
