@@ -466,7 +466,6 @@ describe("RfxCom", function() {
                 })
                 device.security1Handler([0x00, 0x00, 0xFF, 0xAA, 0x00, 0x03, 0x89]);
             });
-
             it("should correctly identify the MOTION device state", function(done) {
                 device.on("security1", function(evt) {
                     expect(evt.deviceStatus).toBe(rfxcom.security.MOTION);
@@ -625,7 +624,7 @@ describe("RfxCom", function() {
             });
             it("should extract the humidity status", function(done) {
                 device.on("th3", function(evt) {
-                    expect(evt.humidityStatus).toBe(rfxcom.humidity.NORMAL);
+                    expect(evt.humidityStatus).toBe(rfxcom.humidity.DRY);
                     done();
                 });
                 device.temphumidity19Handler([0x03, 0x04, 0xAF, 0x01, 0x00, 0x90, 0x36, 0x02, 0x59]);
@@ -643,6 +642,75 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.temphumidity19Handler([0x03, 0x04, 0xAF, 0x01, 0x00, 0x90, 0x36, 0x02, 0x89]);
+            });
+        });
+        describe(".tempbaro12Handler", function() {
+            var device;
+            beforeEach(function() {
+                device = new rfxcom.RfxCom("/dev/ttyUSB0");
+            });
+            it("should extract the id of the device", function(done) {
+                device.on("tb2", function(evt) {
+                    expect(evt.id).toBe("0xE900");
+                    done();
+                });
+                device.tempbaro12Handler([0x02, 0x0E, 0xE9, 0x00, 0x00, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
+            });
+            it("should extract the seqnbr of the message", function(done) {
+                device.on("tb2", function(evt) {
+                    expect(evt.seqnbr).toBe(14);
+                    done();
+                });
+                device.tempbaro12Handler([0x02, 0x0E, 0xE9, 0x00, 0x00, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
+            });
+            it("should extract the temperature of the device", function(done) {
+                device.on("tb2", function(evt) {
+                    expect(evt.temperature).toBe(20.1);
+                    done();
+                });
+                device.tempbaro12Handler([0x02, 0x0E, 0xE9, 0x00, 0x00, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
+            });
+            it("should extract the temperature respecting the sign", function(done) {
+                device.on("tb2", function(evt) {
+                    expect(evt.temperature).toBe(-20.1);
+                    done();
+                });
+                device.tempbaro12Handler([0x02, 0x0E, 0xE9, 0x00, 0x80, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
+            });
+            it("should extract the humidity figure", function(done) {
+                device.on("tb1", function(evt) {
+                    expect(evt.humidity).toBe(39);
+                    done();
+                });
+                device.tempbaro12Handler([0x01, 0x0E, 0xE9, 0x00, 0x00, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
+            });
+            it("should extract the humidity status", function(done) {
+                device.on("tb1", function(evt) {
+                    expect(evt.humidityStatus).toBe(rfxcom.humidity.DRY);
+                    done();
+                });
+                device.tempbaro12Handler([0x01, 0x0E, 0xE9, 0x00, 0x00, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
+            });
+            it("should extract the weather forecast", function(done) {
+                device.on("tb1", function(evt) {
+                    expect(evt.forecast).toBe(rfxcom.forecast.RAIN);
+                    done();
+                });
+                device.tempbaro12Handler([0x01, 0x0E, 0xE9, 0x00, 0x00, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
+            });
+            it("should extract the battery strength correctly", function(done) {
+                device.on("tb2", function(evt) {
+                    expect(evt.batteryLevel).toBe(9);
+                    done();
+                });
+                device.tempbaro12Handler([0x02, 0x0E, 0xE9, 0x00, 0x00, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
+            });
+            it("should extract the signal strength correctly", function(done) {
+                device.on("tb2", function(evt) {
+                    expect(evt.rssi).toBe(3);
+                    done();
+                });
+                device.tempbaro12Handler([0x02, 0x0E, 0xE9, 0x00, 0x00, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
             });
         });
 
