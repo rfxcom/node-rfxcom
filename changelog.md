@@ -1,3 +1,9 @@
+Version 0.7.7
+-------------
+
+- Change tbX messages to tbhX messages and fix typo in battery level
+  determination.
+
 Version 0.7.6
 -------------
 
