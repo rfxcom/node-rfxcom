@@ -518,14 +518,14 @@ describe("RfxCom", function() {
                     expect(evt.batteryLevel).toBe(9);
                     done();
                 })
-                device.security1Handler([0x01, 0x00, 0xFF, 0xAA, 0x00, 0x04, 0x94]);
+                device.security1Handler([0x01, 0x00, 0xFF, 0xAA, 0x00, 0x04, 0x89]);
             });
             it("should correctly identify the signal strength", function(done) {
                 device.on("security1", function(evt) {
-                    expect(evt.rssi).toBe(4);
+                    expect(evt.rssi).toBe(8);
                     done();
                 })
-                device.security1Handler([0x01, 0x00, 0xFF, 0xAA, 0x00, 0x04, 0x94]);
+                device.security1Handler([0x01, 0x00, 0xFF, 0xAA, 0x00, 0x04, 0x89]);
             });
         });
 
@@ -579,14 +579,14 @@ describe("RfxCom", function() {
                     expect(evt.batteryLevel).toBe(9);
                     done();
                 });
-                device.temp19Handler([0x02, 0x01, 0xFA, 0xAF, 0x80, 0x14, 0x9f]);
+                device.temp19Handler([0x02, 0x01, 0xFA, 0xAF, 0x80, 0x14, 0x69]);
             });
             it("should extract the signal strength correctly", function(done) {
                 device.on("temp2", function(evt) {
-                    expect(evt.rssi).toBe(0xf);
+                    expect(evt.rssi).toBe(6);
                     done();
                 });
-                device.temp19Handler([0x02, 0x01, 0xFA, 0xAF, 0x80, 0x14, 0x9f]);
+                device.temp19Handler([0x02, 0x01, 0xFA, 0xAF, 0x80, 0x14, 0x69]);
             });
         });
 
@@ -629,6 +629,20 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.temphumidity19Handler([0x03, 0x04, 0xAF, 0x01, 0x00, 0x90, 0x36, 0x02, 0x59]);
+            });
+            it("should extract the battery strength correctly", function(done) {
+                device.on("th3", function(evt) {
+                    expect(evt.batteryLevel).toBe(9);
+                    done();
+                });
+                device.temphumidity19Handler([0x03, 0x04, 0xAF, 0x01, 0x00, 0x90, 0x36, 0x02, 0x89]);
+            });
+            it("should extract the signal strength correctly", function(done) {
+                device.on("th3", function(evt) {
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.temphumidity19Handler([0x03, 0x04, 0xAF, 0x01, 0x00, 0x90, 0x36, 0x02, 0x89]);
             });
         });
 
