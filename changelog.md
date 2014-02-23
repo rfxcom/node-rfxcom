@@ -1,3 +1,8 @@
+Version 0.7.6
+-------------
+
+- Handle the rfxmeter and tempbaro messages.
+
 Version 0.7.5
 -------------
 
