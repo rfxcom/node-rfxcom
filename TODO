@@ -9,3 +9,4 @@ For v1.0
 
 * All current (as of firmware release 433_52 6-10-2012) messages implemented.
 * Split any device specific prototypes out into lib/
+* Finalise messages.

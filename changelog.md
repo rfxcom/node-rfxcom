@@ -1,3 +1,8 @@
+Version 0.7.5
+-------------
+
+- Implement support for rfxmeter and tempbaro sensors from bwired-nl.
+
 Version 0.7.4
 -------------
 
