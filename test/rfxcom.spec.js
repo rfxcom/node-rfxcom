@@ -299,6 +299,7 @@ describe("RfxCom", function() {
                     expect(evt.id).toBe("0xF09AC7");
                     expect(evt.unitcode).toBe(1);
                     expect(evt.command).toBe("Off");
+                    expect(evt.seqnbr).toBe(1);
                     done();
                 });
                 device.lighting5Handler([0x00, 0x01, 0xF0, 0x9A, 0xC7, 0x01, 0x00, 0x00, 0x80]);
@@ -628,6 +629,22 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.temphumidity19Handler([0x03, 0x04, 0xAF, 0x01, 0x00, 0x90, 0x36, 0x02, 0x59]);
+            });
+        });
+
+        describe(".rfxmeterHandler", function() {
+            var device;
+            beforeEach(function() {
+                device = new rfxcom.RfxCom("/dev/ttyUSB0");
+            });
+            it("should emit a rfxmeter message when called", function(done) {
+                device.on("rfxmeter", function(evt) {
+                    expect(evt.subtype).toBe(0x00);
+                    expect(evt.seqnbr).toBe(55);
+                    expect(evt.counter).toBe(9069671);
+                    done();
+                });
+                device.rfxmeterHandler([0x00, 0x37, 0x08, 0xF8, 0x00, 0x8A, 0x64, 0x67, 0x70]);
             });
         });
     });
