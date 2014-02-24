@@ -133,6 +133,17 @@ describe("RfxCom", function() {
                 device.open();
                 fakeSerialPort.emit("data", [0x0D, 0x54, 0x02, 0x0E, 0xE9, 0x00, 0x00, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
             });
+            it("should emit a weight1 message when it receives message type 0x5D", function(done) {
+                var fakeSerialPort = new FakeSerialPort(),
+                    device = new rfxcom.RfxCom("/dev/ttyUSB0", {
+                        port: fakeSerialPort
+                    });
+                device.on("weight1", function(evt) {
+                    done();
+                });
+                device.open();
+                fakeSerialPort.emit("data", [0x08, 0x5D, 0x01, 0xF5, 0x00, 0x07, 0x03, 0x40, 0x40]);
+            });
             it("should emit a receive message when it receives a message", function(done) {
                 var fakeSerialPort = new FakeSerialPort(),
                     device = new rfxcom.RfxCom("/dev/ttyUSB0", {
@@ -749,6 +760,25 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.rfxmeterHandler([0x00, 0x37, 0x08, 0xF8, 0x00, 0x8A, 0x64, 0x67, 0x70]);
+            });
+        });
+
+        describe(".weightHandler", function() {
+            var device;
+            beforeEach(function() {
+                device = new rfxcom.RfxCom("/dev/ttyUSB0");
+            });
+            it("should emit a weight message when called", function(done) {
+                device.on("weight1", function(evt) {
+                    expect(evt.subtype).toBe(0x01);
+                    expect(evt.seqnbr).toBe(0xF5);
+                    expect(evt.weight).toBe(83.2);
+                    expect(evt.id).toBe("0x0007");
+                    expect(evt.batteryLevel).toBe(9);
+                    expect(evt.rssi).toBe(3);
+                    done();
+                });
+                device.weightHandler([0x01, 0xF5, 0x00, 0x07, 0x03, 0x40, 0x39]);
             });
         });
     });
