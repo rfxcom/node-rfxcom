@@ -785,8 +785,8 @@ describe("RfxCom", function() {
                     expect(evt.seqnbr).toBe(0xF5);
                     expect(evt.weight).toBe(83.2);
                     expect(evt.id).toBe("0x0007");
-                    expect(evt.batteryLevel).toBe(9);
-                    expect(evt.rssi).toBe(3);
+                    expect(evt.batteryLevel).toBe(3);
+                    expect(evt.rssi).toBe(9);
                     done();
                 });
                 device.weightHandler([0x01, 0xF5, 0x00, 0x07, 0x03, 0x40, 0x39]);
