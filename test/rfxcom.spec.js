@@ -1,3 +1,4 @@
+/* global require: false, describe: false, module */
 var rfxcom = require('../lib'),
     FakeSerialPort = require('./helper'),
     matchers = require('./matchers'),
@@ -143,6 +144,17 @@ describe("RfxCom", function() {
                 });
                 device.open();
                 fakeSerialPort.emit("data", [0x08, 0x5D, 0x01, 0xF5, 0x00, 0x07, 0x03, 0x40, 0x40]);
+            });
+            it("should emit an rfxsensor message when it receives message type 0x70", function(done) {
+                var fakeSerialPort = new FakeSerialPort(),
+                    device = new rfxcom.RfxCom("/dev/ttyUSB0", {
+                        port: fakeSerialPort
+                    });
+                device.on("rfxsensor", function(evt) {
+                    done();
+                });
+                device.open();
+                fakeSerialPort.emit("data", [0x07, 0x70, 0x00, 0xE9, 0x28, 0x02, 0xE1, 0x70]);
             });
             it("should emit a receive message when it receives a message", function(done) {
                 var fakeSerialPort = new FakeSerialPort(),
@@ -746,7 +758,6 @@ describe("RfxCom", function() {
                 device.tempbaro12Handler([0x02, 0x0E, 0xE9, 0x00, 0x00, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
             });
         });
-
         describe(".rfxmeterHandler", function() {
             var device;
             beforeEach(function() {
@@ -779,6 +790,56 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.weightHandler([0x01, 0xF5, 0x00, 0x07, 0x03, 0x40, 0x39]);
+            });
+        });
+        describe(".rfxsensorHandler", function() {
+            var device;
+            beforeEach(function() {
+                device = new rfxcom.RfxCom("/dev/ttyUSB0");
+            });
+            it("should emit a rfxsensor message when called with sensor subtype 0 data", function(done) {
+                device.on("rfxsensor", function(evt) {
+                    expect(evt.subtype).toBe(rfxcom.rfxsensor.TEMP);
+                    expect(evt.seqnbr).toBe(233);
+                    expect(evt.id).toBe("0x28");
+                    expect(evt.message).toBe(7.37);
+                    expect(evt.rssi).toBe(7);
+                    done();
+                });
+                device.rfxsensorHandler([0x00, 0xE9, 0x28, 0x02, 0xE1, 0x70]);
+            });
+            it("should interpret the signbit in subtype 0 data", function(done) {
+                device.on("rfxsensor", function(evt) {
+                    expect(evt.subtype).toBe(rfxcom.rfxsensor.TEMP);
+                    expect(evt.seqnbr).toBe(2);
+                    expect(evt.id).toBe("0x08");
+                    expect(evt.message).toBe(-1.5);
+                    expect(evt.rssi).toBe(5);
+                    done();
+                });
+                device.rfxsensorHandler([0x00, 0x02, 0x08, 0x80, 0x96, 0x50]);
+            });
+            it("should emit a rfxsensor message when called with sensor subtype 2 data", function(done) {
+                    device.on("rfxsensor", function(evt) {
+                    expect(evt.subtype).toBe(rfxcom.rfxsensor.VOLTAGE);
+                    expect(evt.seqnbr).toBe(234);
+                    expect(evt.id).toBe("0x28");
+                    expect(evt.message).toBe(472);
+                    expect(evt.rssi).toBe(7);
+                    done();
+                });
+                device.rfxsensorHandler([0x02, 0xEA, 0x28, 0x01, 0xD8, 0x70]);
+            });
+            it("should emit a rfxsensor message when called with sensor subtype 1 data", function(done) {
+                    device.on("rfxsensor", function(evt) {
+                    expect(evt.subtype).toBe(rfxcom.rfxsensor.AD);
+                    expect(evt.seqnbr).toBe(235);
+                    expect(evt.id).toBe("0x28");
+                    expect(evt.message).toBe(385);
+                    expect(evt.rssi).toBe(7);
+                    done();
+                });
+                device.rfxsensorHandler([0x01, 0xEB, 0x28, 0x01, 0x81, 0x70]);
             });
         });
     });
