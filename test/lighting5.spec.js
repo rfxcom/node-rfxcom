@@ -1,16 +1,13 @@
+/* global require: false, beforeEach: false, describe: false, it: false, expect: false */
 var rfxcom = require('../lib'),
     matchers = require('./matchers'),
     FakeSerialPort = require('./helper');
 
-  beforeEach(function (){
-    this.addMatchers({
-      toHaveSent: matchers.toHaveSent
-    });
-    fakeSerialPort = new FakeSerialPort();
-    device = new rfxcom.RfxCom('/dev/ttyUSB0', {
-      port: fakeSerialPort
-    });
+beforeEach(function (){
+  this.addMatchers({
+    toHaveSent: matchers.toHaveSent
   });
+});
 
 describe('Lighting5 class', function(){
   var lighting5,

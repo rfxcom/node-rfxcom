@@ -1,3 +1,6 @@
+/* global require: false, beforeEach: false, describe: false, it: false, expect: false,
+   spyOn: false, console: false
+*/
 var rfxcom = require('../lib'),
     matchers = require('./matchers'),
     FakeSerialPort = require('./helper');
