@@ -320,17 +320,29 @@ describe("RfxCom", function() {
         });
 
         describe(".elec2Handler", function() {
-            it("should emit an elec2 message when called", function(done) {
+            it("should emit an elec2 message when called with subtype 1", function(done) {
                 var device = new rfxcom.RfxCom("/dev/ttyUSB0");
                 device.on("elec2", function(evt) {
-                    expect(evt.subtype).toBe("CM119/160");
+                    expect(evt.subtype).toBe(rfxcom.elec23.CM119_160)
                     expect(evt.id).toBe("0xA412");
                     expect(evt.currentWatts).toBe(370);
                     expect(evt.totalWatts).toBe(30225.82);
                     done();
                 });
-                device.elec2Handler([0x01, 0x00, 0xA4, 0x12, 0x02, 0x00, 0x00, 0x01, 0x72, 0x00, 0x00, 0x00, 0x67, 0x28, 0x97, 0x79]);
+                device.elec23Handler([0x01, 0x00, 0xA4, 0x12, 0x02, 0x00, 0x00, 0x01, 0x72, 0x00, 0x00, 0x00, 0x67, 0x28, 0x97, 0x79]);
             });
+            it("should emit an elec3 message when called with subtype 2", function(done) {
+                var device = new rfxcom.RfxCom("/dev/ttyUSB0");
+                device.on("elec3", function(evt) {
+                    expect(evt.subtype).toBe(rfxcom.elec23.CM180)
+                    expect(evt.id).toBe("0xA412");
+                    expect(evt.currentWatts).toBe(370);
+                    expect(evt.totalWatts).toBe(30225.82);
+                    done();
+                });
+                device.elec23Handler([0x02, 0x00, 0xA4, 0x12, 0x02, 0x00, 0x00, 0x01, 0x72, 0x00, 0x00, 0x00, 0x67, 0x28, 0x97, 0x79]);
+            });
+
         });
 
         describe(".lighting5Handler", function() {
