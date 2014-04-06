@@ -110,7 +110,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x0B, 0x11, 0x01, 0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0xF, 0xF, 0x0F]);
+                fakeSerialPort.emit("data", [0x0B, 0x11, 0x01, 0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0xF, 0xF, 0xF0]);
             });
             it("should emit an rfxmeter message when it receives message type 0x71", function(done) {
                 var fakeSerialPort = new FakeSerialPort(),
@@ -447,7 +447,7 @@ describe("RfxCom", function() {
                     expect(evt.rssi).toBe(0x0F);
                     done();
                 });
-                device.lighting2Handler([0x00, 0x01, 0xC3, 0x9A, 0xC7, 0xA1, 0x01, 0x00, 0x0F, 0x0F]);
+                device.lighting2Handler([0x00, 0x01, 0xC3, 0x9A, 0xC7, 0xA1, 0x01, 0x00, 0x0F, 0xF0]);
             });
             it("should calculate the id correctly", function(done) {
                 device.on("lighting2", function(evt) {
@@ -461,7 +461,7 @@ describe("RfxCom", function() {
                     expect(evt.rssi).toBe(7);
                     done();
                 });
-                device.lighting2Handler([0x00, 0x01, 0xC3, 0x9A, 0xC7, 0xA1, 0x01, 0x00, 0x07, 0xF7]);
+                device.lighting2Handler([0x00, 0x01, 0xC3, 0x9A, 0xC7, 0xA1, 0x01, 0x00, 0x07, 0x7F]);
             });
             describe("device type identification", function() {
                 it("should identify HomeEasy EU devices", function(done) {
