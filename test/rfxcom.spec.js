@@ -46,6 +46,17 @@ describe("RfxCom", function() {
                 device.open();
                 fakeSerialPort.emit("data", [0x0A, 0x14, 0x00, 0x01, 0xF0, 0x9A, 0xC7, 0x02, 0x00, 0x00, 0x80]);
             });
+            it("should emit a lighting6 message when it receives message type 0x15", function(done) {
+                var fakeSerialPort = new FakeSerialPort(),
+                    device = new rfxcom.RfxCom("/dev/ttyUSB0", {
+                        port: fakeSerialPort
+                    });
+                device.on("lighting6", function(evt) {
+                    done();
+                });
+                device.open();
+                fakeSerialPort.emit("data", [0x0b, 0x15, 0x00, 0x00, 0xF0, 0x9A, 0x42, 0x00, 0x03, 0x00, 0x00, 0x00]);
+            });
             it("should emit an elec2 message when it receives message type 0x5a", function(done) {
                 var fakeSerialPort = new FakeSerialPort(),
                     device = new rfxcom.RfxCom("/dev/ttyUSB0", {
@@ -223,11 +234,15 @@ describe("RfxCom", function() {
         describe(".stringToBytes", function() {
             it("should convert a sequence of characters to an array of bytes", function() {
                 var device = new rfxcom.RfxCom("/dev/ttyUSB0");
-                expect(device.stringToBytes("203052").toString()).toBe([32, 48, 82].toString());
+                expect(device.stringToBytes("203052").bytes.toString()).toBe([32, 48, 82].toString());
+            });
+            it("should convert a sequence of characters to hex value", function() {
+                var device = new rfxcom.RfxCom("/dev/ttyUSB0");
+                expect(device.stringToBytes("203052").value).toBe(0x203052);
             });
             it("should ignore leading 0x on a string", function() {
                 var device = new rfxcom.RfxCom("/dev/ttyUSB0");
-                expect(device.stringToBytes("0x203052").toString()).toBe([32, 48, 82].toString());
+                expect(device.stringToBytes("0x203052").bytes.toString()).toBe([32, 48, 82].toString());
             });
         });
 
@@ -323,7 +338,7 @@ describe("RfxCom", function() {
             it("should emit an elec2 message when called with subtype 1", function(done) {
                 var device = new rfxcom.RfxCom("/dev/ttyUSB0");
                 device.on("elec2", function(evt) {
-                    expect(evt.subtype).toBe(rfxcom.elec23.CM119_160)
+                    expect(evt.subtype).toBe(rfxcom.elec23.CM119_160);
                     expect(evt.id).toBe("0xA412");
                     expect(evt.currentWatts).toBe(370);
                     expect(evt.totalWatts).toBe(30225.82);
@@ -334,7 +349,7 @@ describe("RfxCom", function() {
             it("should emit an elec3 message when called with subtype 2", function(done) {
                 var device = new rfxcom.RfxCom("/dev/ttyUSB0");
                 device.on("elec3", function(evt) {
-                    expect(evt.subtype).toBe(rfxcom.elec23.CM180)
+                    expect(evt.subtype).toBe(rfxcom.elec23.CM180);
                     expect(evt.id).toBe("0xA412");
                     expect(evt.currentWatts).toBe(370);
                     expect(evt.totalWatts).toBe(30225.82);
@@ -343,40 +358,6 @@ describe("RfxCom", function() {
                 device.elec23Handler([0x02, 0x00, 0xA4, 0x12, 0x02, 0x00, 0x00, 0x01, 0x72, 0x00, 0x00, 0x00, 0x67, 0x28, 0x97, 0x79]);
             });
 
-        });
-
-        describe(".lighting5Handler", function() {
-            var device;
-            beforeEach(function() {
-                device = new rfxcom.RfxCom("/dev/ttyUSB0");
-            });
-            it("should emit a lighting5 message when called", function(done) {
-                device.on("lighting5", function(evt) {
-                    expect(evt.subtype).toBe("LightwaveRF, Siemens");
-                    expect(evt.id).toBe("0xF09AC7");
-                    expect(evt.unitcode).toBe(1);
-                    expect(evt.command).toBe("Off");
-                    expect(evt.seqnbr).toBe(1);
-                    done();
-                });
-                device.lighting5Handler([0x00, 0x01, 0xF0, 0x9A, 0xC7, 0x01, 0x00, 0x00, 0x80]);
-            });
-
-            it("should identify the subtype correctly", function(done) {
-                device.on("lighting5", function(evt) {
-                    expect(evt.subtype).toBe("EMW100 GAO/Everflourish");
-                    done();
-                });
-                device.lighting5Handler([0x01, 0x01, 0xF0, 0x9A, 0xC7, 0x01, 0x00, 0x00, 0x80]);
-            });
-
-            it("should identify the command correctly", function(done) {
-                device.on("lighting5", function(evt) {
-                    expect(evt.command).toBe("On");
-                    done();
-                });
-                device.lighting5Handler([0x01, 0x01, 0xF0, 0x9A, 0xC7, 0x01, 0x01, 0x00, 0x80]);
-            });
         });
 
         describe(".lighting1Handler", function() {
@@ -391,6 +372,7 @@ describe("RfxCom", function() {
                     expect(evt.housecode).toBe("D");
                     expect(evt.unitcode).toBe(2);
                     expect(evt.command).toBe("On");
+                    expect(evt.commandNumber).toBe(1);
                     expect(evt.rssi).toBe(7);
                     expect(evt.id).toBe("0x4402");
                     done();
@@ -423,7 +405,7 @@ describe("RfxCom", function() {
                 });
                 it("should identify Waveman devices", function(done) {
                     device.on("lighting1", function(evt) {
-                        expect(evt.subtype).toBe("Waveman");
+                        expect(evt.subtype).toBe("WAVEMAN");
                         done();
                     });
                     device.lighting1Handler([0x03, 0x01, 0x43, 0x05, 0x01, 0x80]);
@@ -438,11 +420,12 @@ describe("RfxCom", function() {
             });
             it("should emit a lighting2 message when called", function(done) {
                 device.on("lighting2", function(evt) {
-                    expect(evt.subtype).toBe(rfxcom.lighting2.AC);
+                    expect(evt.subtype).toBe(rfxcom.lighting2[0]);
                     expect(evt.seqnbr).toBe(1);
                     expect(evt.id).toBe("0x039AC7A1");
                     expect(evt.unitcode).toBe(1);
                     expect(evt.command).toBe("Off");
+                    expect(evt.commandNumber).toBe(0);
                     expect(evt.level).toBe(0x0F);
                     expect(evt.rssi).toBe(0x0F);
                     done();
@@ -466,18 +449,94 @@ describe("RfxCom", function() {
             describe("device type identification", function() {
                 it("should identify HomeEasy EU devices", function(done) {
                     device.on("lighting2", function(evt) {
-                        expect(evt.subtype).toBe(rfxcom.lighting2.HOMEEASY_EU);
+                        expect(evt.subtype).toBe(rfxcom.lighting2[1]);
                         done();
                     });
                     device.lighting2Handler([0x01, 0x01, 0xC3, 0x9A, 0xC7, 0xA1, 0x01, 0x00, 0x0F, 0x0F]);
                 });
                 it("should identify ANSLUT devices", function(done) {
                     device.on("lighting2", function(evt) {
-                        expect(evt.subtype).toBe(rfxcom.lighting2.ANSLUT);
+                        expect(evt.subtype).toBe(rfxcom.lighting2[2]);
                         done();
                     });
                     device.lighting2Handler([0x02, 0x01, 0xC3, 0x9A, 0xC7, 0xA1, 0x01, 0x00, 0x0F, 0x0F]);
                 });
+            });
+        });
+
+        describe(".lighting5Handler", function() {
+            var device;
+            beforeEach(function() {
+                device = new rfxcom.RfxCom("/dev/ttyUSB0");
+            });
+            it("should emit a lighting5 message when called", function(done) {
+                device.on("lighting5", function(evt) {
+                    expect(evt.subtype).toBe("LIGHTWAVERF");
+                    expect(evt.id).toBe("0xF09AC7");
+                    expect(evt.unitcode).toBe(1);
+                    expect(evt.command).toBe("Off");
+                    expect(evt.commandNumber).toBe(0);
+                    expect(evt.seqnbr).toBe(1);
+                    done();
+                });
+                device.lighting5Handler([0x00, 0x01, 0xF0, 0x9A, 0xC7, 0x01, 0x00, 0x00, 0x80]);
+            });
+            it("should identify the subtype correctly", function(done) {
+                device.on("lighting5", function(evt) {
+                    expect(evt.subtype).toBe("EMW100");
+                    done();
+                });
+                device.lighting5Handler([0x01, 0x01, 0xF0, 0x9A, 0xC7, 0x01, 0x00, 0x00, 0x80]);
+            });
+            it("should identify the command correctly", function(done) {
+                device.on("lighting5", function(evt) {
+                    expect(evt.command).toBe("On");
+                    expect(evt.commandNumber).toBe(1);
+                    done();
+                });
+                device.lighting5Handler([0x01, 0x01, 0xF0, 0x9A, 0xC7, 0x01, 0x01, 0x00, 0x80]);
+            });
+            it("should calculate the rssi correctly", function(done) {
+                device.on("lighting5", function(evt) {
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.lighting5Handler([0x01, 0x01, 0xF0, 0x9A, 0xC7, 0x01, 0x01, 0x00, 0x80]);
+            });
+        });
+
+        describe(".lighting6Handler", function() {
+            var device;
+            beforeEach(function() {
+                device = new rfxcom.RfxCom("/dev/ttyUSB0");
+            });
+            it("should emit a lighting6 message when called", function(done) {
+                device.on("lighting6", function(evt) {
+                    expect(evt.subtype).toBe("BLYSS");
+                    expect(evt.id).toBe("0xF09A");
+                    expect(evt.groupcode).toBe("K");
+                    expect(evt.unitcode).toBe(4);
+                    expect(evt.command).toBe("On");
+                    expect(evt.commandNumber).toBe(0);
+                    expect(evt.seqnbr).toBe(1);
+                    done();
+                });
+                device.lighting6Handler([0x00, 0x01, 0xF0, 0x9A, 0x4B, 0x04, 0x00, 0x00, 0x00, 0x80]);
+            });
+            it("should identify the command correctly", function(done) {
+                device.on("lighting6", function(evt) {
+                    expect(evt.command).toBe("Off");
+                    expect(evt.commandNumber).toBe(1);
+                    done();
+                });
+                device.lighting6Handler([0x00, 0x01, 0xF0, 0x9A, 0x4B, 0x04, 0x01, 0x00, 0x00, 0x80]);
+            });
+            it("should calculate the rssi correctly", function(done) {
+                device.on("lighting6", function(evt) {
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.lighting6Handler([0x00, 0x01, 0xF0, 0x9A, 0x4B, 0x04, 0x00, 0x00, 0x00, 0x80]);
             });
         });
 
@@ -604,6 +663,55 @@ describe("RfxCom", function() {
             });
         });
 
+        describe(".temprain1handler", function() {
+            var device;
+            beforeEach(function () {
+                device = new rfxcom.RfxCom("/dev/ttyUSB0");
+            });
+            it("should extract the id of the device", function(done) {
+                device.on("temprain1", function(evt) {
+                    expect(evt.id).toBe("0xDEAD");
+                    done();
+                });
+                device.temprain1handler([0x01, 0x01, 0xde, 0xad, 0x01, 0x4A, 0x02, 0xee, 0x42]);
+            });
+            it("should extract the rainfall value", function(done) {
+                device.on("temprain1", function(evt) {
+                    expect(evt.rainfall).toBe(75.0);
+                    done();
+                });
+                device.temprain1handler([0x01, 0x01, 0xde, 0xad, 0x01, 0x4A, 0x02, 0xee, 0x42]);
+            });
+            it("should extract the temperature value", function(done) {
+                device.on("temprain1", function(evt) {
+                    expect(evt.temperature).toBe(33.3);
+                    done();
+                });
+                device.temprain1handler([0x01, 0x01, 0xde, 0xad, 0x01, 0x4D, 0x02, 0xee, 0x42]);
+            });
+            it("should extract a negative temperature value", function(done) {
+                device.on("temprain1", function(evt) {
+                    expect(evt.temperature).toBe(-10.0);
+                    done();
+                });
+                device.temprain1handler([0x01, 0x01, 0xde, 0xad, 0x80, 0x64, 0x02, 0xee, 0x42]);
+            });
+            it("should extract the battery strength correctly", function(done) {
+                device.on("temprain1", function(evt) {
+                    expect(evt.batteryLevel).toBe(9);
+                    done();
+                });
+                device.temprain1handler([0x01, 0x01, 0xde, 0xad, 0x80, 0x64, 0x02, 0xee, 0x09]);
+            });
+            it("should extract the signal strength correctly", function(done) {
+                device.on("temprain1", function(evt) {
+                    expect(evt.rssi).toBe(6);
+                    done();
+                });
+                device.temprain1handler([0x01, 0x01, 0xde, 0xad, 0x80, 0x64, 0x02, 0xee, 0x60]);
+            });
+        });
+
         describe(".temp19Handler", function() {
             var device;
             beforeEach(function() {
@@ -643,6 +751,48 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.temp19Handler([0x02, 0x01, 0xFA, 0xAF, 0x80, 0x14, 0x69]);
+            });
+        });
+
+        describe(".humidity1Handler", function() {
+            var device;
+            beforeEach(function() {
+                device = new rfxcom.RfxCom("/dev/ttyUSB0");
+            });
+            it("should extract the id of the device", function(done) {
+                device.on("humidity1", function(evt) {
+                    expect(evt.id).toBe("0x7700");
+                    done();
+                });
+                device.humidity1Handler([0x01, 0x02, 0x77, 0x00, 0x36, 0x01, 0x89]);
+            });
+            it("should extract the humidity value", function(done) {
+                device.on("humidity1", function(evt) {
+                    expect(evt.humidity).toBe(54);
+                    done();
+                });
+                device.humidity1Handler([0x01, 0x02, 0x77, 0x00, 0x36, 0x01, 0x89]);
+            });
+            it("should extract the humidity status", function(done) {
+                device.on("humidity1", function(evt) {
+                    expect(evt.humidityStatus).toBe(1);
+                    done();
+                });
+                device.humidity1Handler([0x01, 0x02, 0x77, 0x00, 0x36, 0x01, 0x89]);
+            });
+            it("should extract the battery status", function(done) {
+                device.on("humidity1", function(evt) {
+                    expect(evt.batteryLevel).toBe(9);
+                    done();
+                });
+                device.humidity1Handler([0x01, 0x02, 0x77, 0x00, 0x36, 0x01, 0x89]);
+            });
+            it("should extract the rssi", function(done) {
+                device.on("humidity1", function(evt) {
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.humidity1Handler([0x01, 0x02, 0x77, 0x00, 0x36, 0x01, 0x89]);
             });
         });
 
@@ -701,7 +851,8 @@ describe("RfxCom", function() {
                 device.temphumidity19Handler([0x03, 0x04, 0xAF, 0x01, 0x00, 0x90, 0x36, 0x02, 0x89]);
             });
         });
-        describe(".tempbaro12Handler", function() {
+
+        describe(".temphumbaro12Handler", function() {
             var device;
             beforeEach(function() {
                 device = new rfxcom.RfxCom("/dev/ttyUSB0");
@@ -711,65 +862,311 @@ describe("RfxCom", function() {
                     expect(evt.id).toBe("0xE900");
                     done();
                 });
-                device.tempbaro12Handler([0x02, 0x0E, 0xE9, 0x00, 0x00, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
+                device.temphumbaro12Handler([0x02, 0x0E, 0xE9, 0x00, 0x00, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
             });
             it("should extract the seqnbr of the message", function(done) {
                 device.on("thb2", function(evt) {
                     expect(evt.seqnbr).toBe(14);
                     done();
                 });
-                device.tempbaro12Handler([0x02, 0x0E, 0xE9, 0x00, 0x00, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
+                device.temphumbaro12Handler([0x02, 0x0E, 0xE9, 0x00, 0x00, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
             });
             it("should extract the temperature of the device", function(done) {
                 device.on("thb2", function(evt) {
                     expect(evt.temperature).toBe(20.1);
                     done();
                 });
-                device.tempbaro12Handler([0x02, 0x0E, 0xE9, 0x00, 0x00, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
+                device.temphumbaro12Handler([0x02, 0x0E, 0xE9, 0x00, 0x00, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
             });
             it("should extract the temperature respecting the sign", function(done) {
                 device.on("thb2", function(evt) {
                     expect(evt.temperature).toBe(-20.1);
                     done();
                 });
-                device.tempbaro12Handler([0x02, 0x0E, 0xE9, 0x00, 0x80, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
+                device.temphumbaro12Handler([0x02, 0x0E, 0xE9, 0x00, 0x80, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
             });
             it("should extract the humidity figure", function(done) {
                 device.on("thb1", function(evt) {
                     expect(evt.humidity).toBe(39);
                     done();
                 });
-                device.tempbaro12Handler([0x01, 0x0E, 0xE9, 0x00, 0x00, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
+                device.temphumbaro12Handler([0x01, 0x0E, 0xE9, 0x00, 0x00, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
             });
             it("should extract the humidity status", function(done) {
                 device.on("thb1", function(evt) {
                     expect(evt.humidityStatus).toBe(rfxcom.humidity.DRY);
                     done();
                 });
-                device.tempbaro12Handler([0x01, 0x0E, 0xE9, 0x00, 0x00, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
+                device.temphumbaro12Handler([0x01, 0x0E, 0xE9, 0x00, 0x00, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
             });
             it("should extract the weather forecast", function(done) {
                 device.on("thb1", function(evt) {
                     expect(evt.forecast).toBe(rfxcom.forecast.RAIN);
                     done();
                 });
-                device.tempbaro12Handler([0x01, 0x0E, 0xE9, 0x00, 0x00, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
+                device.temphumbaro12Handler([0x01, 0x0E, 0xE9, 0x00, 0x00, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
             });
             it("should extract the battery strength correctly", function(done) {
                 device.on("thb2", function(evt) {
                     expect(evt.batteryLevel).toBe(9);
                     done();
                 });
-                device.tempbaro12Handler([0x02, 0x0E, 0xE9, 0x00, 0x00, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
+                device.temphumbaro12Handler([0x02, 0x0E, 0xE9, 0x00, 0x00, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
             });
             it("should extract the signal strength correctly", function(done) {
                 device.on("thb2", function(evt) {
                     expect(evt.rssi).toBe(3);
                     done();
                 });
-                device.tempbaro12Handler([0x02, 0x0E, 0xE9, 0x00, 0x00, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
+                device.temphumbaro12Handler([0x02, 0x0E, 0xE9, 0x00, 0x00, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
             });
         });
+
+        describe(".rain16Handler", function() {
+            var device;
+            beforeEach(function () {
+                device = new rfxcom.RfxCom("/dev/ttyUSB0");
+            });
+            it("should extract the id of the device", function(done) {
+                device.on("rain2", function(evt) {
+                    expect(evt.id).toBe("0xB600");
+                    done();
+                });
+                device.rain16Handler([0x02, 0x17, 0xb6, 0x00, 0x00, 0x00, 0x00, 0x4d, 0x3c, 0x69]);
+            });
+            it("should extract the total rainfall", function(done) {
+                device.on("rain2", function(evt) {
+                    expect(evt.rainfall).toBe(1977.2);
+                    done();
+                });
+                device.rain16Handler([0x02, 0x17, 0xb6, 0x00, 0x00, 0x00, 0x00, 0x4d, 0x3c, 0x69]);
+            });
+            it("should not emit a rainfall increment", function(done) {
+                device.on("rain2", function(evt) {
+                    expect(evt.hasOwnProperty("rainfallIncrement")).toBe(false);
+                    done();
+                });
+                device.rain16Handler([0x02, 0x17, 0xb6, 0x00, 0x00, 0x00, 0x00, 0x4d, 0x3c, 0x69]);
+            });
+            it("should extract the rainfall rate", function(done) {
+                device.on("rain2", function(evt) {
+                    expect(evt.rainfallRate).toBe(0.0);
+                    done();
+                });
+                device.rain16Handler([0x02, 0x17, 0xb6, 0x00, 0x00, 0x00, 0x00, 0x4d, 0x3c, 0x69]);
+            });
+            it("should extract the battery level", function(done) {
+                device.on("rain2", function(evt) {
+                    expect(evt.batteryLevel).toBe(9);
+                    done();
+                });
+                device.rain16Handler([0x02, 0x17, 0xb6, 0x00, 0x00, 0x00, 0x00, 0x4d, 0x3c, 0x69]);
+            });
+            it("should extract the signal level", function(done) {
+                device.on("rain2", function(evt) {
+                    expect(evt.rssi).toBe(6);
+                    done();
+                });
+                device.rain16Handler([0x02, 0x17, 0xb6, 0x00, 0x00, 0x00, 0x00, 0x4d, 0x3c, 0x69]);
+            });
+            it("should extract the rainfall increment", function(done) {
+                device.on("rain6", function(evt) {
+                    expect(evt.rainfallIncrement).toBe(3.458);
+                    done();
+                });
+                device.rain16Handler([0x06, 0x17, 0xb6, 0x00, 0x00, 0x00, 0x00, 0x4d, 0x0d, 0x69]);
+            });
+            it("should not emit a total rainfall", function(done) {
+                device.on("rain6", function(evt) {
+                    expect(evt.hasOwnProperty("rainfall")).toBe(false);
+                    done();
+                });
+                device.rain16Handler([0x06, 0x17, 0xb6, 0x00, 0x00, 0x00, 0x00, 0x4d, 0x0d, 0x69]);
+            });
+            it("should extract the rainfall rate", function(done) {
+                device.on("rain1", function(evt) {
+                    expect(evt.rainfallRate).toBe(289.0);
+                    done();
+                });
+                device.rain16Handler([0x01, 0x17, 0xb6, 0x00, 0x01, 0x21, 0x00, 0x4d, 0x3c, 0x69]);
+            });
+            it("should extract the rainfall rate", function(done) {
+                device.on("rain2", function(evt) {
+                    expect(evt.rainfallRate).toBe(2.89);
+                    done();
+                });
+                device.rain16Handler([0x02, 0x17, 0xb6, 0x00, 0x01, 0x21, 0x00, 0x4d, 0x3c, 0x69]);
+            });
+            it("should extract the battery level correctly", function(done) {
+                device.on("rain2", function(evt) {
+                    expect(evt.batteryLevel).toBe(9);
+                    done();
+                });
+                device.rain16Handler([0x02, 0x17, 0xb6, 0x00, 0x01, 0x21, 0x00, 0x4d, 0x3c, 0x69]);
+            });
+            it("should extract the signal strength correctly", function(done) {
+                device.on("rain2", function(evt) {
+                    expect(evt.rssi).toBe(6);
+                    done();
+                });
+                device.rain16Handler([0x02, 0x17, 0xb6, 0x00, 0x01, 0x21, 0x00, 0x4d, 0x3c, 0x69]);
+            });
+        });
+
+        describe(".wind16Handler", function() {
+            var device;
+            beforeEach(function () {
+                device = new rfxcom.RfxCom("/dev/ttyUSB0");
+            });
+            it("should extract the id of the device", function (done) {
+                device.on("wind1", function (evt) {
+                    expect(evt.id).toBe("0x2F00");
+                    done();
+                });
+                device.wind16Handler([0x01, 0x12, 0x2f, 0x00, 0x00, 0x87, 0x00, 0x00, 0x00, 0x14,
+                    0x00, 0x49, 0x00, 0x00, 0x79]);
+            });
+            it("should extract the wind direction", function (done) {
+                device.on("wind1", function (evt) {
+                    expect(evt.direction).toBe(135);
+                    done();
+                });
+                device.wind16Handler([0x01, 0x12, 0x2f, 0x00, 0x00, 0x87, 0x00, 0x00, 0x00, 0x14,
+                    0x00, 0x49, 0x00, 0x00, 0x79]);
+            });
+            it("should extract the average wind speed", function (done) {
+                device.on("wind1", function (evt) {
+                    expect(evt.averageSpeed).toBe(0.0);
+                    done();
+                });
+                device.wind16Handler([0x01, 0x12, 0x2f, 0x00, 0x00, 0x87, 0x00, 0x00, 0x00, 0x14,
+                    0x00, 0x49, 0x00, 0x00, 0x79]);
+            });
+            it("should extract the gust speed", function (done) {
+                device.on("wind1", function (evt) {
+                    expect(evt.gustSpeed).toBe(2.0);
+                    done();
+                });
+                device.wind16Handler([0x01, 0x12, 0x2f, 0x00, 0x00, 0x87, 0x00, 0x00, 0x00, 0x14,
+                    0x00, 0x49, 0x00, 0x00, 0x79]);
+            });
+            it("should not provide temperature or windchill with a subtype 1 sensor", function (done) {
+                device.on("wind1", function (evt) {
+                    expect(evt.hasOwnProperty("temperature")).toBe(false);
+                    expect(evt.hasOwnProperty("chillfactor")).toBe(false);
+                    done();
+                });
+                device.wind16Handler([0x01, 0x12, 0x2f, 0x00, 0x00, 0x87, 0x00, 0x00, 0x00, 0x14,
+                    0x00, 0x49, 0x00, 0x00, 0x79]);
+            });
+            it("should extract the windchill", function (done) {
+                device.on("wind4", function (evt) {
+                    expect(evt.chillfactor).toBe(1.0);
+                    done();
+                });
+                device.wind16Handler([0x04, 0x12, 0x2f, 0x00, 0x00, 0x87, 0x00, 0x00, 0x00, 0x14,
+                    0x00, 0x49, 0x00, 0x0a, 0x79]);
+            });
+            it("should extract a negative windchill correctly", function (done) {
+                device.on("wind4", function (evt) {
+                    expect(evt.chillfactor).toBe(-31.4);
+                    done();
+                });
+                device.wind16Handler([0x04, 0x12, 0x2f, 0x00, 0x00, 0x87, 0x00, 0x00, 0x00, 0x14,
+                    0x00, 0x49, 0x81, 0x3a, 0x79]);
+            });
+            it("should extract the temperature", function (done) {
+                device.on("wind4", function (evt) {
+                    expect(evt.temperature).toBe(7.3);
+                    done();
+                });
+                device.wind16Handler([0x04, 0x12, 0x2f, 0x00, 0x00, 0x87, 0x00, 0x00, 0x00, 0x14,
+                    0x00, 0x49, 0x00, 0x0a, 0x79]);
+            });
+            it("should extract a negative temperature correctly", function (done) {
+                device.on("wind4", function (evt) {
+                    expect(evt.temperature).toBe(-7.3);
+                    done();
+                });
+                device.wind16Handler([0x04, 0x12, 0x2f, 0x00, 0x00, 0x87, 0x00, 0x00, 0x00, 0x14,
+                    0x80, 0x49, 0x81, 0x3a, 0x79]);
+            });
+            it("should extract the wind speed from a subtype 5 sensor", function (done) {
+                device.on("wind5", function (evt) {
+                    expect(evt.gustSpeed).toBe(2.0);
+                    expect(evt.hasOwnProperty("averageSpeed")).toBe(false);
+                    done();
+                });
+                device.wind16Handler([0x05, 0x12, 0x2f, 0x00, 0x00, 0x87, 0x00, 0x00, 0x00, 0x14,
+                    0x00, 0x49, 0x00, 0x00, 0x79]);
+            });
+            it("should extract the battery level correctly", function(done) {
+                device.on("wind1", function(evt) {
+                    expect(evt.batteryLevel).toBe(9);
+                    done();
+                });
+                device.wind16Handler([0x01, 0x12, 0x2f, 0x00, 0x00, 0x87, 0x00, 0x00, 0x00, 0x14,
+                    0x00, 0x49, 0x00, 0x00, 0x79]);
+            });
+            it("should extract the signal strength correctly", function(done) {
+                device.on("wind1", function(evt) {
+                    expect(evt.rssi).toBe(7);
+                    done();
+                });
+                device.wind16Handler([0x01, 0x12, 0x2f, 0x00, 0x00, 0x87, 0x00, 0x00, 0x00, 0x14,
+                    0x00, 0x49, 0x00, 0x00, 0x79]);
+            });
+        });
+
+        describe(".uv13Handler", function() {
+            var device;
+            beforeEach(function () {
+                device = new rfxcom.RfxCom("/dev/ttyUSB0");
+            });
+            it("should extract the id of the device", function (done) {
+                device.on("uv1", function (evt) {
+                    expect(evt.id).toBe("0xF1D0");
+                    done();
+                });
+                device.uv13Handler([0x01, 0x13, 0xf1, 0xd0, 0x0a, 0x00, 0xc8, 0x79]);
+            });
+            it("should extract the uv index", function (done) {
+                device.on("uv1", function (evt) {
+                    expect(evt.uv).toBe(1.0);
+                    done();
+                });
+                device.uv13Handler([0x01, 0x13, 0xf1, 0xd0, 0x0a, 0x00, 0xc8, 0x79]);
+            });
+            it("should extract the temperature", function (done) {
+                device.on("uv1", function (evt) {
+                    expect(evt.temperature).toBe(20.0);
+                    done();
+                });
+                device.uv13Handler([0x01, 0x13, 0xf1, 0xd0, 0x0a, 0x00, 0xc8, 0x79]);
+            });
+            it("should extract a negative temperature", function (done) {
+                device.on("uv1", function (evt) {
+                    expect(evt.temperature).toBe(-5.0);
+                    done();
+                });
+                device.uv13Handler([0x01, 0x13, 0xf1, 0xd0, 0x0a, 0x80, 0x32, 0x79]);
+            });
+            it("should extract the battery level correctly", function(done) {
+                device.on("uv1", function(evt) {
+                    expect(evt.batteryLevel).toBe(9);
+                    done();
+                });
+                device.uv13Handler([0x01, 0x13, 0xf1, 0xd0, 0x0a, 0x80, 0x32, 0x79]);
+            });
+            it("should extract the signal strength correctly", function(done) {
+                device.on("uv1", function(evt) {
+                    expect(evt.rssi).toBe(7);
+                    done();
+                });
+                device.uv13Handler([0x01, 0x13, 0xf1, 0xd0, 0x0a, 0x80, 0x32, 0x79]);
+            });
+        });
+
         describe(".rfxmeterHandler", function() {
             var device;
             beforeEach(function() {
