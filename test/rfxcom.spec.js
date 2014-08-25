@@ -15,7 +15,8 @@ describe("RfxCom", function() {
         describe("data event handler", function() {
             it("should emit a response message when it receives message type 0x02", function(done) {
                 var fakeSerialPort = new FakeSerialPort(),
-                    device = new rfxcom.RfxCom("/dev/ttyUSB0", {
+                //    device = new rfxcom.RfxCom("/dev/ttyUSB0", {
+                        device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
                 device.on("response", function() {
@@ -26,7 +27,7 @@ describe("RfxCom", function() {
             });
             it("should emit a status message when it receives message type 0x01", function(done) {
                 var fakeSerialPort = new FakeSerialPort(),
-                    device = new rfxcom.RfxCom("/dev/ttyUSB0", {
+                    device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
                 device.on("status", function() {
@@ -37,7 +38,7 @@ describe("RfxCom", function() {
             });
             it("should emit a lighting5 message when it receives message type 0x14", function(done) {
                 var fakeSerialPort = new FakeSerialPort(),
-                    device = new rfxcom.RfxCom("/dev/ttyUSB0", {
+                    device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
                 device.on("lighting5", function(evt) {
@@ -48,7 +49,7 @@ describe("RfxCom", function() {
             });
             it("should emit a lighting6 message when it receives message type 0x15", function(done) {
                 var fakeSerialPort = new FakeSerialPort(),
-                    device = new rfxcom.RfxCom("/dev/ttyUSB0", {
+                    device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
                 device.on("lighting6", function(evt) {
@@ -59,7 +60,7 @@ describe("RfxCom", function() {
             });
             it("should emit an elec2 message when it receives message type 0x5a", function(done) {
                 var fakeSerialPort = new FakeSerialPort(),
-                    device = new rfxcom.RfxCom("/dev/ttyUSB0", {
+                    device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
                 device.on("elec2", function(evt) {
@@ -70,7 +71,7 @@ describe("RfxCom", function() {
             });
             it("should emit a security1 message when it receives message type 0x20", function(done) {
                 var fakeSerialPort = new FakeSerialPort(),
-                    device = new rfxcom.RfxCom("/dev/ttyUSB0", {
+                    device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
                 device.on("security1", function(evt) {
@@ -81,7 +82,7 @@ describe("RfxCom", function() {
             });
             it("should emit a temp1 message when it receives message type 0x50, with device type 1", function(done) {
                 var fakeSerialPort = new FakeSerialPort(),
-                    device = new rfxcom.RfxCom("/dev/ttyUSB0", {
+                    device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
                 device.on("temp1", function(evt) {
@@ -92,7 +93,7 @@ describe("RfxCom", function() {
             });
             it("should emit a temp2 message when it receives message type 0x50, with device type 2", function(done) {
                 var fakeSerialPort = new FakeSerialPort(),
-                    device = new rfxcom.RfxCom("/dev/ttyUSB0", {
+                    device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
                 device.on("temp2", function(evt) {
@@ -103,7 +104,7 @@ describe("RfxCom", function() {
             });
             it("should emit a th1 message when it receives message type 0x52, with device type 1", function(done) {
                 var fakeSerialPort = new FakeSerialPort(),
-                    device = new rfxcom.RfxCom("/dev/ttyUSB0", {
+                    device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
                 device.on("th1", function(evt) {
@@ -114,7 +115,7 @@ describe("RfxCom", function() {
             });
             it("should emit a lighting2 message when it receives message type 0x11", function(done) {
                 var fakeSerialPort = new FakeSerialPort(),
-                    device = new rfxcom.RfxCom("/dev/ttyUSB0", {
+                    device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
                 device.on("lighting2", function(evt) {
@@ -125,7 +126,7 @@ describe("RfxCom", function() {
             });
             it("should emit an rfxmeter message when it receives message type 0x71", function(done) {
                 var fakeSerialPort = new FakeSerialPort(),
-                    device = new rfxcom.RfxCom("/dev/ttyUSB0", {
+                    device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
                 device.on("rfxmeter", function(evt) {
@@ -136,7 +137,7 @@ describe("RfxCom", function() {
             });
             it("should emit a thb2 message when it receives message type 0x54", function(done) {
                 var fakeSerialPort = new FakeSerialPort(),
-                    device = new rfxcom.RfxCom("/dev/ttyUSB0", {
+                    device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
                 device.on("thb2", function(evt) {
@@ -147,7 +148,7 @@ describe("RfxCom", function() {
             });
             it("should emit a weight1 message when it receives message type 0x5D", function(done) {
                 var fakeSerialPort = new FakeSerialPort(),
-                    device = new rfxcom.RfxCom("/dev/ttyUSB0", {
+                    device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
                 device.on("weight1", function(evt) {
@@ -158,7 +159,7 @@ describe("RfxCom", function() {
             });
             it("should emit an rfxsensor message when it receives message type 0x70", function(done) {
                 var fakeSerialPort = new FakeSerialPort(),
-                    device = new rfxcom.RfxCom("/dev/ttyUSB0", {
+                    device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
                 device.on("rfxsensor", function(evt) {
@@ -169,7 +170,7 @@ describe("RfxCom", function() {
             });
             it("should emit a receive message when it receives a message", function(done) {
                 var fakeSerialPort = new FakeSerialPort(),
-                    device = new rfxcom.RfxCom("/dev/ttyUSB0", {
+                    device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
                 device.on("receive", function(evt) {
@@ -180,7 +181,17 @@ describe("RfxCom", function() {
             });
         });
 
-        describe(".initialise should prepare the device for use", function() {
+        describe(".initialise function", function() {
+            it("should raise throw an error if the serial port device file does not exist", function () {
+                var fakeSerialPort = new FakeSerialPort(),
+                    device = new rfxcom.RfxCom("/dev/tty-i-dont-exist", {
+                        port: fakeSerialPort
+                    });
+                expect(function () {
+                    device.open();
+                }).toThrow(new Error("Serial port /dev/tty-i-dont-exist does not exist"));
+
+            });
             it("should prepare the device for use.", function(done) {
                 var fakeSerialPort = new FakeSerialPort(),
                     device = new rfxcom.RfxCom("/dev/ttyUSB0", {
