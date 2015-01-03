@@ -50,6 +50,21 @@ rfxtrx.initialise(function () {
 });
 </pre>
 
+Sending Commands
+===
+Prototype objects are provided for some of the most useful protocols (see the RFXCOM manual for details):
+
+* Lighting1
+* Lighting2
+* Lighting3
+* Lighting5
+* Lighting6
+* Curtain1
+
+Each prototype has a constructor, most of which must be called with the required subtype as a second parameter. The subtypes
+are exported from `index.js` and can be accessed as shown in the examples below. Each prototype has functions to send the appropriate
+commends.
+
 LightwaveRf
 -----------
 There's a specialised Lighting5 prototype, which uses an RfxCom object.
@@ -75,7 +90,7 @@ device by putting the device into pairing mode and turning on a device id, light
 
 The device ids don't have to be unique, but it's advisable.
 
-Lighting2
+HomeEasy (EU)
 ---------
 There's a specialised Lighting2 prototype, which uses an RfxCom object.
 
@@ -91,14 +106,23 @@ The lighting2 message controls one of three subtypes, you need to specify the
 subtype to the constructor, the options are in rfxcom.lighting2.
 
 
-RfxCom events
-=============
+RfxCom system events
+====================
 
-The events are named from the message identifiers sent by the RFXtrx device.
+System events are used to track conection and disconnection of the RFXtrx433, and to provide
+low-level access to received data.
+
+"connecting"
+------------
+Emitted when the RFXcom has successfully opened the serial port.
 
 "ready"
 -------
-Emitted when the RFXcom has successfully opened the serial port.
+Emitted when the RFXtrx433 is ready to accept data (after a delay to prevent it from entering the bootloader).
+
+"disconnect"
+------------
+Emitted if the RFXtrx433 has been disconnected from the USB port
 
 "response"
 ----------
@@ -114,29 +138,100 @@ Emitted when a "status" message is received from the RFXtrx 433.
 ---------
 Emitted when any message is received from the RFXtrx 433, sends the raw bytes that were received.
 
-"elec2"
+RfxCom received data events
+===========================
+
+The events are mostly named from the message identifiers used in the RFXtrx documentation. Not all protocols
+can be received (some are transmit-only), and a protocol must be enabled to be received. This can be done using RFXmngr.exe,
+or the `enable()` function of the rfxcom object.
+
+"elec"
 -------
-Emitted when data is received from OWL electricity monitoring devices
-CM119/CM160.
+Emitted when data is received from electricity power & energy monitoring devices
+such as the Owl CM119/CM160.
+
+"rfxmeter"
+---
+Emitted when data is received from an RFXmeter remote meter pulse counter
+
+"rfxsensor"
+---
+Emitted when data is received from an RFXsensor remote temperature/voltage sensor
+
+"chime"
+---
+Emitted when data is received from Byron wireless doorbells
 
 "security1"
 -----------
 Emitted when an X10 security device reports a status change.
 
+"lighting1"
+-----------
+Emitted when a message is received from X10, ARC, Energenie or similar lighting remote control devices.
+
+"lighting2"
+-----------
+Emitted when a message is received from AC/HomeEasy type remote control devices.
+
 "lighting5"
 -----------
-Emitted when a message is received from LightwaveRF type devices.
+Emitted when a message is received from LightwaveRF/Siemens type remote control devices.
+
+"lighting6"
+-----------
+Emitted when a message is received from Blyss lighting remote control devices.
+
+"humidity"
+---
+Emitted when data is received from a LaCrosse humidity sensor.
 
 "th1-9"
 -------
 Emitted when a message is received from Oregon Scientific
 Temperature/Humidity sensors.
 
-"temp1-9"
+"temp"
 ---------
-Emitted when a message is received from an Oregon Scientific temperature
+Emitted when a message is received from an Oregon Scientific temperature.
 sensor.
 
-"lighting2"
------------
-Emitted when a message is received from AC/HomeEasy type devices.
+"thb1-2"
+---
+Emitted when a message is received from Oregon Scientific
+temperature, humidity and barometric pressure combined sensors.
+
+"rain"
+---
+Emitted when a message is received from an Oregon Scientific, LaCrosse,
+or similar rain gauge.
+
+"temprain"
+----------
+Emitted when a message is received from an Alecto combined temperature & rain gauge.
+
+"wind"
+---
+Emitted when a message is received from an Oregon Scientific or similar wind speed/direction sensor.
+
+"uv"
+---
+Emitted when a message is received from an Oregon Scientific or similar UV index sensor.
+"weight"
+---
+Emitted when a message is received from an Oregon Scientific weighing scale.
+
+Connecting and disconnecting
+===
+The function `rfxtrx.initialise()` will attempt to connect to the RFXtrx433 hardware. If this succeeds, a 'connecting' event
+is emitted, followed about 5.5 seconds later by a 'ready' event. If the device is not present (wrong device path, or device
+not plugged in) the `initialise()` call will instead throw an error with the message 'Serial port <device path> does not exist'.
+If the call returns normally, and the hardware is subsequently unplugged, a 'disconnect' event is emitted (this can happen
+before either the 'connecting' or 'ready' events are emitted).
+
+A subsequent call to `initialise()` will attempt to reconnect. A 'disconnect' handler may make repeated attempts to reconnect,
+but <em>must</em> allow an interval of at least `rfxcom.initialiseWaitTime` milliseconds between each attempt. While
+disconnected, any data sent by a call to a command object is silently discarded, however the various received data event
+handlers are preserved.
+
+<em>Note: disconnection & reconnection has not been tested on Windows</em>
