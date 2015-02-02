@@ -57,12 +57,12 @@ describe("RfxCom", function () {
                 device.open();
                 fakeSerialPort.emit("data", [0x0b, 0x15, 0x00, 0x00, 0xF0, 0x9A, 0x42, 0x00, 0x03, 0x00, 0x00, 0x00]);
             });
-            it("should emit an elec message when it receives message type 0x5a", function (done) {
+            it("should emit an elec2 message when it receives message type 0x5a", function (done) {
                 var fakeSerialPort = new FakeSerialPort(),
                     device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
-                device.on("elec", function (evt) {
+                device.on("elec2", function (evt) {
                     done();
                 });
                 device.open();
@@ -181,15 +181,16 @@ describe("RfxCom", function () {
         });
 
         describe(".initialise function", function () {
-            it("should raise throw an error if the serial port device file does not exist", function () {
+            it("should emit a 'connectfailed' event if the serial port device file does not exist", function (done) {
                 var fakeSerialPort = new FakeSerialPort(),
                     device = new rfxcom.RfxCom("/dev/tty-i-dont-exist", {
                         port: fakeSerialPort
                     });
-                expect(function () {
-                    device.open();
-                }).toThrow(new Error("Serial port /dev/tty-i-dont-exist does not exist"));
-
+                device.on("connectfailed", function (evt) {
+                    done();
+                });
+                device.open();
+                fakeSerialPort.emit("error", "connectfailed\n");
             });
             it("should prepare the device for use.", function (done) {
                 var fakeSerialPort = new FakeSerialPort(),
@@ -211,7 +212,7 @@ describe("RfxCom", function () {
                 expect(resetSpy).toHaveBeenCalled();
                 expect(delaySpy).toHaveBeenCalledWith(500);
                 expect(flushSpy).toHaveBeenCalledWith(jasmine.any(Function));
-                expect(getStatusSpy).toHaveBeenCalledWith(handler);
+                expect(getStatusSpy).toHaveBeenCalledWith(jasmine.any(Function));
                 expect(openSpy).toHaveBeenCalled();
             });
         });
@@ -345,10 +346,10 @@ describe("RfxCom", function () {
         });
 
         describe(".elec1Handler", function () {
-            it("should emit an elec message when called with subtype CM113", function (done) {
+            it("should emit an elec1 message when called with subtype CM113", function (done) {
                 var device = new rfxcom.RfxCom("/dev/ttyUSB0");
-                device.on("elec", function (evt) {
-                    expect(evt.subtype).toBe("CM113");
+                device.on("elec1", function (evt) {
+                    expect(evt.subtype).toBe(1);
                     expect(evt.id).toBe("0x8600");
                     expect(evt.count).toBe(4);
                     expect(evt.current[0]).toBeCloseTo(2.9, 11);
@@ -363,10 +364,10 @@ describe("RfxCom", function () {
         });
 
         describe(".elec23Handler", function () {
-            it("should emit an elec message when called with subtype CM119_160", function (done) {
+            it("should emit an elec2 message when called with subtype CM119_160", function (done) {
                 var device = new rfxcom.RfxCom("/dev/ttyUSB0");
-                device.on("elec", function (evt) {
-                    expect(evt.subtype).toBe("CM119_160");
+                device.on("elec2", function (evt) {
+                    expect(evt.subtype).toBe(1);
                     expect(evt.id).toBe("0x1A73");
                     expect(evt.count).toBe(0);
                     expect(evt.power).toBe(1014);
@@ -377,10 +378,10 @@ describe("RfxCom", function () {
                 });
                 device.elec23Handler([0x01, 0x07, 0x1A, 0x73, 0x00, 0x00, 0x00, 0x03, 0xF6, 0x00, 0x00, 0x00, 0x00, 0x35, 0x0B, 0x89]);
             });
-            it("should emit an elec message when called with subtype CM180", function (done) {
+            it("should emit an elec3 message when called with subtype CM180", function (done) {
                 var device = new rfxcom.RfxCom("/dev/ttyUSB0");
-                device.on("elec", function (evt) {
-                    expect(evt.subtype).toBe("CM180");
+                device.on("elec3", function (evt) {
+                    expect(evt.subtype).toBe(2);
                     expect(evt.id).toBe("0xA412");
                     expect(evt.power).toBe(370);
                     expect(evt.energy).toBeCloseTo(30226.3151306, 6);
@@ -394,10 +395,10 @@ describe("RfxCom", function () {
         });
 
         describe(".elec4Handler", function () {
-            it("should emit an elec message when called with subtype CM180I", function (done) {
+            it("should emit an elec4 message when called with subtype CM180I", function (done) {
                 var device = new rfxcom.RfxCom("/dev/ttyUSB0");
-                device.on("elec", function (evt) {
-                    expect(evt.subtype).toBe("CM180I");
+                device.on("elec4", function (evt) {
+                    expect(evt.subtype).toBe(1);
                     expect(evt.id).toBe("0xB800");
                     expect(evt.seqnbr).toBe(6);
                     expect(evt.count).toBe(0);
@@ -411,10 +412,10 @@ describe("RfxCom", function () {
                 });
                 device.elec4Handler([0x01, 0x06, 0xB8, 0x00, 0x00, 0x00, 0x16, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x6F, 0x14, 0x88, 0x89]);
             });
-            it("should emit an elec message when called with subtype CM180I", function (done) {
+            it("should emit an elec4 message when called with subtype CM180I", function (done) {
                 var device = new rfxcom.RfxCom("/dev/ttyUSB0");
-                device.on("elec", function (evt) {
-                    expect(evt.subtype).toBe("CM180I");
+                device.on("elec4", function (evt) {
+                    expect(evt.subtype).toBe(1);
                     expect(evt.id).toBe("0xB800");
                     expect(evt.seqnbr).toBe(79);
                     expect(evt.count).toBe(2);
@@ -433,8 +434,8 @@ describe("RfxCom", function () {
         describe(".elec5Handler", function () {
             it("should emit an elec message when called with subtype REVOLT", function (done) {
                 var device = new rfxcom.RfxCom("/dev/ttyUSB0");
-                device.on("elec", function (evt) {
-                    expect(evt.subtype).toBe("REVOLT");
+                device.on("elec5", function (evt) {
+                    expect(evt.subtype).toBe(1);
                     expect(evt.id).toBe("0x002D");
                     expect(evt.seqnbr).toBe(3);
                     expect(evt.voltage).toBe(228.0);
@@ -450,8 +451,8 @@ describe("RfxCom", function () {
             });
             it("should emit an elec message when called with subtype REVOLT", function (done) {
                 var device = new rfxcom.RfxCom("/dev/ttyUSB0");
-                device.on("elec", function (evt) {
-                    expect(evt.subtype).toBe("REVOLT");
+                device.on("elec5", function (evt) {
+                    expect(evt.subtype).toBe(1);
                     expect(evt.id).toBe("0x002D");
                     expect(evt.seqnbr).toBe(4);
                     expect(evt.voltage).toBe(228.0);
@@ -467,8 +468,8 @@ describe("RfxCom", function () {
             });
             it("should emit an elec message when called with subtype REVOLT", function (done) {
                 var device = new rfxcom.RfxCom("/dev/ttyUSB0");
-                device.on("elec", function (evt) {
-                    expect(evt.subtype).toBe("REVOLT");
+                device.on("elec5", function (evt) {
+                    expect(evt.subtype).toBe(1);
                     expect(evt.id).toBe("0x002D");
                     expect(evt.seqnbr).toBe(5);
                     expect(evt.voltage).toBe(227.0);
@@ -484,8 +485,8 @@ describe("RfxCom", function () {
             });
             it("should emit an elec message when called with subtype REVOLT", function (done) {
                 var device = new rfxcom.RfxCom("/dev/ttyUSB0");
-                device.on("elec", function (evt) {
-                    expect(evt.subtype).toBe("REVOLT");
+                device.on("elec5", function (evt) {
+                    expect(evt.subtype).toBe(1);
                     expect(evt.id).toBe("0x002D");
                     expect(evt.seqnbr).toBe(6);
                     expect(evt.voltage).toBe(227.0);
@@ -508,7 +509,7 @@ describe("RfxCom", function () {
             });
             it("should emit a lighting1 message when called", function (done) {
                 device.on("lighting1", function (evt) {
-                    expect(evt.subtype).toBe("ARC");
+                    expect(evt.subtype).toBe(1);
                     expect(evt.seqnbr).toBe(1);
                     expect(evt.housecode).toBe("D");
                     expect(evt.unitcode).toBe(2);
@@ -547,14 +548,14 @@ describe("RfxCom", function () {
             describe("device type identification", function () {
                 it("should identify X10 devices", function (done) {
                     device.on("lighting1", function (evt) {
-                        expect(evt.subtype).toBe("X10");
+                        expect(evt.subtype).toBe(0);
                         done();
                     });
                     device.lighting1Handler([0x00, 0x01, 0x43, 0x05, 0x01, 0x80]);
                 });
                 it("should identify Waveman devices", function(done) {
                     device.on("lighting1", function(evt) {
-                        expect(evt.subtype).toBe("WAVEMAN");
+                        expect(evt.subtype).toBe(3);
                         done();
                     });
                     device.lighting1Handler([0x03, 0x01, 0x43, 0x05, 0x01, 0x80]);
@@ -569,7 +570,7 @@ describe("RfxCom", function () {
             });
             it("should emit a lighting2 message when called", function(done) {
                 device.on("lighting2", function(evt) {
-                    expect(evt.subtype).toBe(rfxcom.lighting2[0]);
+                    expect(evt.subtype).toBe(0);
                     expect(evt.seqnbr).toBe(1);
                     expect(evt.id).toBe("0x039AC7A1");
                     expect(evt.unitcode).toBe(1);
@@ -606,14 +607,14 @@ describe("RfxCom", function () {
             describe("device type identification", function() {
                 it("should identify HomeEasy EU devices", function(done) {
                     device.on("lighting2", function(evt) {
-                        expect(evt.subtype).toBe(rfxcom.lighting2[1]);
+                        expect(evt.subtype).toBe(1);
                         done();
                     });
                     device.lighting2Handler([0x01, 0x01, 0xC3, 0x9A, 0xC7, 0xA1, 0x01, 0x00, 0x0F, 0x0F]);
                 });
                 it("should identify ANSLUT devices", function(done) {
                     device.on("lighting2", function(evt) {
-                        expect(evt.subtype).toBe(rfxcom.lighting2[2]);
+                        expect(evt.subtype).toBe(2);
                         done();
                     });
                     device.lighting2Handler([0x02, 0x01, 0xC3, 0x9A, 0xC7, 0xA1, 0x01, 0x00, 0x0F, 0x0F]);
@@ -628,7 +629,7 @@ describe("RfxCom", function () {
             });
             it("should emit a lighting5 message when called", function(done) {
                 device.on("lighting5", function(evt) {
-                    expect(evt.subtype).toBe("LIGHTWAVERF");
+                    expect(evt.subtype).toBe(0);
                     expect(evt.id).toBe("0xF09AC7");
                     expect(evt.unitcode).toBe(1);
                     expect(evt.command).toBe("Off");
@@ -648,7 +649,7 @@ describe("RfxCom", function () {
             });
             it("should identify the subtype correctly", function(done) {
                 device.on("lighting5", function(evt) {
-                    expect(evt.subtype).toBe("EMW100");
+                    expect(evt.subtype).toBe(1);
                     done();
                 });
                 device.lighting5Handler([0x01, 0x01, 0xF0, 0x9A, 0xC7, 0x01, 0x00, 0x00, 0x80]);
@@ -677,7 +678,7 @@ describe("RfxCom", function () {
             });
             it("should emit a lighting6 message when called", function(done) {
                 device.on("lighting6", function(evt) {
-                    expect(evt.subtype).toBe("BLYSS");
+                    expect(evt.subtype).toBe(0);
                     expect(evt.id).toBe("0xF09A");
                     expect(evt.groupcode).toBe("K");
                     expect(evt.unitcode).toBe(4);
@@ -713,6 +714,24 @@ describe("RfxCom", function () {
             });
         });
 
+        describe(".chime1Handler", function () {
+            var device;
+            beforeEach(function() {
+                device = new rfxcom.RfxCom("/dev/ttyUSB0");
+            });
+            it("should emit a chime1 message when called", function(done) {
+                device.on("chime1", function(evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0xF09A");
+                    expect(evt.command).toBe("Big Ben");
+                    expect(evt.commandNumber).toBe(3);
+                    expect(evt.seqnbr).toBe(1);
+                    done();
+                });
+                device.chime1Handler([0x00, 0x01, 0xF0, 0x9A, 0x03, 0x80]);
+            });
+
+        });
         describe(".security1Handler", function() {
             var device;
             beforeEach(function() {
@@ -844,6 +863,7 @@ describe("RfxCom", function () {
             it("should extract the id of the device", function(done) {
                 device.on("temprain1", function(evt) {
                     expect(evt.id).toBe("0xDEAD");
+                    expect(evt.subtype).toBe(1);
                     done();
                 });
                 device.temprain1handler([0x01, 0x01, 0xde, 0xad, 0x01, 0x4A, 0x02, 0xee, 0x42]);
@@ -893,6 +913,7 @@ describe("RfxCom", function () {
             it("should extract the id of the device", function(done) {
                 device.on("temp3", function(evt) {
                     expect(evt.id).toBe("0xFAAF");
+                    expect(evt.subtype).toBe(3);
                     done();
                 });
                 device.temp19Handler([0x03, 0x01, 0xFA, 0xAF, 0x00, 0x14, 0x42]);
@@ -900,6 +921,7 @@ describe("RfxCom", function () {
             it("should extract the temperature of the device", function(done) {
                 device.on("temp1", function(evt) {
                     expect(evt.temperature).toBe(2.0);
+                    expect(evt.subtype).toBe(1);
                     done();
                 });
                 device.temp19Handler([0x01, 0x01, 0xFA, 0xAF, 0x00, 0x14, 0x9f]);
@@ -914,6 +936,7 @@ describe("RfxCom", function () {
             it("should extract the battery strength correctly", function(done) {
                 device.on("temp2", function(evt) {
                     expect(evt.batteryLevel).toBe(9);
+                    expect(evt.subtype).toBe(2);
                     done();
                 });
                 device.temp19Handler([0x02, 0x01, 0xFA, 0xAF, 0x80, 0x14, 0x69]);
@@ -935,6 +958,7 @@ describe("RfxCom", function () {
             it("should extract the id of the device", function(done) {
                 device.on("humidity1", function(evt) {
                     expect(evt.id).toBe("0x7700");
+                    expect(evt.subtype).toBe(1);
                     done();
                 });
                 device.humidity1Handler([0x01, 0x02, 0x77, 0x00, 0x36, 0x01, 0x89]);
@@ -977,6 +1001,7 @@ describe("RfxCom", function () {
             it("should extract the id of the device", function(done) {
                 device.on("th3", function(evt) {
                     expect(evt.id).toBe("0xAF01");
+                    expect(evt.subtype).toBe(3);
                     done();
                 });
                 device.temphumidity19Handler([0x03, 0x04, 0xAF, 0x01, 0x00, 0x90, 0x36, 0x02, 0x59]);
@@ -1033,6 +1058,7 @@ describe("RfxCom", function () {
             it("should extract the id of the device", function(done) {
                 device.on("thb2", function(evt) {
                     expect(evt.id).toBe("0xE900");
+                    expect(evt.subtype).toBe(2);
                     done();
                 });
                 device.temphumbaro12Handler([0x02, 0x0E, 0xE9, 0x00, 0x00, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
@@ -1068,6 +1094,7 @@ describe("RfxCom", function () {
             it("should extract the humidity status", function(done) {
                 device.on("thb1", function(evt) {
                     expect(evt.humidityStatus).toBe(rfxcom.humidity.DRY);
+                    expect(evt.subtype).toBe(1);
                     done();
                 });
                 device.temphumbaro12Handler([0x01, 0x0E, 0xE9, 0x00, 0x00, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
@@ -1103,6 +1130,7 @@ describe("RfxCom", function () {
             it("should extract the id of the device", function(done) {
                 device.on("rain2", function(evt) {
                     expect(evt.id).toBe("0xB600");
+                    expect(evt.subtype).toBe(2);
                     done();
                 });
                 device.rain16Handler([0x02, 0x17, 0xb6, 0x00, 0x00, 0x00, 0x00, 0x4d, 0x3c, 0x69]);
@@ -1145,6 +1173,7 @@ describe("RfxCom", function () {
             it("should extract the rainfall increment", function(done) {
                 device.on("rain6", function(evt) {
                     expect(evt.rainfallIncrement).toBe(3.458);
+                    expect(evt.subtype).toBe(6);
                     done();
                 });
                 device.rain16Handler([0x06, 0x17, 0xb6, 0x00, 0x00, 0x00, 0x00, 0x4d, 0x0d, 0x69]);
@@ -1159,6 +1188,7 @@ describe("RfxCom", function () {
             it("should extract the rainfall rate", function(done) {
                 device.on("rain1", function(evt) {
                     expect(evt.rainfallRate).toBe(289.0);
+                    expect(evt.subtype).toBe(1);
                     done();
                 });
                 device.rain16Handler([0x01, 0x17, 0xb6, 0x00, 0x01, 0x21, 0x00, 0x4d, 0x3c, 0x69]);
@@ -1194,6 +1224,7 @@ describe("RfxCom", function () {
             it("should extract the id of the device", function (done) {
                 device.on("wind1", function (evt) {
                     expect(evt.id).toBe("0x2F00");
+                    expect(evt.subtype).toBe(1);
                     done();
                 });
                 device.wind16Handler([0x01, 0x12, 0x2f, 0x00, 0x00, 0x87, 0x00, 0x00, 0x00, 0x14,
@@ -1235,6 +1266,7 @@ describe("RfxCom", function () {
             it("should extract the windchill", function (done) {
                 device.on("wind4", function (evt) {
                     expect(evt.chillfactor).toBe(1.0);
+                    expect(evt.subtype).toBe(4);
                     done();
                 });
                 device.wind16Handler([0x04, 0x12, 0x2f, 0x00, 0x00, 0x87, 0x00, 0x00, 0x00, 0x14,
@@ -1268,6 +1300,7 @@ describe("RfxCom", function () {
                 device.on("wind5", function (evt) {
                     expect(evt.gustSpeed).toBe(2.0);
                     expect(evt.hasOwnProperty("averageSpeed")).toBe(false);
+                    expect(evt.subtype).toBe(5);
                     done();
                 });
                 device.wind16Handler([0x05, 0x12, 0x2f, 0x00, 0x00, 0x87, 0x00, 0x00, 0x00, 0x14,
@@ -1299,6 +1332,7 @@ describe("RfxCom", function () {
             it("should extract the id of the device", function (done) {
                 device.on("uv1", function (evt) {
                     expect(evt.id).toBe("0xF1D0");
+                    expect(evt.subtype).toBe(1);
                     done();
                 });
                 device.uv13Handler([0x01, 0x13, 0xf1, 0xd0, 0x0a, 0x00, 0xc8, 0x79]);
