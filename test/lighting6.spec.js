@@ -42,6 +42,19 @@ describe('Lighting6 class', function () {
             expect(fakeSerialPort).toHaveSent([0x0b, 0x15, 0x00, 0x00, 0xF0, 0x9A, 0x42, 0x01, 0x00, 0x00, 0x00, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
+        it('should log the bytes being sent in debug mode', function (done) {
+            var debugDevice = new rfxcom.RfxCom('/dev/ttyUSB0', {
+                    port:  fakeSerialPort,
+                    debug: true
+                }),
+                debug = new rfxcom.Lighting6(debugDevice, rfxcom.lighting6.BLYSS);
+
+            var consoleSpy = spyOn(console, 'log');
+            debug.switchOn('0xF09A/B/1', function () {
+                done();
+            });
+            expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : %s', ['0B', '15', '00', '00', 'F0', '9A', '42', '01', '00', '00', '00', '00']);
+        });
         it('should accept an array address', function (done) {
             var sentCommandId;
             lighting6.switchOff(['0xF09A', 'B', '1'], function (err, response, cmdId) {

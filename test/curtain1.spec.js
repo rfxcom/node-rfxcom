@@ -36,11 +36,11 @@ describe('Curtain1 class', function () {
             port: fakeSerialPort,
             debug: true
           }),
-          curtain = new rfxcom.Curtain1(debugDevice);
+          curtain = new rfxcom.Curtain1(debugDevice),
           consoleSpy = spyOn(console, 'log');
 
       curtain.open('0x41/01', done);
-      expect(consoleSpy).toHaveBeenCalledWith('Sending %j', ['07', '18', '00', '00', '41', '01', '00', '00']);
+      expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : %s', ['07', '18', '00', '00', '41', '01', '00', '00']);
     });
     // TODO: Add checking for valid housecodes / unitcodes pg. 28.
     it('should throw an exception with an invalid deviceId', function () {

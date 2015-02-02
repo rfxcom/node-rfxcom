@@ -62,6 +62,21 @@ describe('Lighting5 class', function () {
             });
             expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x00, 0x00, 0xF0, 0x9A, 0xC8, 0x01, 0x10, 0x10, 0x00]);
         });
+        it('should log the bytes being sent in debug mode', function (done) {
+            var debugDevice = new rfxcom.RfxCom('/dev/ttyUSB0', {
+                    port:  fakeSerialPort,
+                    debug: true
+                }),
+                debug = new rfxcom.Lighting5(debugDevice, rfxcom.lighting5.LIGHTWAVERF);
+
+            var consoleSpy = spyOn(console, 'log');
+            debug.switchOn('0xF09AC8/1', {
+                level: 0x10
+            }, function () {
+                done();
+            });
+            expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : %s', ['0A', '14', '00', '00', 'F0', '9A', 'C8', '01', '10', '10', '00']);
+        });
     });
     describe('.switchOff', function () {
         beforeEach(function () {

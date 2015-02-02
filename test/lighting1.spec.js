@@ -47,7 +47,7 @@ describe('Lighting1 class', function () {
 
             var consoleSpy = spyOn(console, 'log');
             debug.chime('C14', done);
-            expect(consoleSpy).toHaveBeenCalledWith('Sending %j', ['07', '10', '01', '00', '43', '0E', '07', '00']);
+            expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : %s', ['07', '10', '01', '00', '43', '0E', '07', '00']);
         });
     });
     describe('.unsupportedCommands', function () {
