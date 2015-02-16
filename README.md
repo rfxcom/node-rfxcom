@@ -13,7 +13,7 @@ To install
   npm install rfxcom
 </pre>
 
-The only dependency is serialport 1.0.6+.
+The only dependency is serialport 1.4.10+.
 
 To Use
 ------
@@ -63,11 +63,11 @@ Prototype objects are provided for some of the most useful protocols (see the RF
 
 Each prototype has a constructor, most of which must be called with the required subtype as a second parameter. The subtypes
 are exported from `index.js` and can be accessed as shown in the examples below. Each prototype has functions to send the appropriate
-commends.
+commands.
 
 LightwaveRf
 -----------
-There's a specialised Lighting5 prototype, which uses an RfxCom object.
+LightwaveRf devices use the specialised Lighting5 prototype, which itself uses an RfxCom object.
 
 <pre>
 var rfxcom = require('rfxcom');
@@ -86,13 +86,14 @@ I've tested it with both LightwaveRf lights, and the relay switch.
 
 LightwaveRf lights get their identity from the remote used to pair, if you don't
 have a remote, or if you want to specify the address manually, you can pair the
-device by putting the device into pairing mode and turning on a device id, lightwaverf.switchOn("0xFFFFFF/1").
+device by putting the device into pairing mode and turning on a chosen device id, for example lightwaverf.switchOn("0xFFFFFF/1").
 
 The device ids don't have to be unique, but it's advisable.
 
 HomeEasy (EU)
----------
-There's a specialised Lighting2 prototype, which uses an RfxCom object.
+-------------
+HomeEasy devices use the specialised Lighting2 prototype, which itself uses an RfxCom object. There are two types of
+HomeEasy: the ones marketed in UK are of type 'AC', while those in the Netherlands and elsewhere are of type 'HOMEEASY_EU'.
 
 <pre>
     var rfxtrx = new rfxcom.RfxCom("/dev/ttyUSB0", {debug: true}),
@@ -115,6 +116,10 @@ low-level access to received data.
 "connecting"
 ------------
 Emitted when the RFXcom has successfully opened the serial port.
+
+"connectfailed"
+------------
+Emitted if the RFXcom was unable to open the serial port.
 
 "ready"
 -------
@@ -145,7 +150,7 @@ The events are mostly named from the message identifiers used in the RFXtrx docu
 can be received (some are transmit-only), and a protocol must be enabled to be received. This can be done using RFXmngr.exe,
 or the `enable()` function of the rfxcom object.
 
-"elec"
+"elec1-5"
 -------
 Emitted when data is received from electricity power & energy monitoring devices
 such as the Owl CM119/CM160.
@@ -191,7 +196,7 @@ Emitted when data is received from a LaCrosse humidity sensor.
 Emitted when a message is received from Oregon Scientific
 Temperature/Humidity sensors.
 
-"temp"
+"temp1-10"
 ---------
 Emitted when a message is received from an Oregon Scientific temperature.
 sensor.
@@ -225,13 +230,11 @@ Connecting and disconnecting
 ===
 The function `rfxtrx.initialise()` will attempt to connect to the RFXtrx433 hardware. If this succeeds, a 'connecting' event
 is emitted, followed about 5.5 seconds later by a 'ready' event. If the device is not present (wrong device path, or device
-not plugged in) the `initialise()` call will instead throw an error with the message 'Serial port <device path> does not exist'.
-If the call returns normally, and the hardware is subsequently unplugged, a 'disconnect' event is emitted (this can happen
-before either the 'connecting' or 'ready' events are emitted).
+not plugged in) a 'connectfailed' event is emitted. If the the hardware is subsequently unplugged, a 'disconnect' event
+is emitted (this can happen before either the 'connecting' or 'ready' events are emitted).
 
-A subsequent call to `initialise()` will attempt to reconnect. A 'disconnect' handler may make repeated attempts to reconnect,
+If either the connection fails or the RFXtrx433 is unplugged, a subsequent call to `initialise()` will attempt to reconnect.
+The 'disconnect'/'connectfailed' handler may make repeated attempts to reconnect,
 but <em>must</em> allow an interval of at least `rfxcom.initialiseWaitTime` milliseconds between each attempt. While
 disconnected, any data sent by a call to a command object is silently discarded, however the various received data event
 handlers are preserved.
-
-<em>Note: disconnection & reconnection has not been tested on Windows</em>
