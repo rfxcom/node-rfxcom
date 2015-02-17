@@ -167,6 +167,17 @@ describe("RfxCom", function() {
                 device.open();
                 fakeSerialPort.emit("data", [0x01]);
             });
+            it("should emit an end message when serial port is closed (ends)", function(done) {
+                var fakeSerialPort = new FakeSerialPort(),
+                    device = new rfxcom.RfxCom("/dev/ttyUSB0", {
+                        port: fakeSerialPort
+                    });
+                device.on("end", function(evt) {
+                    done();
+                });
+                device.open();
+                fakeSerialPort.emit("end");
+            });
         });
 
         describe(".initialise should prepare the device for use", function() {
