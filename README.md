@@ -110,6 +110,10 @@ is for.
 --------
 Emitted when a "status" message is received from the RFXtrx 433.
 
+"end"
+--------
+Emitted when the serial port "ends".
+
 "receive"
 ---------
 Emitted when any message is received from the RFXtrx 433, sends the raw bytes that were received.
