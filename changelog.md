@@ -1,3 +1,10 @@
+Version 0.7.8
+-------------
+
+- Emit end event when serial port 'ends' (device is removed from USB port)
+  contributed by @freakent.
+- Bump to serialport ~1.4.
+
 Version 0.7.7
 -------------
 
