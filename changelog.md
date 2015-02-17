@@ -1,4 +1,4 @@
-Version 0.7.8
+Version 0.7.9
 -------------
 
 - Emit end event when serial port 'ends' (device is removed from USB port)
