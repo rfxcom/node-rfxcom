@@ -35,6 +35,17 @@ describe("RfxCom", function () {
                 device.open();
                 fakeSerialPort.emit("data", [0x0D, 0x01, 0x00, 0x01, 0x02, 0x53, 0x30, 0x00, 0x02, 0x21, 0x01, 0x00, 0x00, 0x00]);
             });
+            it("should emit a lighting4 message when it receives message type 0x13", function (done) {
+                var fakeSerialPort = new FakeSerialPort(),
+                    device = new rfxcom.RfxCom("/", {
+                        port: fakeSerialPort
+                    });
+                device.on("lighting4", function (evt) {
+                    done();
+                });
+                device.open();
+                fakeSerialPort.emit("data", [0x09, 0x13, 0x00, 0x00, 0x00, 0x01, 0x02, 0x03, 0x12, 0x00]);
+            });
             it("should emit a lighting5 message when it receives message type 0x14", function (done) {
                 var fakeSerialPort = new FakeSerialPort(),
                     device = new rfxcom.RfxCom("/", {
@@ -619,6 +630,26 @@ describe("RfxCom", function () {
                     });
                     device.lighting2Handler([0x02, 0x01, 0xC3, 0x9A, 0xC7, 0xA1, 0x01, 0x00, 0x0F, 0x0F]);
                 });
+            });
+        });
+
+        describe(".lighting4Handler", function() {
+            var device;
+            beforeEach(function () {
+                device = new rfxcom.RfxCom("/dev/ttyUSB0");
+            });
+            it("should emit a lighting4 message when called", function (done) {
+                device.on("lighting4", function (evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.seqnbr).toBe(0);
+                    expect(evt.data).toBe("0x010203");
+                    expect(evt.pulseWidth).toBe(350);
+                    expect(evt.command).toBe("Data");
+                    expect(evt.commandNumber).toBe(0);
+                    expect(evt.rssi).toBe(0x05);
+                    done();
+                });
+                device.lighting4Handler([0x00, 0x00, 0x01, 0x02, 0x03, 0x05, 0x78, 0x50]);
             });
         });
 

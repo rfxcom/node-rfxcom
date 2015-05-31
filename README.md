@@ -57,6 +57,7 @@ Prototype objects are provided for some of the most useful protocols (see the RF
 * Lighting1
 * Lighting2
 * Lighting3
+* Lighting4
 * Lighting5
 * Lighting6
 * Curtain1
@@ -178,6 +179,10 @@ Emitted when a message is received from X10, ARC, Energenie or similar lighting 
 "lighting2"
 -----------
 Emitted when a message is received from AC/HomeEasy type remote control devices.
+
+"lighting4"
+-----------
+Emitted when a message is received from devices using the PT2262 family chipset.
 
 "lighting5"
 -----------
