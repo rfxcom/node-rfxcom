@@ -1,9 +1,9 @@
 {
   "name": "rfxcom",
-  "version": "0.7.9",
+  "version": "0.7.10-beta",
   "author": "Kevin McDermott <kevin@bigkevmcd.com>",
   "dependencies": {
-    "serialport": "~1.4.0"
+    "serialport": "*"
   },
   "main": "rfxcom.js",
   "devDependencies": {

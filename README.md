@@ -90,6 +90,29 @@ There's a specialised Lighting2 prototype, which uses an RfxCom object.
 The lighting2 message controls one of three subtypes, you need to specify the
 subtype to the constructor, the options are in rfxcom.lighting2.
 
+Rfy (Somfy)
+-----------
+There's a specialised Rfy prototype, which uses an RfxCom object.
+
+<pre>
+    var rfxtrx = new rfxcom.RfxCom("/dev/ttyUSB0", {debug: true}),
+        rfy = new rfxcom.Rfy(rfxtrx, rfxcom.rfy.RFY);
+
+    rfy.up("01010101");
+    rfy.down("01010101");
+    rfy.do("01010101", 'down', function(err, res, sequenceNum) {
+        if (!err) console.log('complete');
+    });    
+</pre>
+
+The rfy message controls one of two subtypes, you need to specify the
+subtype to the constructor, the options are rfxcom.rfy.RFY or 
+rfxcom.rfy.RFYEXT.
+
+Predefined commands include up(), down(), stop(), list() and program().
+All other commands can be accessed via do() option, see defines.js 
+RfyCommands for complete list of available commands.
+
 
 RfxCom events
 =============
@@ -144,3 +167,8 @@ sensor.
 "lighting2"
 -----------
 Emitted when a message is received from AC/HomeEasy type devices.
+
+"list"
+------
+Emitted when a response to the RFY command 'listremotes' is received.
+(Some bytes of the response packet have unknown meaning.)
