@@ -42,6 +42,15 @@ describe('Lighting5 class', function(){
       expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x00, 0x00, 0xF0, 0x9A, 0xC8, 0x01, 0x01, 0x1F, 0x00]);
       expect(sentCommandId).toEqual(0);
     });
+    it('should accept an array deviceId', function (done) {
+      var sentCommandId;
+      lighting5.switchOn(['0xF09AC8', '1'], function (err, response, cmdId) {
+        sentCommandId = cmdId;
+        done();
+      });
+      expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x00, 0x00, 0xF0, 0x9A, 0xC8, 0x01, 0x01, 0x1F, 0x00]);
+      expect(sentCommandId).toEqual(0);
+    });
     it('should throw an exception with an invalid deviceId', function(){
       expect(function(){
         lighting5.switchOn('0xF09AC8');

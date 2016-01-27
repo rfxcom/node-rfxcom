@@ -38,6 +38,15 @@ describe('Lighting1 class', function () {
       expect(fakeSerialPort).toHaveSent([0x07, 0x10, 0x01, 0x00, 0x43, 0x0E, 0x07, 0x00]);
       expect(sentCommandId).toEqual(0);
     });
+    it('should accept an array deviceId', function (done) {
+      var sentCommandId;
+      lighting1.chime(['C', '14'], function (err, response, cmdId) {
+        sentCommandId = cmdId;
+        done();
+      });
+      expect(fakeSerialPort).toHaveSent([0x07, 0x10, 0x01, 0x00, 0x43, 0x0E, 0x07, 0x00]);
+      expect(sentCommandId).toEqual(0);
+    });
    it('should log the bytes being sent in debug mode', function (done) {
      var debugDevice = new rfxcom.RfxCom('/dev/ttyUSB0', {
        port: fakeSerialPort,
@@ -47,7 +56,7 @@ describe('Lighting1 class', function () {
 
      var consoleSpy = spyOn(console, 'log');
      debug.chime('C14', done);
-     expect(consoleSpy).toHaveBeenCalledWith('Sending %j', ['07', '10', '01', '00', '43', '0E', '07', '00']);
+     expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : %s', ['07', '10', '01', '00', '43', '0E', '07', '00']);
    });
   });
 });
