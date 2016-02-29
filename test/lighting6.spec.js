@@ -98,8 +98,8 @@ describe('Lighting6 class', function () {
         });
         it('should throw an exception with an invalid unit code', function () {
             expect(function () {
-                lighting6.switchOn(['0xFFFF', 'P', '6']);
-            }).toThrow(new Error("Invalid unit number 6"));
+                lighting6.switchOn(['0xFFFF', 'P', '9']);
+            }).toThrow(new Error("Invalid unit number 9"));
         });
         it('should throw an exception with a badly formatted deviceId', function () {
             expect(function () {
