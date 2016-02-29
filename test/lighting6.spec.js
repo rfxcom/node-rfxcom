@@ -84,11 +84,11 @@ describe('Lighting6 class', function () {
         });
         it('should accept the highest ID, group code & unit code numbers', function (done) {
             var sentCommandId;
-            lighting6.switchOn(['0xFFFF', 'P', '5'], function (err, response, cmdId) {
+            lighting6.switchOn(['0xFFFF', 'P', '8'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
             });
-            expect(fakeSerialPort).toHaveSent([0x0b, 0x15, 0x00, 0x00, 0xff, 0xff, 0x50, 0x05, 0x00, 0x00, 0x00, 0x00]);
+            expect(fakeSerialPort).toHaveSent([0x0b, 0x15, 0x00, 0x00, 0xff, 0xff, 0x50, 0x08, 0x00, 0x00, 0x00, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
         it('should throw an exception with an invalid group code', function () {
