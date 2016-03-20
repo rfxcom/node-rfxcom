@@ -16,9 +16,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/bigkevmcd/node-rfxcom.git"
+    "url": "http://github.com/rfxcom/node-rfxcom.git"
   },
   "bugs": {
-    "url": "https://github.com/bigkevmcd/node-rfxcom/issues"
+    "url": "https://github.com/rfxcom/node-rfxcom/issues"
   }
 }
