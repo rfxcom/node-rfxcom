@@ -3,7 +3,7 @@
   "version": "0.8.0",
   "author": "Kevin McDermott <kevin@bigkevmcd.com>",
   "dependencies": {
-    "serialport": "~2.0.0"
+    "serialport": "2.x"
   },
   "main": "rfxcom.js",
   "devDependencies": {
@@ -18,6 +18,7 @@
     "type": "git",
     "url": "http://github.com/bigkevmcd/node-rfxcom.git"
   },
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/bigkevmcd/node-rfxcom/issues"
   }

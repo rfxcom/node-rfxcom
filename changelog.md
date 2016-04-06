@@ -1,3 +1,10 @@
+Version 0.8.0
+-------------
+
+- Handle dynamic removal/replacement of the RFXtrx. Added new events 'connecting', 'disconnected',
+  and 'connectfailed'. Added new properties .connected, .initialising and .initialiseWaitTime
+- Bump to serialport 2.x
+
 Version 0.7.9
 -------------
 
