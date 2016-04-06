@@ -165,6 +165,10 @@ Temperature/Humidity sensors.
 Emitted when a message is received from an Oregon Scientific temperature
 sensor.
 
+"rain"
+------
+Emitted when a message is received from an Oregon Scientific rain sensor.
+
 "lighting2"
 -----------
 Emitted when a message is received from AC/HomeEasy type devices.
