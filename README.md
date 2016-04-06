@@ -13,7 +13,7 @@ To install
   npm install rfxcom
 </pre>
 
-The only dependency is serialport 1.0.6+.
+The only dependency is serialport 2.0.0+.
 
 To Use
 ------
@@ -91,14 +91,27 @@ The lighting2 message controls one of three subtypes, you need to specify the
 subtype to the constructor, the options are in rfxcom.lighting2.
 
 
-RfxCom events
-=============
+RfxCom system events
+====================
 
-The events are named from the message identifiers sent by the RFXtrx device.
+System events are used to track conection and disconnection of the RFXtrx433, and to provide
+low-level access to received data.
+
+"connecting"
+------------
+Emitted when the RFXcom has successfully opened the serial port.
+
+"connectfailed"
+------------
+Emitted if the RFXcom was unable to open the serial port.
 
 "ready"
 -------
-Emitted when the RFXcom has successfully opened the serial port.
+Emitted when the RFXtrx433 is ready to accept data (after a delay to prevent it from entering the bootloader).
+
+"disconnect"
+------------
+Emitted if the RFXtrx433 has been disconnected from the USB port
 
 "response"
 ----------
@@ -114,9 +127,20 @@ Emitted when a "status" message is received from the RFXtrx 433.
 --------
 Emitted when the serial port "ends".
 
+"drain"
+--------
+Emitted when the serial port emits a "drain" event.
+
 "receive"
 ---------
-Emitted when any message is received from the RFXtrx 433, sends the raw bytes that were received.
+Emitted when any message is received from the RFXtrx 433, and contains the raw bytes that were received.
+
+RfxCom received data events
+===========================
+
+The events are mostly named from the message identifiers used in the RFXtrx documentation. Not all protocols
+can be received (some are transmit-only), and a protocol must be enabled to be received. This can be done using RFXmngr.exe,
+or the `enable()` function of the rfxcom object.
 
 "elec2"
 -------
@@ -144,3 +168,23 @@ sensor.
 "lighting2"
 -----------
 Emitted when a message is received from AC/HomeEasy type devices.
+
+Connecting and disconnecting
+===
+The function `rfxtrx.initialise()` will attempt to connect to the RFXtrx433 hardware. If this succeeds, a 'connecting' event
+is emitted, followed about 5.5 seconds later by a 'ready' event. If the device is not present (wrong device path, or device
+not plugged in) a 'connectfailed' event is emitted. If the the hardware is subsequently unplugged, a 'disconnect' event
+is emitted (this can happen before either the 'connecting' or 'ready' events are emitted).
+
+If either the connection fails or the RFXtrx433 is unplugged, a subsequent call to `initialise()` will attempt to reconnect.
+The 'disconnect'/'connectfailed' handler may make repeated attempts to reconnect,
+but <em>must</em> allow an interval of at least `rfxcom.initialiseWaitTime` milliseconds between each attempt. While
+disconnected, any data sent by a call to a command object is silently discarded, however the various received data event
+handlers are preserved.
+
+<em>Note:</em>
+
+Some variants of Linux will create a differently-named device file if the RFtxr433 is disconnected and then reconnected,
+even if it is reconnected to the same USB port. For example, `/dev/ttyUSB0` may become `/dev/ttyUSB1`. To avoid any
+problems this may cause, use the equivalent alias device file in `/dev/serial/by-id/` when creating the RfxCom object.
+This should look something like `/dev/serial/by-id/usb_RFXCOM_RFXtrx433_12345678-if00-port0`.
