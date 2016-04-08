@@ -1,3 +1,9 @@
+Version 0.9.0
+-------------
+
+- Added support for Lighting3, Lighting4, and Lighting6 device packet types
+- Added error-checking for supported commands, address codes, and parameter values
+
 Version 0.8.0
 -------------
 
