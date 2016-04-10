@@ -50,9 +50,26 @@ rfxtrx.initialise(function () {
 });
 </pre>
 
+Sending Commands
+===
+Prototype objects are provided for some of the most useful protocols (see the RFXCOM manual for details):
+
+* Lighting1
+* Lighting2
+* Lighting3
+* Lighting4
+* Lighting5
+* Lighting6
+* Curtain1
+
+Each prototype has a constructor, most of which must be called with the required subtype as a second parameter.
+The subtypes are exported from `index.js` and can be accessed as shown in the examples below. Each prototype has
+functions to send the appropriate commands. File `DeviceCommands.md` contains a quick reference to all these transmitter
+prototype objects.
+
 LightwaveRf
 -----------
-There's a specialised Lighting5 prototype, which uses an RfxCom object.
+LightwaveRf devices use the specialised Lighting5 prototype, which itself uses an RfxCom object.
 
 <pre>
 var rfxcom = require('rfxcom');
@@ -71,13 +88,14 @@ I've tested it with both LightwaveRf lights, and the relay switch.
 
 LightwaveRf lights get their identity from the remote used to pair, if you don't
 have a remote, or if you want to specify the address manually, you can pair the
-device by putting the device into pairing mode and turning on a device id, lightwaverf.switchOn("0xFFFFFF/1").
+device by putting the device into pairing mode and turning on a chosen device id, for example lightwaverf.switchOn("0xFFFFFF/1").
 
 The device ids don't have to be unique, but it's advisable.
 
-Lighting2
----------
-There's a specialised Lighting2 prototype, which uses an RfxCom object.
+HomeEasy (EU)
+-------------
+HomeEasy devices use the specialised Lighting2 prototype, which itself uses an RfxCom object. There are two types of
+HomeEasy: the ones marketed in UK are of type 'AC', while those in the Netherlands and elsewhere are of type 'HOMEEASY_EU'.
 
 <pre>
     var rfxtrx = new rfxcom.RfxCom("/dev/ttyUSB0", {debug: true}),
@@ -86,10 +104,6 @@ There's a specialised Lighting2 prototype, which uses an RfxCom object.
     lighting2.switchOn("0xF09AC8AA/1");
     lighting2.switchOff("0xF09AC8AA/1");
 </pre>
-
-The lighting2 message controls one of three subtypes, you need to specify the
-subtype to the constructor, the options are in rfxcom.lighting2.
-
 
 RfxCom system events
 ====================
@@ -142,35 +156,64 @@ The events are mostly named from the message identifiers used in the RFXtrx docu
 can be received (some are transmit-only), and a protocol must be enabled to be received. This can be done using RFXmngr.exe,
 or the `enable()` function of the rfxcom object.
 
-"elec2"
--------
+"elec2" - "elec3"
+-----------------
 Emitted when data is received from OWL electricity monitoring devices
 CM119/CM160.
 
 "security1"
 -----------
-Emitted when an X10 security device reports a status change.
+Emitted when an X10 or similar security device reports a status change.
 
-"lighting5"
------------
-Emitted when a message is received from LightwaveRF type devices.
-
-"th1-9"
--------
+"th1" - "th9"
+-------------
 Emitted when a message is received from Oregon Scientific
 Temperature/Humidity sensors.
 
-"temp1-9"
----------
+"thb1" - "thb2"
+---------------
+Emitted when a message is received from an Oregon Scientific
+Temperature, Humidity & Barometric Pressure sensor.
+
+"temp1" - "temp10"
+-----------------
 Emitted when a message is received from an Oregon Scientific temperature
 sensor.
 
+"lighting1"
+-----------
+Emitted when a message is received from X10, ARC, Energenie or similar lighting remote control devices.
+
 "lighting2"
 -----------
-Emitted when a message is received from AC/HomeEasy type devices.
+Emitted when a message is received from AC/HomeEasy type remote control devices.
+
+"lighting4"
+-----------
+Emitted when a message is received from devices using the PT2262 family chipset.
+
+"lighting5"
+-----------
+Emitted when a message is received from LightwaveRF/Siemens type remote control devices.
+
+"lighting6"
+-----------
+Emitted when a message is received from Blyss lighting remote control devices.
+
+"weight1" - "weight2"
+---------------------
+Emitted when a message is received from a weighing scale device.
+
+"rfxmeter"
+----------
+Emitted whan a message is received from an RFXCOM rfxmeter device.
+
+"rfxsensor"
+-----------
+Emitted when a message is received from an RFXCOM rfxsensor device.
 
 Connecting and disconnecting
-===
+============================
 The function `rfxtrx.initialise()` will attempt to connect to the RFXtrx433 hardware. If this succeeds, a 'connecting' event
 is emitted, followed about 5.5 seconds later by a 'ready' event. If the device is not present (wrong device path, or device
 not plugged in) a 'connectfailed' event is emitted. If the the hardware is subsequently unplugged, a 'disconnect' event
