@@ -156,22 +156,27 @@ The events are mostly named from the message identifiers used in the RFXtrx docu
 can be received (some are transmit-only), and a protocol must be enabled to be received. This can be done using RFXmngr.exe,
 or the `enable()` function of the rfxcom object.
 
-"elec2"
--------
+"elec2" - "elec3"
+-----------------
 Emitted when data is received from OWL electricity monitoring devices
 CM119/CM160.
 
 "security1"
 -----------
-Emitted when an X10 security device reports a status change.
+Emitted when an X10 or similar security device reports a status change.
 
-"th1-9"
--------
+"th1" - "th9"
+-------------
 Emitted when a message is received from Oregon Scientific
 Temperature/Humidity sensors.
 
-"temp1-9"
----------
+"thb1" - "thb2"
+---------------
+Emitted when a message is received from an Oregon Scientific
+Temperature, Humidity & Barometric Pressure sensor.
+
+"temp1" - "temp10"
+-----------------
 Emitted when a message is received from an Oregon Scientific temperature
 sensor.
 
@@ -195,8 +200,20 @@ Emitted when a message is received from LightwaveRF/Siemens type remote control 
 -----------
 Emitted when a message is received from Blyss lighting remote control devices.
 
+"weight1" - "weight2"
+---------------------
+Emitted when a message is received from a weighing scale device.
+
+"rfxmeter"
+----------
+Emitted whan a message is received from an RFXCOM rfxmeter device.
+
+"rfxsensor"
+-----------
+Emitted when a message is received from an RFXCOM rfxsensor device.
+
 Connecting and disconnecting
-===
+============================
 The function `rfxtrx.initialise()` will attempt to connect to the RFXtrx433 hardware. If this succeeds, a 'connecting' event
 is emitted, followed about 5.5 seconds later by a 'ready' event. If the device is not present (wrong device path, or device
 not plugged in) a 'connectfailed' event is emitted. If the the hardware is subsequently unplugged, a 'disconnect' event

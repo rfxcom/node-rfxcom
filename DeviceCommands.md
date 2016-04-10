@@ -5,7 +5,8 @@ A quick reference of the currently supported device types and subtypes, and the 
 (i.e. transmitted by the RFXtrx433). Note that not every device subtype in a given type will support
 all the available commands. Invalid command/device combinations, address codes and parameters will throw an error.
 
-For the full details see the RFXtrx433 user manual
+For the full details see the RFXtrx433 user manual. Some of these devices may only be supported by recent versions of
+the RFXCOM firmware.
 
 Curtain1
 --------
