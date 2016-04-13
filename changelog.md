@@ -1,3 +1,12 @@
+Version 0.10.0
+--------------
+
+- Added support for additional weather sensors and energy monitoring devices
+- Added support for Byron SX doorbells (receive-only)
+BREAKING CHANGES:
+- In elec2 and elec3 events, property name "currentWatts" is replaced by "power" (the value is unchanged)
+- In elec2 and elec3 events, property name "totalWatts" is replaced by "energy" and the value is no longer rounded
+
 Version 0.9.0
 -------------
 
