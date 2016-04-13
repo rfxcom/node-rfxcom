@@ -147,38 +147,79 @@ Emitted when the serial port emits a "drain" event.
 
 "receive"
 ---------
-Emitted when any message is received from the RFXtrx 433, and contains the raw bytes that were received.
+Emitted when any packet message is received from the RFXtrx 433, and contains the raw bytes that were received.
+This event is emitted before the received data event for the packet type (if one is defined). 
 
-RfxCom received data events
-===========================
+RfxCom received data events - sensors
+=====================================
 
-The events are mostly named from the message identifiers used in the RFXtrx documentation. Not all protocols
-can be received (some are transmit-only), and a protocol must be enabled to be received. This can be done using RFXmngr.exe,
-or the `enable()` function of the rfxcom object.
-
-"elec2" - "elec3"
------------------
-Emitted when data is received from OWL electricity monitoring devices
-CM119/CM160.
+The events are mostly named from the message identifiers used in the RFXtrx documentation. A protocol must
+be enabled to be received. This can be done using RFXmngr.exe, or the `enable()` function of the rfxcom object.
+Each event has an 'evt' property whose members contain the received sensor data, along with signal strength and
+battery level (if available).
 
 "security1"
 -----------
 Emitted when an X10 or similar security device reports a status change.
 
-"th1" - "th9"
+"temprain1"
+-----------
+Emitted when a message is received from an Allecto temperature/rainfall weather sensor.
+
+"temp1" - "temp11"
+-----------------
+Emitted when a message is received from a temperature sensor (inside/outside air temperature; pool water temperature).
+
+"humidity1"
+-----------
+Emitted when data arrives from humidity sensing devices
+
+"th1" - "th14"
 -------------
-Emitted when a message is received from Oregon Scientific
-Temperature/Humidity sensors.
+Emitted when a message is received from Oregon Scientific and other
+temperature/humidity sensors.
 
 "thb1" - "thb2"
 ---------------
 Emitted when a message is received from an Oregon Scientific
-Temperature, Humidity & Barometric Pressure sensor.
+temperature/humidity/barometric pressure sensor.
 
-"temp1" - "temp10"
+"rain1" - "rain7"
 -----------------
-Emitted when a message is received from an Oregon Scientific temperature
-sensor.
+Emitted when data arrives from rainfall sensing devices
+
+"wind1" - "wind7"
+-----------------
+Emitted when data arrives from wind speed/direction sensors
+
+"uv1" - "uv3"
+-------------
+Emiied when data arrives from ultraviolet radiation sensors
+
+"weight1" - "weight2"
+---------------------
+Emitted when a message is received from a weighing scale device.
+
+"elec1" - "elec5"
+-----------------
+Emitted when data is received from OWL or REVOLT electricity monitoring devices.
+
+"rfxmeter"
+----------
+Emitted whan a message is received from an RFXCOM rfxmeter device.
+
+"rfxsensor"
+-----------
+Emitted when a message is received from an RFXCOM rfxsensor device.
+
+RfxCom received data events - remote controls
+=============================================
+
+These events are emitted when data arrives from a 'remote control' device, which may be a pushbutton
+unit or a dedicated remote control device such as a PIR light switch. The events are named from the
+message identifiers used in the RFXtrx documentation. A protocol must be enabled to be received. however not
+every protocols that can be transmitted can be received. Each event has an 'evt' property whose members contain
+the transmitted command, along with signal strength and battery level (if available).
 
 "lighting1"
 -----------
@@ -200,17 +241,9 @@ Emitted when a message is received from LightwaveRF/Siemens type remote control 
 -----------
 Emitted when a message is received from Blyss lighting remote control devices.
 
-"weight1" - "weight2"
----------------------
-Emitted when a message is received from a weighing scale device.
-
-"rfxmeter"
-----------
-Emitted whan a message is received from an RFXCOM rfxmeter device.
-
-"rfxsensor"
------------
-Emitted when a message is received from an RFXCOM rfxsensor device.
+"chime1"
+--------
+Emitted when data arrives from Byron or similar doorbell pushbutton
 
 Connecting and disconnecting
 ============================
