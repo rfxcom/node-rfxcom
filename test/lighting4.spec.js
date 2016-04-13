@@ -35,7 +35,7 @@ describe('Lighting4 class', function () {
                 sentCommandId = cmdId;
                 done();
             });
-            expect(fakeSerialPort).toHaveSent([0x09, 0x13, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x78, 0x00]);
+            expect(fakeSerialPort).toHaveSent([0x09, 0x13, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x5E, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes to the serialport (numeric data, hex string pulse width)', function (done) {
@@ -53,7 +53,7 @@ describe('Lighting4 class', function () {
                 sentCommandId = cmdId;
                 done();
             });
-            expect(fakeSerialPort).toHaveSent([0x09, 0x13, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x78, 0x00]);
+            expect(fakeSerialPort).toHaveSent([0x09, 0x13, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x5E, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes to the serialport (array data, default pulse width)', function (done) {
@@ -62,7 +62,7 @@ describe('Lighting4 class', function () {
                 sentCommandId = cmdId;
                 done();
             });
-            expect(fakeSerialPort).toHaveSent([0x09, 0x13, 0x00, 0x00, 0x00, 0x01, 0x02, 0x05, 0x78, 0x00]);
+            expect(fakeSerialPort).toHaveSent([0x09, 0x13, 0x00, 0x00, 0x00, 0x01, 0x02, 0x01, 0x5E, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes to the serialport (undersize array data, default pulse width)', function (done) {
@@ -71,7 +71,7 @@ describe('Lighting4 class', function () {
                 sentCommandId = cmdId;
                 done();
             });
-            expect(fakeSerialPort).toHaveSent([0x09, 0x13, 0x00, 0x00, 0x00, 0x01, 0x02, 0x05, 0x78, 0x00]);
+            expect(fakeSerialPort).toHaveSent([0x09, 0x13, 0x00, 0x00, 0x00, 0x01, 0x02, 0x01, 0x5E, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes to the serialport (hex string data, default pulse width)', function (done) {
@@ -80,7 +80,7 @@ describe('Lighting4 class', function () {
                 sentCommandId = cmdId;
                 done();
             });
-            expect(fakeSerialPort).toHaveSent([0x09, 0x13, 0x00, 0x00, 0x00, 0x01, 0x02, 0x05, 0x78, 0x00]);
+            expect(fakeSerialPort).toHaveSent([0x09, 0x13, 0x00, 0x00, 0x00, 0x01, 0x02, 0x01, 0x5E, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes to the serialport (hex string data, hex string pulse width)', function (done) {
