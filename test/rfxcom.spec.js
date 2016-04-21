@@ -88,7 +88,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x08, 0x20, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00]);
+                fakeSerialPort.emit("data", [0x08, 0x20, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
             });
             it("should emit a temp1 message when it receives message type 0x50, with device type 1", function(done) {
                 var fakeSerialPort = new FakeSerialPort(),
@@ -132,7 +132,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x0B, 0x11, 0x01, 0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0xF, 0xF, 0xF0]);
+                fakeSerialPort.emit("data", [0x0B, 0x11, 0x01, 0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x0F, 0x0F]);
             });
             it("should emit an rfxmeter message when it receives message type 0x71", function(done) {
                 var fakeSerialPort = new FakeSerialPort(),
