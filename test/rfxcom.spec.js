@@ -890,13 +890,118 @@ describe("RfxCom", function() {
                 device.on("status", function(evt) {
                     expect(evt.subtype).toBe(0);
                     expect(evt.seqnbr).toBe(0x01);
-                    expect(evt.cmnd).toBe(0x20);
+                    expect(evt.cmnd).toBe(0x2);
                     expect(evt.receiverType).toBe("433.92MHz transceiver");
                     expect(evt.firmwareVersion).toBe(0x30);
+                    expect(evt.firmwareType).toBe("Type 1");
                     expect(evt.enabledProtocols).toEqual(["RSL", "BYRONSX"]);
                     done();
                 });
-                device.statusHandler([0, 1, 0x20, 0x53, 0x30, 0x30, 0, 0, 0, 0, 0, 0, 0]);
+                device.statusHandler([0, 1, 0x2, 0x53, 0x30, 0x30, 0, 0, 0, 0, 0, 0]);
+            });
+            it("should emit a status message when called", function(done) {
+                device.on("status", function(evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.seqnbr).toBe(0x01);
+                    expect(evt.cmnd).toBe(0x2);
+                    expect(evt.receiverType).toBe("433.92MHz transceiver");
+                    expect(evt.firmwareVersion).toBe(161);
+                    expect(evt.firmwareType).toBe("Type 1");
+                    expect(evt.enabledProtocols).toEqual(["RSL", "BYRONSX"]);
+                    done();
+                });
+                device.statusHandler([0, 1, 0x2, 0x53, 161, 0x30, 0, 0, 0, 0, 0, 0]);
+            });
+            it("should emit a status message when called", function(done) {
+                device.on("status", function(evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.seqnbr).toBe(0x01);
+                    expect(evt.cmnd).toBe(0x2);
+                    expect(evt.receiverType).toBe("433.92MHz transceiver");
+                    expect(evt.firmwareVersion).toBe(162);
+                    expect(evt.firmwareType).toBe("Type 2");
+                    expect(evt.enabledProtocols).toEqual(["RSL", "BYRONSX"]);
+                    done();
+                });
+                device.statusHandler([0, 1, 0x2, 0x53, 162, 0x30, 0, 0, 0, 0, 0, 0]);
+            });
+            it("should emit a status message when called", function(done) {
+                device.on("status", function(evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.seqnbr).toBe(0x01);
+                    expect(evt.cmnd).toBe(0x2);
+                    expect(evt.receiverType).toBe("433.92MHz transceiver");
+                    expect(evt.firmwareVersion).toBe(224);
+                    expect(evt.firmwareType).toBe("Type 2");
+                    expect(evt.enabledProtocols).toEqual(["RSL", "BYRONSX"]);
+                    done();
+                });
+                device.statusHandler([0, 1, 0x2, 0x53, 224, 0x30, 0, 0, 0, 0, 0, 0]);
+            });
+            it("should emit a status message when called", function(done) {
+                device.on("status", function(evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.seqnbr).toBe(0x01);
+                    expect(evt.cmnd).toBe(0x2);
+                    expect(evt.receiverType).toBe("433.92MHz transceiver");
+                    expect(evt.firmwareVersion).toBe(225);
+                    expect(evt.firmwareType).toBe("Ext");
+                    expect(evt.enabledProtocols).toEqual(["RSL", "BYRONSX"]);
+                    done();
+                });
+                device.statusHandler([0, 1, 0x2, 0x53, 225, 0x30, 0, 0, 0, 0, 0, 0]);
+            });
+            it("should emit a status message when called with a long status packet", function(done) {
+                device.on("status", function(evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.seqnbr).toBe(0x01);
+                    expect(evt.cmnd).toBe(0x2);
+                    expect(evt.receiverType).toBe("433.92MHz transceiver");
+                    expect(evt.firmwareVersion).toBe(1001);
+                    expect(evt.firmwareType).toBe("Type 1");
+                    expect(evt.enabledProtocols).toEqual(["RSL", "BYRONSX"]);
+                    done();
+                });
+                device.statusHandler([0, 1, 0x2, 0x53, 1, 0x30, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0]);
+            });
+            it("should emit a status message when called with a long status packet", function(done) {
+                device.on("status", function(evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.seqnbr).toBe(0x01);
+                    expect(evt.cmnd).toBe(0x2);
+                    expect(evt.receiverType).toBe("433.92MHz transceiver");
+                    expect(evt.firmwareVersion).toBe(1001);
+                    expect(evt.firmwareType).toBe("Type 2");
+                    expect(evt.enabledProtocols).toEqual(["RSL", "BYRONSX"]);
+                    done();
+                });
+                device.statusHandler([0, 1, 0x2, 0x53, 1, 0x30, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0]);
+            });
+            it("should emit a status message when called with a long status packet", function(done) {
+                device.on("status", function(evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.seqnbr).toBe(0x01);
+                    expect(evt.cmnd).toBe(0x2);
+                    expect(evt.receiverType).toBe("433.92MHz transceiver");
+                    expect(evt.firmwareVersion).toBe(1001);
+                    expect(evt.firmwareType).toBe("Ext");
+                    expect(evt.enabledProtocols).toEqual(["RSL", "BYRONSX"]);
+                    done();
+                });
+                device.statusHandler([0, 1, 0x2, 0x53, 1, 0x30, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0]);
+            });
+            it("should emit a status message when called with a long status packet", function(done) {
+                device.on("status", function(evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.seqnbr).toBe(0x01);
+                    expect(evt.cmnd).toBe(0x2);
+                    expect(evt.receiverType).toBe("433.92MHz transceiver");
+                    expect(evt.firmwareVersion).toBe(1001);
+                    expect(evt.firmwareType).toBe("Ext 2");
+                    expect(evt.enabledProtocols).toEqual(["RSL", "BYRONSX"]);
+                    done();
+                });
+                device.statusHandler([0, 1, 0x2, 0x53, 1, 0x30, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0]);
             });
         });
 
