@@ -126,4 +126,17 @@ Commands:
     Lighting6.switchOn()
     Lighting6.switchOff()
 
+Chime1
+---------
+
+Devices:
+
+    BYRON_SX
+    BYRON_MP001
+    SELECT_PLUS
+    ENVIVO
+    
+Commands:
+
+    Chime1.chime()
     

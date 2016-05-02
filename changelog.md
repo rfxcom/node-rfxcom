@@ -1,3 +1,20 @@
+Version 0.11.1
+--------------
+
+- Improve decoding of status packets from firmware versions 1001 and above
+- Send 'start receiver' command when connecting, and check the response
+
+Version 0.11.0
+--------------
+
+- Added transmission of chime1 type packets
+
+Version 0.10.1
+--------------
+
+- Fixed a bug in the received message parsing which could cause messages to be lost, and/or throw
+  an unhandled exception.
+
 Version 0.10.0
 --------------
 

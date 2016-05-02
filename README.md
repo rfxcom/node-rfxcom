@@ -60,6 +60,7 @@ Prototype objects are provided for some of the most useful protocols (see the RF
 * Lighting4
 * Lighting5
 * Lighting6
+* Chime1
 * Curtain1
 
 Each prototype has a constructor, most of which must be called with the required subtype as a second parameter.
