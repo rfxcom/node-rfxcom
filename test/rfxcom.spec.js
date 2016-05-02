@@ -767,13 +767,50 @@ describe("RfxCom", function() {
             it("should emit a chime1 message when called", function(done) {
                 device.on("chime1", function(evt) {
                     expect(evt.subtype).toBe(0);
-                    expect(evt.id).toBe("0xF09A");
+                    expect(evt.id).toBe("0x9A");
                     expect(evt.command).toBe("Big Ben");
                     expect(evt.commandNumber).toBe(3);
                     expect(evt.seqnbr).toBe(1);
+                    expect(evt.rssi).toBe(1);
                     done();
                 });
-                device.chime1Handler([0x00, 0x01, 0xF0, 0x9A, 0x03, 0x80]);
+                device.chime1Handler([0x00, 0x01, 0x00, 0x9A, 0x03, 0x81]);
+            });
+            it("should handle long ID devices", function(done) {
+                device.on("chime1", function(evt) {
+                    expect(evt.subtype).toBe(2);
+                    expect(evt.id).toBe("0x03FFFF");
+                    expect(evt.command).toBeUndefined();
+                    expect(evt.commandNumber).toBeUndefined();
+                    expect(evt.seqnbr).toBe(2);
+                    expect(evt.rssi).toBe(2);
+                    done();
+                });
+                device.chime1Handler([0x02, 0x02, 0x03, 0xFF, 0xFF, 0x02]);
+            });
+            it("should handle long ID devices", function(done) {
+                device.on("chime1", function(evt) {
+                    expect(evt.subtype).toBe(4);
+                    expect(evt.id).toBe("0xFFFFFF");
+                    expect(evt.command).toBeUndefined();
+                    expect(evt.commandNumber).toBeUndefined();
+                    expect(evt.seqnbr).toBe(4);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.chime1Handler([0x04, 0x04, 0xFF, 0xFF, 0xFF, 0xF8]);
+            });
+            it("should handle BYRON_MP001 devices", function(done) {
+                device.on("chime1", function(evt) {
+                    expect(evt.subtype).toBe(1);
+                    expect(evt.id).toBe("101000");
+                    expect(evt.command).toBeUndefined();
+                    expect(evt.commandNumber).toBeUndefined();
+                    expect(evt.seqnbr).toBe(5);
+                    expect(evt.rssi).toBe(4);
+                    done();
+                });
+                device.chime1Handler([0x01, 0x05, 0x11, 0x5F, 0x54, 0xF4]);
             });
 
         });
