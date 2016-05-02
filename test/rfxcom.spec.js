@@ -211,7 +211,10 @@ describe("RfxCom", function() {
                     resetSpy = spyOn(device, "reset").andCallThrough(),
                     delaySpy = spyOn(device, "delay"),
                     flushSpy = spyOn(device, "flush").andCallThrough(),
-                    getStatusSpy = spyOn(device, "getStatus").andCallThrough(),
+                    startRxSpy = spyOn(device, "startRx").andCallThrough(),
+                    getStatusSpy = spyOn(device, "getStatus").andCallFake(function () {
+                        device.statusHandler([0x00,0x01,0x02,0x53,0x5E,0x08,0x02,0x25,0x00,0x01,0x01,0x1C])
+                    }),
                     openSpy = spyOn(device, "open").andCallFake(function() {
                         device.emit("ready");
                     });
@@ -224,6 +227,7 @@ describe("RfxCom", function() {
                 expect(delaySpy).toHaveBeenCalledWith(500);
                 expect(flushSpy).toHaveBeenCalledWith(jasmine.any(Function));
                 expect(getStatusSpy).toHaveBeenCalledWith(jasmine.any(Function));
+                expect(startRxSpy).toHaveBeenCalledWith(jasmine.any(Function));
                 expect(openSpy).toHaveBeenCalled();
             });
         });
