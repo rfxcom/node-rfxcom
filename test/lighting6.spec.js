@@ -21,6 +21,12 @@ describe('Lighting6 class', function () {
         device = new rfxcom.RfxCom('/dev/ttyUSB0', {
             port: fakeSerialPort
         });
+        device.connected = true;
+    });
+    afterEach(function () {
+        if (typeof device.acknowledge[0] == "function") {
+            device.acknowledge[0]();
+        }
     });
     describe('instantiation', function () {
         it('should throw an error if no subtype is specified', function () {
@@ -48,12 +54,13 @@ describe('Lighting6 class', function () {
                     debug: true
                 }),
                 debug = new rfxcom.Lighting6(debugDevice, rfxcom.lighting6.BLYSS);
-
+            debugDevice.connected = true;
             var consoleSpy = spyOn(console, 'log');
             debug.switchOn('0xF09A/B/1', function () {
                 done();
             });
             expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : %s', ['0B', '15', '00', '00', 'F0', '9A', '42', '01', '00', '00', '00', '00']);
+            debugDevice.acknowledge[0]();
         });
         it('should accept an array address', function (done) {
             var sentCommandId;

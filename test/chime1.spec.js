@@ -14,6 +14,12 @@ describe('Chime1 class', function () {
         device = new rfxcom.RfxCom('/dev/ttyUSB0', {
             port: fakeSerialPort
         });
+        device.connected = true;
+    });
+    afterEach(function () {
+        if (typeof device.acknowledge[0] == "function") {
+            device.acknowledge[0]();
+        }
     });
     describe('instantiation', function () {
         it('should throw an error if no subtype is specified', function () {
@@ -50,10 +56,11 @@ describe('Chime1 class', function () {
                     debug: true
                 }),
                 debug = new rfxcom.Chime1(debugDevice, rfxcom.chime1.BYRON_SX);
-
+            debugDevice.connected = true;
             var consoleSpy = spyOn(console, 'log');
             debug.chime('0x2a', done);
             expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : %s', ['07', '16', '00', '00', '00', '2A', '05', '00']);
+            debugDevice.acknowledge[0]();
         });
         it('should accept a valid tone number', function (done) {
             var sentCommandId;
