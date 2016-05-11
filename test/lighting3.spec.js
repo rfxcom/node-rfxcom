@@ -17,6 +17,12 @@ describe('Lighting3 class', function () {
         device = new rfxcom.RfxCom('/dev/ttyUSB0', {
             port: fakeSerialPort
         });
+        device.connected = true;
+    });
+    afterEach(function () {
+        if (typeof device.acknowledge[0] == "function") {
+            device.acknowledge[0]();
+        }
     });
     describe('instantiation', function () {
         it('should throw an error if no subtype is specified', function () {
@@ -112,10 +118,11 @@ describe('Lighting3 class', function () {
                     debug: true
                 }),
                 debugLight = new rfxcom.Lighting3(debugDevice, rfxcom.lighting3.KOPPLA);
-
+            debugDevice.connected = true;
             var consoleSpy = spyOn(console, 'log');
             debugLight.switchOn(['16', '0'], done);
             expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : %s', ['08', '12', '00', '00', '0F', 'FF', '03', '10', '00']);
+            debugDevice.acknowledge[0]();
         });
         it('should accept the highest system code & channel number', function (done) {
             var sentCommandId;
