@@ -13,7 +13,7 @@ To install
   npm install rfxcom
 </pre>
 
-The only dependency is serialport 2.0.0+.
+Depends on serialport 2.0.0+ and queue ^4.0.0
 
 To Use
 ------
@@ -67,6 +67,11 @@ Each prototype has a constructor, most of which must be called with the required
 The subtypes are exported from `index.js` and can be accessed as shown in the examples below. Each prototype has
 functions to send the appropriate commands. File `DeviceCommands.md` contains a quick reference to all these transmitter
 prototype objects.
+
+Commands can only be sent when the RFXtrx433 is connected (see below). Commands are held in a queue, and will be sent as
+soon as the RFXtrx433 can accept them. No commands are sent (and no messages received) until the initial handshake
+with the RFXtrx433 is complete. If the RFXtrx433 is disconnected the queue is cleared, losing any cammand messages it
+may contain.
 
 LightwaveRf
 -----------

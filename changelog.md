@@ -1,3 +1,8 @@
+Version 0.12.0
+--------------
+
+- Added a command message transmit queue to avoid buffer overruns in the RFXtrx433
+
 Version 0.11.1
 --------------
 
