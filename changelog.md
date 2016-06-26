@@ -1,3 +1,47 @@
+Version 0.12.0
+--------------
+
+- Added a command message transmit queue to avoid buffer overruns in the RFXtrx433
+
+Version 0.11.1
+--------------
+
+- Improve decoding of status packets from firmware versions 1001 and above
+- Send 'start receiver' command when connecting, and check the response
+
+Version 0.11.0
+--------------
+
+- Added transmission of chime1 type packets
+
+Version 0.10.1
+--------------
+
+- Fixed a bug in the received message parsing which could cause messages to be lost, and/or throw
+  an unhandled exception.
+
+Version 0.10.0
+--------------
+
+- Added support for additional weather sensors and energy monitoring devices
+- Added support for Byron SX doorbells (receive-only)
+BREAKING CHANGES:
+- In elec2 and elec3 events, property name "currentWatts" is replaced by "power" (the value is unchanged)
+- In elec2 and elec3 events, property name "totalWatts" is replaced by "energy" and the value is no longer rounded
+
+Version 0.9.0
+-------------
+
+- Added support for Lighting3, Lighting4, and Lighting6 device packet types
+- Added error-checking for supported commands, address codes, and parameter values
+
+Version 0.8.0
+-------------
+
+- Handle dynamic removal/replacement of the RFXtrx. Added new events 'connecting', 'disconnected',
+  and 'connectfailed'. Added new properties .connected, .initialising and .initialiseWaitTime
+- Bump to serialport 2.x
+
 Version 0.7.9
 -------------
 
