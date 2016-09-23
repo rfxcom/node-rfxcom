@@ -8,6 +8,32 @@ all the available commands. Invalid command/device combinations, address codes a
 For the full details see the RFXtrx433 user manual. Some of these devices may only be supported by recent versions of
 the RFXCOM firmware.
 
+Blinds1
+--------
+
+Devices:
+    T0_ROLLERTROL
+    T1
+    T2
+    T3
+    T4
+    T5
+    T6
+    T7
+    T8
+    T9
+    T10
+    T11
+    T12
+
+Commands:
+
+    Blinds1.open()
+    Blinds1.close()
+    Blinds1.stop()
+    Blinds1.confirm()
+    Blinds1.setLimit()
+    
 Curtain1
 --------
 
