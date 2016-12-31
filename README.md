@@ -54,14 +54,15 @@ Sending Commands
 ===
 Prototype objects are provided for some of the most useful protocols (see the RFXCOM manual for details):
 
+* Blinds1
+* Chime1
+* Curtain1
 * Lighting1
 * Lighting2
 * Lighting3
 * Lighting4
 * Lighting5
 * Lighting6
-* Chime1
-* Curtain1
 
 Each prototype has a constructor, most of which must be called with the required subtype as a second parameter.
 The subtypes are exported from `index.js` and can be accessed as shown in the examples below. Each prototype has
@@ -70,7 +71,7 @@ prototype objects.
 
 Commands can only be sent when the RFXtrx433 is connected (see below). Commands are held in a queue, and will be sent as
 soon as the RFXtrx433 can accept them. No commands are sent (and no messages received) until the initial handshake
-with the RFXtrx433 is complete. If the RFXtrx433 is disconnected the queue is cleared, losing any cammand messages it
+with the RFXtrx433 is complete. If the RFXtrx433 is disconnected the queue is cleared, losing any command messages it
 may contain.
 
 LightwaveRf

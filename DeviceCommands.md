@@ -6,25 +6,26 @@ A quick reference of the currently supported device types and subtypes, and the 
 all the available commands. Invalid command/device combinations, address codes and parameters will throw an error.
 
 For the full details see the RFXtrx433 user manual. Some of these devices may only be supported by recent versions of
-the RFXCOM firmware.
+the RFXCOM firmware, and in some cases, the E version hardware is required.
 
 Blinds1
 --------
 
 Devices:
-    T0_ROLLERTROL
-    T1
-    T2
-    T3
-    T4
-    T5
-    T6
-    T7
-    T8
-    T9
-    T10
-    T11
-    T12
+
+    BLINDS_T0
+    BLINDS_T1
+    BLINDS_T2
+    BLINDS_T3
+    BLINDS_T4
+    BLINDS_T5
+    BLINDS_T6
+    BLINDS_T7
+    BLINDS_T8
+    BLINDS_T9
+    BLINDS_T10
+    BLINDS_T11
+    BLINDS_T12
 
 Commands:
 
@@ -33,6 +34,22 @@ Commands:
     Blinds1.stop()
     Blinds1.confirm()
     Blinds1.setLimit()
+    Blinds1.down()
+    Blinds1.up()
+
+Chime1
+---------
+
+Devices:
+
+    BYRON_SX
+    BYRON_MP001
+    SELECT_PLUS
+    ENVIVO
+    
+Commands:
+
+    Chime1.chime()
     
 Curtain1
 --------
@@ -151,18 +168,3 @@ Commands:
 
     Lighting6.switchOn()
     Lighting6.switchOff()
-
-Chime1
----------
-
-Devices:
-
-    BYRON_SX
-    BYRON_MP001
-    SELECT_PLUS
-    ENVIVO
-    
-Commands:
-
-    Chime1.chime()
-    
