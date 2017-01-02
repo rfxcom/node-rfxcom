@@ -248,6 +248,10 @@ Emitted when a message is received from LightwaveRF/Siemens type remote control 
 -----------
 Emitted when a message is received from Blyss lighting remote control devices.
 
+"blinds1"
+--------
+Emitted when a message arrives from a type 1 blinds remote controller (only a few types are supported)
+
 "chime1"
 --------
 Emitted when data arrives from Byron or similar doorbell pushbutton

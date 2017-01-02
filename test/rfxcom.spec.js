@@ -818,6 +818,105 @@ describe("RfxCom", function() {
             });
 
         });
+
+        describe(".blinds1Handler", function () {
+            var device;
+            beforeEach(function () {
+                device = new rfxcom.RfxCom("/dev/ttyUSB0");
+            });
+            it("should handle BLINDS_T0 devices", function(done) {
+                device.on("blinds1", function(evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0x1234");
+                    expect(evt.unitcode).toBe(5);
+                    expect(evt.command).toBe("Open");
+                    expect(evt.commandNumber).toBe(0);
+                    expect(evt.seqnbr).toBe(5);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.blinds1Handler([0x00, 0x05, 0x00, 0x12, 0x34, 0x05, 0x00, 0x80]);
+            });
+            it("should handle BLINDS_T1 devices", function(done) {
+                device.on("blinds1", function(evt) {
+                    expect(evt.subtype).toBe(1);
+                    expect(evt.id).toBe("0x1234");
+                    expect(evt.unitcode).toBe(5);
+                    expect(evt.command).toBe("Open");
+                    expect(evt.commandNumber).toBe(0);
+                    expect(evt.seqnbr).toBe(5);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.blinds1Handler([0x01, 0x05, 0x00, 0x12, 0x34, 0x05, 0x00, 0x80]);
+            });
+            it("should handle BLINDS_T2 devices", function(done) {
+                device.on("blinds1", function(evt) {
+                    expect(evt.subtype).toBe(2);
+                    expect(evt.id).toBe("0x001234");
+                    expect(evt.unitcode).toBeUndefined();
+                    expect(evt.command).toBe("Open");
+                    expect(evt.commandNumber).toBe(0);
+                    expect(evt.seqnbr).toBe(5);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.blinds1Handler([0x02, 0x05, 0x00, 0x12, 0x34, 0x05, 0x00, 0x80]);
+            });
+            it("should handle BLINDS_T3 devices", function(done) {
+                device.on("blinds1", function(evt) {
+                    expect(evt.subtype).toBe(3);
+                    expect(evt.id).toBe("0x001234");
+                    expect(evt.unitcode).toBe(5);
+                    expect(evt.command).toBe("Open");
+                    expect(evt.commandNumber).toBe(0);
+                    expect(evt.seqnbr).toBe(5);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.blinds1Handler([0x03, 0x05, 0x00, 0x12, 0x34, 0x04, 0x00, 0x80]);
+            });
+            it("should handle BLINDS_T3 devices group code", function(done) {
+                device.on("blinds1", function(evt) {
+                    expect(evt.subtype).toBe(3);
+                    expect(evt.id).toBe("0x001234");
+                    expect(evt.unitcode).toBe(0);
+                    expect(evt.command).toBe("Open");
+                    expect(evt.commandNumber).toBe(0);
+                    expect(evt.seqnbr).toBe(5);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.blinds1Handler([0x03, 0x05, 0x00, 0x12, 0x34, 0x0f, 0x00, 0x80]);
+            });
+            it("should handle BLINDS_T4 devices", function(done) {
+                device.on("blinds1", function(evt) {
+                    expect(evt.subtype).toBe(4);
+                    expect(evt.id).toBe("0x001234");
+                    expect(evt.unitcode).toBeUndefined();
+                    expect(evt.command).toBe("Open");
+                    expect(evt.commandNumber).toBe(0);
+                    expect(evt.seqnbr).toBe(5);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.blinds1Handler([0x04, 0x05, 0x00, 0x12, 0x34, 0x00, 0x00, 0x80]);
+            });
+            it("should handle BLINDS_T11 devices", function(done) {
+                device.on("blinds1", function(evt) {
+                    expect(evt.subtype).toBe(11);
+                    expect(evt.id).toBe("0x001234");
+                    expect(evt.unitcode).toBeUndefined();
+                    expect(evt.command).toBe("Open");
+                    expect(evt.commandNumber).toBe(0);
+                    expect(evt.seqnbr).toBe(5);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.blinds1Handler([0x0b, 0x05, 0x00, 0x12, 0x34, 0x00, 0x00, 0x80]);
+            });
+        });
+
         describe(".security1Handler", function() {
             var device;
             beforeEach(function() {
