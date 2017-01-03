@@ -26,6 +26,7 @@ Devices:
     BLINDS_T10
     BLINDS_T11
     BLINDS_T12
+    BLINDS_T13
 
 Commands:
 
@@ -34,6 +35,8 @@ Commands:
     Blinds1.stop()
     Blinds1.confirm()
     Blinds1.setLimit()
+    Blinds1.setLowerLimit()
+    Blinds1.reverse()
     Blinds1.down()
     Blinds1.up()
 

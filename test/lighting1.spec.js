@@ -28,7 +28,7 @@ describe('Lighting1 class', function () {
         it('should throw an error if no subtype is specified', function () {
             expect(function () {
                 lighting1 = new rfxcom.Lighting1(device);
-            }).toThrow(new Error('Must provide a subtype.'));
+            }).toThrow("Must provide a subtype.");
         });
     });
     describe('.chime', function () {
@@ -36,7 +36,7 @@ describe('Lighting1 class', function () {
             lighting1 = new rfxcom.Lighting1(device, rfxcom.lighting1.ARC);
         });
         it('should send the correct bytes to the serialport', function (done) {
-            var sentCommandId;
+            var sentCommandId = NaN;
             lighting1.chime('C14', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -45,7 +45,7 @@ describe('Lighting1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept an array deviceId', function (done) {
-            var sentCommandId;
+            var sentCommandId = NaN;
             lighting1.chime(['C', '14'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -71,10 +71,9 @@ describe('Lighting1 class', function () {
             lighting1 = new rfxcom.Lighting1(device, rfxcom.lighting1.IMPULS);
         });
         it('should reject a group command', function () {
-            var sentCommandId;
             expect(function () {
                 lighting1.switchOn('C0')
-            }).toThrow(new Error("Device does not support group on/off commands"));
+            }).toThrow("Device does not support group on/off commands");
         });
     });
     describe('.lampCommands', function () {
@@ -82,7 +81,7 @@ describe('Lighting1 class', function () {
             lighting1 = new rfxcom.Lighting1(device, rfxcom.lighting1.X10);
         });
         it('should accept an array deviceId', function (done) {
-            var sentCommandId;
+            var sentCommandId = NaN;
             lighting1.switchOn(['C', '14'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -91,7 +90,7 @@ describe('Lighting1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept a group command', function (done) {
-            var sentCommandId;
+            var sentCommandId = NaN;
             lighting1.switchOff(['C', '0'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -100,7 +99,7 @@ describe('Lighting1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept a dim command', function (done) {
-            var sentCommandId;
+            var sentCommandId = NaN;
             lighting1.decreaseLevel(['C', '2'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -109,7 +108,7 @@ describe('Lighting1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept a bright command', function (done) {
-            var sentCommandId;
+            var sentCommandId = NaN;
             lighting1.increaseLevel(['C', '2'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -118,10 +117,9 @@ describe('Lighting1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should reject a group bright command', function () {
-            var sentCommandId;
             expect(function () {
                 lighting1.increaseLevel(['C', '0'])
-            }).toThrow(new Error("Device does not support group dim/bright commands"));
+            }).toThrow("Device does not support group dim/bright commands");
         });
     });
     describe('.X10 adress checking', function () {
@@ -129,22 +127,19 @@ describe('Lighting1 class', function () {
             lighting1 = new rfxcom.Lighting1(device, rfxcom.lighting1.X10);
         });
         it('should reject an invalid house code', function () {
-            var sentCommandId;
             expect(function () {
                 lighting1.switchOn(['Q', '1'])
-            }).toThrow(new Error("Invalid house code 'Q'"));
+            }).toThrow("Invalid house code 'Q'");
         });
         it('should reject an invalid unit code', function () {
-            var sentCommandId;
             expect(function () {
                 lighting1.switchOn(['P', '65'])
-            }).toThrow(new Error("Invalid unit code 65"));
+            }).toThrow("Invalid unit code 65");
         });
         it('should reject an badly formatted address', function () {
-            var sentCommandId;
             expect(function () {
                 lighting1.switchOn(['0x556', 'B', '1'])
-            }).toThrow(new Error("Invalid deviceId format"));
+            }).toThrow("Invalid deviceId format");
         });
     });
     describe('.CHACON adress checking', function () {
@@ -152,7 +147,7 @@ describe('Lighting1 class', function () {
             lighting1 = new rfxcom.Lighting1(device, rfxcom.lighting1.CHACON);
         });
         it('should accept the highest house & unit codes', function (done) {
-            var sentCommandId;
+            var sentCommandId = NaN;
             lighting1.switchOn(['C', '4'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -161,16 +156,14 @@ describe('Lighting1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should reject an invalid house code', function () {
-            var sentCommandId;
             expect(function () {
                 lighting1.switchOn(['D', '1'])
-            }).toThrow(new Error("Invalid house code 'D'"));
+            }).toThrow("Invalid house code 'D'");
         });
         it('should reject an invalid unit code', function () {
-            var sentCommandId;
             expect(function () {
                 lighting1.switchOn(['A', '5'])
-            }).toThrow(new Error("Invalid unit code 5"));
+            }).toThrow("Invalid unit code 5");
         });
     });
     describe('.COCO adress checking', function () {
@@ -178,7 +171,7 @@ describe('Lighting1 class', function () {
             lighting1 = new rfxcom.Lighting1(device, rfxcom.lighting1.COCO);
         });
         it('should accept the highest house & unit codes', function (done) {
-            var sentCommandId;
+            var sentCommandId = NaN;
             lighting1.switchOn(['D', '4'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -187,16 +180,14 @@ describe('Lighting1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should reject an invalid house code', function () {
-            var sentCommandId;
             expect(function () {
                 lighting1.switchOn(['E', '1'])
-            }).toThrow(new Error("Invalid house code 'E'"));
+            }).toThrow("Invalid house code 'E'");
         });
         it('should reject an invalid unit code', function () {
-            var sentCommandId;
             expect(function () {
                 lighting1.switchOn(['A', '5'])
-            }).toThrow(new Error("Invalid unit code 5"));
+            }).toThrow("Invalid unit code 5");
         });
     });
     describe('.IMPULS adress checking', function () {
@@ -204,7 +195,7 @@ describe('Lighting1 class', function () {
             lighting1 = new rfxcom.Lighting1(device, rfxcom.lighting1.IMPULS);
         });
         it('should accept the highest house & unit codes', function (done) {
-            var sentCommandId;
+            var sentCommandId = NaN;
             lighting1.switchOn(['P', '64'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -213,16 +204,14 @@ describe('Lighting1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should reject an invalid house code', function () {
-            var sentCommandId;
             expect(function () {
                 lighting1.switchOn(['Q', '1'])
-            }).toThrow(new Error("Invalid house code 'Q'"));
+            }).toThrow("Invalid house code 'Q'");
         });
         it('should reject an invalid unit code', function () {
-            var sentCommandId;
             expect(function () {
                 lighting1.switchOn(['A', '65'])
-            }).toThrow(new Error("Invalid unit code 65"));
+            }).toThrow("Invalid unit code 65");
         });
     });
     describe('.PHILIPS_SBC adress checking', function () {
@@ -230,7 +219,7 @@ describe('Lighting1 class', function () {
             lighting1 = new rfxcom.Lighting1(device, rfxcom.lighting1.PHILIPS_SBC);
         });
         it('should accept the highest house & unit codes', function (done) {
-            var sentCommandId;
+            var sentCommandId = NaN;
             lighting1.switchOn(['P', '8'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -239,16 +228,14 @@ describe('Lighting1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should reject an invalid house code', function () {
-            var sentCommandId;
             expect(function () {
                 lighting1.switchOn(['Q', '1'])
-            }).toThrow(new Error("Invalid house code 'Q'"));
+            }).toThrow("Invalid house code 'Q'");
         });
         it('should reject an invalid unit code', function () {
-            var sentCommandId;
             expect(function () {
                 lighting1.switchOn(['A', '9'])
-            }).toThrow(new Error("Invalid unit code 9"));
+            }).toThrow("Invalid unit code 9");
         });
     });
     describe('.ENERGENIE_5_GANG adress checking', function () {
@@ -256,7 +243,7 @@ describe('Lighting1 class', function () {
             lighting1 = new rfxcom.Lighting1(device, rfxcom.lighting1.ENERGENIE_5_GANG);
         });
         it('should accept the highest house & unit codes', function (done) {
-            var sentCommandId;
+            var sentCommandId = NaN;
             lighting1.switchOn(['P', '10'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -265,16 +252,14 @@ describe('Lighting1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should reject an invalid house code', function () {
-            var sentCommandId;
             expect(function () {
                 lighting1.switchOn(['Q', '1'])
-            }).toThrow(new Error("Invalid house code 'Q'"));
+            }).toThrow("Invalid house code 'Q'");
         });
         it('should reject an invalid unit code', function () {
-            var sentCommandId;
             expect(function () {
                 lighting1.switchOn(['A', '11'])
-            }).toThrow(new Error("Invalid unit code 11"));
+            }).toThrow("Invalid unit code 11");
         });
     });
 });

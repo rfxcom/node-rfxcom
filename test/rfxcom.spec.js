@@ -40,7 +40,7 @@ describe("RfxCom", function() {
                     device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
-                device.on("lighting4", function (evt) {
+                device.on("lighting4", function () {
                     done();
                 });
                 device.open();
@@ -51,7 +51,7 @@ describe("RfxCom", function() {
                     device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
-                device.on("lighting5", function(evt) {
+                device.on("lighting5", function() {
                     done();
                 });
                 device.open();
@@ -62,7 +62,7 @@ describe("RfxCom", function() {
                     device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
-                device.on("lighting6", function (evt) {
+                device.on("lighting6", function () {
                     done();
                 });
                 device.open();
@@ -73,7 +73,7 @@ describe("RfxCom", function() {
                     device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
-                device.on("elec2", function(evt) {
+                device.on("elec2", function() {
                     done();
                 });
                 device.open();
@@ -84,7 +84,7 @@ describe("RfxCom", function() {
                     device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
-                device.on("security1", function(evt) {
+                device.on("security1", function() {
                     done();
                 });
                 device.open();
@@ -95,7 +95,7 @@ describe("RfxCom", function() {
                     device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
-                device.on("temp1", function(evt) {
+                device.on("temp1", function() {
                     done();
                 });
                 device.open();
@@ -106,7 +106,7 @@ describe("RfxCom", function() {
                     device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
-                device.on("temp2", function(evt) {
+                device.on("temp2", function() {
                     done();
                 });
                 device.open();
@@ -117,7 +117,7 @@ describe("RfxCom", function() {
                     device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
-                device.on("th1", function(evt) {
+                device.on("th1", function() {
                     done();
                 });
                 device.open();
@@ -128,7 +128,7 @@ describe("RfxCom", function() {
                     device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
-                device.on("lighting2", function(evt) {
+                device.on("lighting2", function() {
                     done();
                 });
                 device.open();
@@ -139,7 +139,7 @@ describe("RfxCom", function() {
                     device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
-                device.on("rfxmeter", function(evt) {
+                device.on("rfxmeter", function() {
                     done();
                 });
                 device.open();
@@ -150,7 +150,7 @@ describe("RfxCom", function() {
                     device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
-                device.on("thb2", function(evt) {
+                device.on("thb2", function() {
                     done();
                 });
                 device.open();
@@ -161,7 +161,7 @@ describe("RfxCom", function() {
                     device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
-                device.on("weight1", function(evt) {
+                device.on("weight1", function() {
                     done();
                 });
                 device.open();
@@ -172,7 +172,7 @@ describe("RfxCom", function() {
                     device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
-                device.on("rfxsensor", function(evt) {
+                device.on("rfxsensor", function() {
                     done();
                 });
                 device.open();
@@ -183,7 +183,7 @@ describe("RfxCom", function() {
                     device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
-                device.on("receive", function(evt) {
+                device.on("receive", function() {
                     done();
                 });
                 device.open();
@@ -197,7 +197,7 @@ describe("RfxCom", function() {
                     device = new rfxcom.RfxCom("/dev/tty-i-dont-exist", {
                         port: fakeSerialPort
                     });
-                device.on("connectfailed", function (evt) {
+                device.on("connectfailed", function () {
                     done();
                 });
                 device.open();
@@ -778,7 +778,7 @@ describe("RfxCom", function() {
                     expect(evt.rssi).toBe(1);
                     done();
                 });
-                device.chime1Handler([0x00, 0x01, 0x00, 0x9A, 0x03, 0x81]);
+                device.chime1Handler([0x00, 0x01, 0x00, 0x9A, 0x03, 0x10]);
             });
             it("should handle long ID devices", function(done) {
                 device.on("chime1", function(evt) {
@@ -790,7 +790,7 @@ describe("RfxCom", function() {
                     expect(evt.rssi).toBe(2);
                     done();
                 });
-                device.chime1Handler([0x02, 0x02, 0x03, 0xFF, 0xFF, 0x02]);
+                device.chime1Handler([0x02, 0x02, 0x03, 0xFF, 0xFF, 0x20]);
             });
             it("should handle long ID devices", function(done) {
                 device.on("chime1", function(evt) {
@@ -802,7 +802,7 @@ describe("RfxCom", function() {
                     expect(evt.rssi).toBe(8);
                     done();
                 });
-                device.chime1Handler([0x04, 0x04, 0xFF, 0xFF, 0xFF, 0xF8]);
+                device.chime1Handler([0x04, 0x04, 0xFF, 0xFF, 0xFF, 0x80]);
             });
             it("should handle BYRON_MP001 devices", function(done) {
                 device.on("chime1", function(evt) {
@@ -814,7 +814,7 @@ describe("RfxCom", function() {
                     expect(evt.rssi).toBe(4);
                     done();
                 });
-                device.chime1Handler([0x01, 0x05, 0x11, 0x5F, 0x54, 0xF4]);
+                device.chime1Handler([0x01, 0x05, 0x11, 0x5F, 0x54, 0x40]);
             });
 
         });
@@ -854,7 +854,7 @@ describe("RfxCom", function() {
                 device.on("blinds1", function(evt) {
                     expect(evt.subtype).toBe(2);
                     expect(evt.id).toBe("0x001234");
-                    expect(evt.unitcode).toBeUndefined();
+                    expect(evt.unitcode).toBe(1);
                     expect(evt.command).toBe("Open");
                     expect(evt.commandNumber).toBe(0);
                     expect(evt.seqnbr).toBe(5);
@@ -893,7 +893,7 @@ describe("RfxCom", function() {
                 device.on("blinds1", function(evt) {
                     expect(evt.subtype).toBe(4);
                     expect(evt.id).toBe("0x001234");
-                    expect(evt.unitcode).toBeUndefined();
+                    expect(evt.unitcode).toBe(1);
                     expect(evt.command).toBe("Open");
                     expect(evt.commandNumber).toBe(0);
                     expect(evt.seqnbr).toBe(5);
@@ -906,7 +906,7 @@ describe("RfxCom", function() {
                 device.on("blinds1", function(evt) {
                     expect(evt.subtype).toBe(11);
                     expect(evt.id).toBe("0x001234");
-                    expect(evt.unitcode).toBeUndefined();
+                    expect(evt.unitcode).toBe(1);
                     expect(evt.command).toBe("Open");
                     expect(evt.commandNumber).toBe(0);
                     expect(evt.seqnbr).toBe(5);

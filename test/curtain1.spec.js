@@ -29,7 +29,7 @@ describe('Curtain1 class', function () {
             curtain1 = new rfxcom.Curtain1(device);
         });
         it('should send the correct bytes to the serialport', function (done) {
-            var sentCommandId;
+            var sentCommandId = NaN;
             curtain1.open('0x41/01', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -53,7 +53,7 @@ describe('Curtain1 class', function () {
         it('should throw an exception with an invalid deviceId', function () {
             expect(function () {
                 curtain1.open('0x40');
-            }).toThrow(new Error('Invalid deviceId format.'));
+            }).toThrow("Invalid deviceId format.");
         });
         it('should handle no callback', function () {
             curtain1.open('0x41/10');
@@ -65,7 +65,7 @@ describe('Curtain1 class', function () {
             curtain1 = new rfxcom.Curtain1(device);
         });
         it('should send the correct bytes to the serialport', function (done) {
-            var sentCommandId;
+            var sentCommandId = NaN;
             curtain1.close('0xA5/01', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -79,7 +79,7 @@ describe('Curtain1 class', function () {
             curtain1 = new rfxcom.Curtain1(device);
         });
         it('should send the correct bytes to the serialport', function (done) {
-            var sentCommandId;
+            var sentCommandId = NaN;
             curtain1.stop('0x41/01', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -93,7 +93,7 @@ describe('Curtain1 class', function () {
             curtain1 = new rfxcom.Curtain1(device);
         });
         it('should send the correct bytes to the serialport', function (done) {
-            var sentCommandId;
+            var sentCommandId = NaN;
             curtain1.program('0x41/01', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
