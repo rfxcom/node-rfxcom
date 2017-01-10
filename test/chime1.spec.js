@@ -25,7 +25,7 @@ describe('Chime1 class', function () {
         it('should throw an error if no subtype is specified', function () {
             expect(function () {
                 chime1 = new rfxcom.Chime1(device);
-            }).toThrow(new Error('Must provide a subtype.'));
+            }).toThrow("Must provide a subtype.");
         });
     });
     describe('.chime', function () {
@@ -33,7 +33,7 @@ describe('Chime1 class', function () {
             chime1 = new rfxcom.Chime1(device, rfxcom.chime1.BYRON_SX);
         });
         it('should send the correct bytes to the serialport', function (done) {
-            var sentCommandId;
+            var sentCommandId = NaN;
             chime1.chime('0x2a', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -42,7 +42,7 @@ describe('Chime1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept an array deviceId', function (done) {
-            var sentCommandId;
+            var sentCommandId = NaN;
             chime1.chime(['0x2a'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -63,7 +63,7 @@ describe('Chime1 class', function () {
             debugDevice.acknowledge[0]();
         });
         it('should accept a valid tone number', function (done) {
-            var sentCommandId;
+            var sentCommandId = NaN;
             chime1.chime('0x2a', 0x0d, function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -72,22 +72,19 @@ describe('Chime1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should throw an error with an invalid tone number', function () {
-            var sentCommandId;
             expect(function () {
                 chime1.chime('0x2a', -1)
-            }).toThrow(new Error("Invalid tone: value must be in range 0-15"));
+            }).toThrow("Invalid tone: value must be in range 0-15");
         });
         it('should throw an error with an invalid device ID', function () {
-            var sentCommandId;
             expect(function () {
                 chime1.chime('0x23a')
-            }).toThrow(new Error("Device ID 0x23a outside valid range"));
+            }).toThrow("Device ID 0x23a outside valid range");
         });
         it('should throw an error with an invalid device ID format', function () {
-            var sentCommandId;
             expect(function () {
                 chime1.chime('0x23/0xa')
-            }).toThrow(new Error("Invalid device ID format"));
+            }).toThrow("Invalid device ID format");
         });
     });
     describe('.chime', function () {
@@ -95,7 +92,7 @@ describe('Chime1 class', function () {
             chime1 = new rfxcom.Chime1(device, rfxcom.chime1.BYRON_MP001);
         });
         it('should send the correct bytes to the serialport', function (done) {
-            var sentCommandId;
+            var sentCommandId = NaN;
             chime1.chime('101000', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -104,16 +101,14 @@ describe('Chime1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should throw an error with an invalid device ID format', function () {
-            var sentCommandId;
             expect(function () {
                 chime1.chime('10100')
-            }).toThrow(new Error("Invalid device ID format"));
+            }).toThrow("Invalid device ID format");
         });
         it('should throw an error with an invalid device ID format', function () {
-            var sentCommandId;
             expect(function () {
                 chime1.chime('10100x')
-            }).toThrow(new Error("Invalid device ID format"));
+            }).toThrow("Invalid device ID format");
         });
     });
     describe('.chime', function () {
@@ -121,7 +116,7 @@ describe('Chime1 class', function () {
             chime1 = new rfxcom.Chime1(device, rfxcom.chime1.SELECT_PLUS);
         });
         it('should send the correct bytes to the serialport', function (done) {
-            var sentCommandId;
+            var sentCommandId = NaN;
             chime1.chime('0x3ff', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -130,7 +125,7 @@ describe('Chime1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept the highest allowed address', function (done) {
-            var sentCommandId;
+            var sentCommandId = NaN;
             chime1.chime('0x3fffff', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -139,10 +134,9 @@ describe('Chime1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should throw an error with an invalid device ID', function () {
-            var sentCommandId;
             expect(function () {
                 chime1.chime('0x400000')
-            }).toThrow(new Error("Device ID 0x400000 outside valid range"));
+            }).toThrow("Device ID 0x400000 outside valid range");
         });
     });
     describe('.chime', function () {
@@ -150,7 +144,7 @@ describe('Chime1 class', function () {
             chime1 = new rfxcom.Chime1(device, rfxcom.chime1.ENVIVO);
         });
         it('should send the correct bytes to the serialport', function (done) {
-            var sentCommandId;
+            var sentCommandId = NaN;
             chime1.chime('0x3ff', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -159,7 +153,7 @@ describe('Chime1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes to the serialport', function (done) {
-            var sentCommandId;
+            var sentCommandId = NaN;
             chime1.chime('0xffffff', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -168,10 +162,9 @@ describe('Chime1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should throw an error with an invalid device ID', function () {
-            var sentCommandId;
             expect(function () {
                 chime1.chime('0x400/1')
-            }).toThrow(new Error("Invalid device ID format"));
+            }).toThrow("Invalid device ID format");
         });
     });
 });

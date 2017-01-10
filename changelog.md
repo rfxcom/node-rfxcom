@@ -1,3 +1,8 @@
+Version 0.13.0
+--------------
+
+- Added support for Blinds1 devices. Tested only for T0/Rollertrol.
+
 Version 0.12.0
 --------------
 
