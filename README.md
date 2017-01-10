@@ -250,7 +250,7 @@ Emitted when a message is received from Blyss lighting remote control devices.
 
 "blinds1"
 --------
-Emitted when a message arrives from a type 1 blinds remote controller (only a few types are supported)
+Emitted when a message arrives from a compatible type 1 blinds remote controller (only a few subtypes can be received)
 
 "chime1"
 --------

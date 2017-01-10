@@ -92,15 +92,6 @@ describe('Blinds1 class', function () {
             expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x00, 0x00, 0x00, 0x12, 0x34, 0x05, 0x03, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
-        it('should send the correct bytes for a set() command to the serialport', function (done) {
-            var sentCommandId = NaN;
-            blinds1.set('0x1234/5', function (err, response, cmdId) {
-                sentCommandId = cmdId;
-                done();
-            });
-            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x00, 0x00, 0x00, 0x12, 0x34, 0x05, 0x04, 0x00]);
-            expect(sentCommandId).toEqual(0);
-        });
         it('should send the correct bytes for a setLimit() command to the serialport', function (done) {
             var sentCommandId = NaN;
             blinds1.setLimit('0x1234/5', function (err, response, cmdId) {
@@ -242,11 +233,6 @@ describe('Blinds1 class', function () {
             expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x01, 0x00, 0x00, 0x12, 0x34, 0x05, 0x04, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
-        it('should throw an error for set() command', function () {
-            expect(function () {
-                blinds1.set('0x1234/5')
-            }).toThrow("Device does not support set()");
-        });
         it('should throw an error for down() command', function () {
             expect(function () {
                 blinds1.down('0x1234/5')
@@ -379,11 +365,6 @@ describe('Blinds1 class', function () {
             expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x02, 0x00, 0x00, 0x12, 0x34, 0x00, 0x03, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
-        it('should throw an error for set() command', function () {
-            expect(function () {
-                blinds1.set('0x1234/5')
-            }).toThrow("Device does not support set()");
-        });
         it('should throw an error for setLimit() command', function () {
             expect(function () {
                 blinds1.setLimit('0x1234/5')
@@ -503,11 +484,6 @@ describe('Blinds1 class', function () {
                 blinds1.setLimit('0x1234/5')
             }).toThrow("Device does not support setLimit()");
         });
-        it('should throw an error for set() command', function () {
-            expect(function () {
-                blinds1.set('0x1234/5')
-            }).toThrow("Device does not support set()");
-        });
         it('should throw an error for down() command', function () {
             expect(function () {
                 blinds1.down('0x1234/5')
@@ -625,11 +601,6 @@ describe('Blinds1 class', function () {
             });
             expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x04, 0x00, 0x00, 0x12, 0x34, 0x00, 0x04, 0x00]);
             expect(sentCommandId).toEqual(0);
-        });
-        it('should throw an error for set() command', function () {
-            expect(function () {
-                blinds1.set('0x1234/5')
-            }).toThrow("Device does not support set()");
         });
         it('should throw an error for down() command', function () {
             expect(function () {
@@ -749,11 +720,6 @@ describe('Blinds1 class', function () {
                 blinds1.setLimit('0x1234/5')
             }).toThrow("Device does not support setLimit()");
         });
-        it('should throw an error for set() command', function () {
-            expect(function () {
-                blinds1.set('0x1234/5')
-            }).toThrow("Device does not support set()");
-        });
         it('should send the correct bytes for a down() command to the serialport', function (done) {
             var sentCommandId = NaN;
             blinds1.down('0x1234/5', function (err, response, cmdId) {
@@ -866,11 +832,6 @@ describe('Blinds1 class', function () {
             expect(function () {
                 blinds1.setLimit('0x1234/5')
             }).toThrow("Device does not support setLimit()");
-        });
-        it('should throw an error for set() command', function () {
-            expect(function () {
-                blinds1.set('0x1234/5')
-            }).toThrow("Device does not support set()");
         });
         it('should throw an error for down() command', function () {
             expect(function () {
@@ -1000,11 +961,6 @@ describe('Blinds1 class', function () {
                 blinds1.setLimit('0x1234/5')
             }).toThrow("Device does not support setLimit()");
         });
-        it('should throw an error for set() command', function () {
-            expect(function () {
-                blinds1.set('0x1234/5')
-            }).toThrow("Device does not support set()");
-        });
         it('should throw an error for down() command', function () {
             expect(function () {
                 blinds1.down('0x1234/5')
@@ -1128,11 +1084,6 @@ describe('Blinds1 class', function () {
             expect(function () {
                 blinds1.setLimit('0x123/5')
             }).toThrow("Device does not support setLimit()");
-        });
-        it('should throw an error for a set() command', function () {
-            expect(function () {
-                blinds1.set('0x123/5')
-            }).toThrow("Device does not support set()");
         });
         it('should send the correct bytes for a down() command', function (done) {
             var sentCommandId = NaN;
@@ -1279,11 +1230,6 @@ describe('Blinds1 class', function () {
             expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x09, 0x00, 0x00, 0x12, 0x34, 0x55, 0x04, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
-        it('should throw an error for set() command', function () {
-            expect(function () {
-                blinds1.set('0x12345/5')
-            }).toThrow("Device does not support set()");
-        });
         it('should throw an error for down() command', function () {
             expect(function () {
                 blinds1.down('0x12345/5')
@@ -1429,11 +1375,6 @@ describe('Blinds1 class', function () {
                 blinds1.setLimit('0x1234/5')
             }).toThrow("Device does not support setLimit()");
         });
-        it('should throw an error for set() command', function () {
-            expect(function () {
-                blinds1.set('0x1234/5')
-            }).toThrow("Device does not support set()");
-        });
         it('should send the correct bytes for a down() command to the serialport', function (done) {
             var sentCommandId = NaN;
             blinds1.down('0x1234/5', function (err, response, cmdId) {
@@ -1560,11 +1501,6 @@ describe('Blinds1 class', function () {
                 blinds1.setLimit('0x1234/5')
             }).toThrow("Device does not support setLimit()");
         });
-        it('should throw an error for set() command', function () {
-            expect(function () {
-                blinds1.set('0x1234/5')
-            }).toThrow("Device does not support set()");
-        });
         it('should throw an error for down() command', function () {
             expect(function () {
                 blinds1.down('0x1234/5')
@@ -1669,11 +1605,6 @@ describe('Blinds1 class', function () {
             expect(function () {
                 blinds1.setLimit('0x1234/5')
             }).toThrow("Device does not support setLimit()");
-        });
-        it('should throw an error for a set() command', function () {
-            expect(function () {
-                blinds1.set('0x1234/5')
-            }).toThrow("Device does not support set()");
         });
         it('should throw an error for a down() command', function () {
             expect(function () {
@@ -1807,11 +1738,6 @@ describe('Blinds1 class', function () {
             expect(function () {
                 blinds1.setLimit('0x1234/5')
             }).toThrow("Device does not support setLimit()");
-        });
-        it('should throw an error for a set() command', function () {
-            expect(function () {
-                blinds1.set('0x1234/5')
-            }).toThrow("Device does not support set()");
         });
         it('should throw an error for a down() command', function () {
             expect(function () {
