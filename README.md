@@ -256,6 +256,11 @@ Emitted when a message arrives from a compatible type 1 blinds remote controller
 --------
 Emitted when data arrives from Byron or similar doorbell pushbutton
 
+"list"
+------
+Emitted when a response to the RFY command 'listremotes' is received.
+(Some bytes of the response packet have unknown meaning.)
+
 Connecting and disconnecting
 ============================
 The function `rfxtrx.initialise()` will attempt to connect to the RFXtrx433 hardware. If this succeeds, a 'connecting' event
@@ -275,3 +280,26 @@ Some variants of Linux will create a differently-named device file if the RFtxr4
 even if it is reconnected to the same USB port. For example, `/dev/ttyUSB0` may become `/dev/ttyUSB1`. To avoid any
 problems this may cause, use the equivalent alias device file in `/dev/serial/by-id/` when creating the RfxCom object.
 This should look something like `/dev/serial/by-id/usb_RFXCOM_RFXtrx433_12345678-if00-port0`.
+
+Rfy (Somfy)
+-----------
+There's a specialised Rfy prototype, which uses an RfxCom object.
+
+<pre>
+    var rfxtrx = new rfxcom.RfxCom("/dev/ttyUSB0", {debug: true}),
+        rfy = new rfxcom.Rfy(rfxtrx, rfxcom.rfy.RFY);
+
+    rfy.up("01010101");
+    rfy.down("01010101");
+    rfy.do("01010101", 'down', function(err, res, sequenceNum) {
+        if (!err) console.log('complete');
+    });    
+</pre>
+
+The rfy message controls one of two subtypes, you need to specify the
+subtype to the constructor, the options are rfxcom.rfy.RFY or 
+rfxcom.rfy.RFYEXT.
+
+Predefined commands include up(), down(), stop(), list() and program().
+All other commands can be accessed via do() option, see defines.js 
+RfyCommands for complete list of available commands.
