@@ -1,14 +1,14 @@
 {
   "name": "rfxcom",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "author": "Kevin McDermott <kevin@bigkevmcd.com>",
   "dependencies": {
     "queue": "^4.0.0",
-    "serialport": "2.x"
+    "serialport": "4.0.4"
   },
   "main": "rfxcom.js",
   "devDependencies": {
-    "jasmine-node": "*",
+    "jasmine-node": "1.14.3",
     "jshint": "*"
   },
   "scripts": {
