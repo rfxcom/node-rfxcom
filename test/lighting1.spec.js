@@ -20,7 +20,7 @@ describe('Lighting1 class', function () {
         device.connected = true;
     });
     afterEach(function () {
-        if (typeof device.acknowledge[0] == "function") {
+        if (typeof device.acknowledge[0] === "function") {
             device.acknowledge[0]();
         }
     });
