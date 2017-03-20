@@ -171,3 +171,35 @@ Commands:
 
     Lighting6.switchOn()
     Lighting6.switchOff()
+
+Rfy
+---
+
+Devices:
+
+    RFY
+    RFYEXT
+    ASA
+    
+Commands:
+
+    Rfy.up()
+    Rfy.down()
+    Rfy.stop()
+    Rfy.venetianOpenUS()
+    Rfy.venetianCloseUS()
+    Rfy.venetianIncreaseAngleUS()
+    Rfy.venetianDecreaseAngleUS()
+    Rfy.venetianOpenEU()
+    Rfy.venetianCloseEU()
+    Rfy.venetianIncreaseAngleEU()
+    Rfy.venetianDecreaseAngleEU()
+    Rfy.enableSunSensor()
+    Rfy.disableSunSensor()
+    
+    Rfy.erase()
+    Rfy.eraseAll()
+    Rfy.listRemotes()
+    Rfy.program()
+    
+    Rfy.do()

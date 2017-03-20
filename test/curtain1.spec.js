@@ -46,7 +46,7 @@ describe('Curtain1 class', function () {
                 consoleSpy = spyOn(console, 'log');
             debugDevice.connected = true;
             curtain.open('0x41/01', done);
-            expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : %s', ['07', '18', '00', '00', '41', '01', '00', '00']);
+            expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 07,18,00,00,41,01,00,00');
             debugDevice.acknowledge[0]();
         });
         // TODO: Add checking for valid housecodes / unitcodes pg. 28.

@@ -59,7 +59,7 @@ describe('Lighting6 class', function () {
             debug.switchOn('0xF09A/B/1', function () {
                 done();
             });
-            expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : %s', ['0B', '15', '00', '00', 'F0', '9A', '42', '01', '00', '00', '00', '00']);
+            expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 0B,15,00,00,F0,9A,42,01,00,00,00,00');
             debugDevice.acknowledge[0]();
         });
         it('should accept an array address', function (done) {
