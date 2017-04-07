@@ -24,7 +24,7 @@ describe('Lighting5 class', function () {
         device.connected = true;
     });
     afterEach(function () {
-        if (typeof device.acknowledge[0] == "function") {
+        if (typeof device.acknowledge[0] === "function") {
             device.acknowledge[0]();
         }
     });
@@ -104,7 +104,7 @@ describe('Lighting5 class', function () {
             }, function () {
                 done();
             });
-            expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : %s', ['0A', '14', '00', '00', 'F0', '9A', 'C8', '01', '10', '10', '00']);
+            expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 0A,14,00,00,F0,9A,C8,01,10,10,00');
             debugDevice.acknowledge[0]();
         });
     });

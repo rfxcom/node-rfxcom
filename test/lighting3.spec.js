@@ -20,7 +20,7 @@ describe('Lighting3 class', function () {
         device.connected = true;
     });
     afterEach(function () {
-        if (typeof device.acknowledge[0] == "function") {
+        if (typeof device.acknowledge[0] === "function") {
             device.acknowledge[0]();
         }
     });
@@ -121,7 +121,7 @@ describe('Lighting3 class', function () {
             debugDevice.connected = true;
             var consoleSpy = spyOn(console, 'log');
             debugLight.switchOn(['16', '0'], done);
-            expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : %s', ['08', '12', '00', '00', '0F', 'FF', '03', '10', '00']);
+            expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 08,12,00,00,0F,FF,03,10,00');
             debugDevice.acknowledge[0]();
         });
         it('should accept the highest system code & channel number', function (done) {

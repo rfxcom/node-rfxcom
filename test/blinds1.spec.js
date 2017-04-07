@@ -17,7 +17,7 @@ describe('Blinds1 class', function () {
         device.connected = true;
     });
     afterEach(function () {
-        if (typeof device.acknowledge[0] == "function") {
+        if (typeof device.acknowledge[0] === "function") {
             device.acknowledge[0]();
         }
     });
@@ -62,7 +62,7 @@ describe('Blinds1 class', function () {
             debugDevice.connected = true;
             var consoleSpy = spyOn(console, 'log');
             debug.open('0x1234/5', done);
-            expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : %s', ['09', '19', '00', '00', '00', '12', '34', '05', '00', '00']);
+            expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 09,19,00,00,00,12,34,05,00,00');
             debugDevice.acknowledge[0]();
         });
         it('should send the correct bytes for a close() command to the serialport', function (done) {

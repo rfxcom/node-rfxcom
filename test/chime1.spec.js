@@ -17,7 +17,7 @@ describe('Chime1 class', function () {
         device.connected = true;
     });
     afterEach(function () {
-        if (typeof device.acknowledge[0] == "function") {
+        if (typeof device.acknowledge[0] === "function") {
             device.acknowledge[0]();
         }
     });
@@ -59,7 +59,7 @@ describe('Chime1 class', function () {
             debugDevice.connected = true;
             var consoleSpy = spyOn(console, 'log');
             debug.chime('0x2a', done);
-            expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : %s', ['07', '16', '00', '00', '00', '2A', '05', '00']);
+            expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 07,16,00,00,00,2A,05,00');
             debugDevice.acknowledge[0]();
         });
         it('should accept a valid tone number', function (done) {

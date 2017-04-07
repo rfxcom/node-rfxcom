@@ -20,7 +20,7 @@ describe('Lighting2 class', function () {
         device.connected = true;
     });
     afterEach(function () {
-        if (typeof device.acknowledge[0] == "function") {
+        if (typeof device.acknowledge[0] === "function") {
             device.acknowledge[0]();
         }
     });
@@ -71,7 +71,7 @@ describe('Lighting2 class', function () {
             debugDevice.connected = true;
             var consoleSpy = spyOn(console, 'log');
             debugLight.switchOn('0x03FFFFFF/1', done);
-            expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : %s', ['0B', '11', '02', '00', '03', 'FF', 'FF', 'FF', '01', '01', '0F', '00']);
+            expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 0B,11,02,00,03,FF,FF,FF,01,01,0F,00');
             debugDevice.acknowledge[0]();
         });
         it('should throw an exception with a badly formatted deviceId', function () {

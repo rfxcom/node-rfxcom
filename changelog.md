@@ -1,3 +1,8 @@
+Version 0.14.0
+--------------
+
+- Added support for Rfy devices (Somfy blinds)
+
 Version 0.13.0
 --------------
 

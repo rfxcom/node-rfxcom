@@ -20,7 +20,7 @@ describe('Lighting4 class', function () {
         device.connected = true;
     });
     afterEach(function () {
-        if (typeof device.acknowledge[0] == "function") {
+        if (typeof device.acknowledge[0] === "function") {
             device.acknowledge[0]();
         }
     });
@@ -55,7 +55,7 @@ describe('Lighting4 class', function () {
             debugLight.sendData(0, null, function () {
                 done();
             });
-            expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : %s', ['09', '13', '00', '00', '00', '00', '00', '01', '5E', '00']);
+            expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 09,13,00,00,00,00,00,01,5E,00');
             debugDevice.acknowledge[0]();
         });
         it('should send the correct bytes to the serialport (numeric data, hex string pulse width)', function (done) {

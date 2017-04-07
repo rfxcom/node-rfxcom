@@ -1,11 +1,6 @@
 Evented communication with RFXtrx433.
 =====================================
 
-How to Use
-==========
-
-rfxcom depends on the serialport module.
-
 To install
 ----------
 
@@ -13,7 +8,7 @@ To install
   npm install rfxcom
 </pre>
 
-Depends on serialport 2.0.0+ and queue ^4.0.0
+Depends on serialport 4.* and queue ^4.0.0
 
 To Use
 ------
@@ -51,7 +46,8 @@ rfxtrx.initialise(function () {
 </pre>
 
 Sending Commands
-===
+================
+
 Prototype objects are provided for some of the most useful protocols (see the RFXCOM manual for details):
 
 * Blinds1
@@ -63,6 +59,7 @@ Prototype objects are provided for some of the most useful protocols (see the RF
 * Lighting4
 * Lighting5
 * Lighting6
+* Rfy
 
 Each prototype has a constructor, most of which must be called with the required subtype as a second parameter.
 The subtypes are exported from `index.js` and can be accessed as shown in the examples below. Each prototype has
@@ -112,11 +109,49 @@ HomeEasy: the ones marketed in UK are of type 'AC', while those in the Netherlan
     lighting2.switchOff("0xF09AC8AA/1");
 </pre>
 
+Rfy (Somfy) Blinds
+------------------
+There is a specialised Rfy prototype, which itself uses an RfxCom object. This supports three subtypes: 'RFY', 'RFYEXT'
+and 'ASA', one of which must be supplied to the Rfy constructor. RFY support requires an RFXtrx433E.
+
+<pre>
+    var rfxtrx = new rfxcom.RfxCom("/dev/ttyUSB0", {debug: true}),
+           rfy = new rfxcom.Rfy(rfxtrx, rfxcom.rfy.RFY);
+
+    rfy.up("0x10203/1");
+    // All commands can take an optional callback
+    rfy.down("0x10203/1", function(err, res, sequenceNumber) {
+                if (!err) console.log('complete');
+            });
+    // The ID can be supplied as an array with address & unitcode elements (strings)
+    rfy.do(["0x10203", "1"], "down");
+    // The eraseAll() and listRemotes() commands DO NOT take an ID parameter, all the others do
+    rfy.listRemotes();
+    rfy.eraseAll(callback);
+</pre>
+
+Supported commands include standard operations such as up(), down(), and stop(), as well
+as the programming commands:
+program(), erase(), eraseAll(), and listRemotes().
+All other commands can be accessed using the do() command - see the
+RfyCommands list in defines.js for the complete list of available commands.
+
+To 'pair' the RFX as a new remote control with a Somfy blind motor,
+press and hold 'program' *on the existing Somfy remote controller* until the blind responds with a 'jog'
+motion. Then send a program() command to the RFXtrx433E, with the ID parameter set to an address/unit code
+combination of your choice - this needs to be unique within the RFXtrx433E's list, but is otherwise
+arbitrary. Limits for the address are 0x1 to 0xFFFFF; limits for the unitcode are 0x0 to 0x4 for RFY
+subtype devices, 0x0 to 0xf for RFYEXT devices, and 0x1 to 0x5 for ASA devices.
+
+To list all the remotes (of either RFY or ASA subtype) send a listRemotes() command; to erase a single
+entry from the list, send erase(ID) where ID is the address/unitcode of the entry to erase; or eraseAll()
+to clear the list.
+
 RfxCom system events
 ====================
 
-System events are used to track conection and disconnection of the RFXtrx433, and to provide
-low-level access to received data.
+System events are used to track conection & disconnection of, and communication with, the RFXtrx433 itself,
+and to provide low-level access to received data (including unsupported packet types)
 
 "connecting"
 ------------
@@ -136,9 +171,32 @@ Emitted if the RFXtrx433 has been disconnected from the USB port
 
 "response"
 ----------
-Emitted when a response message is received from the RFXtrx 433, sends the
-status (from the RFXtrx433) and the sequence number of the message the response
-is for.
+Emitted when a response message is received from the RFXtrx 433, or RfxCom times out waiting for a response.
+It passes three parameters:
+* A textual description of the response, as a string
+* The sequence number of the message responded to
+* A response code number:
+  - 0: ACK - transmit OK
+  - 1: ACK - transmit delayed
+  - 2: NAK - transmitter did not lock onto frequency
+  - 3: NAK - AC address not allowed
+  - 4: Command unknown or not supported by this device
+  - 5: Unknown RFY remote ID
+  - 6: Timed out waiting for response
+
+"listremotes"
+-------------
+Emitted in response to the Rfy command `listRemotes()` - this queries the RFXtrx433E for the list of currently stored
+simulated RFY remote controls. The list is passed an array, which may be of zero length, of objects describing each
+simulated remote control:
+* remoteNumber: index number of this entry in the RFXtrx433E's internal list
+* remoteType: "RFY" or "ASA",
+* deviceId: Address/unitcode as a hexadecimal string, e.g. "0x123/2"
+* idBytes: Address as an array of 3 bytes, e.g. [0x00, 0x01, 0x23]
+* unitCode: Unit code as a byte, e.g. 0x02
+
+This event is emitted approximately 10s after the `listRemotes()` command is given, as the only way to detect the end of
+the list is to wait for the response timeout - the RFXtrx433E does not send an 'end of list' packet.
 
 "status"
 --------
@@ -154,15 +212,15 @@ Emitted when the serial port emits a "drain" event.
 
 "receive"
 ---------
-Emitted when any packet message is received from the RFXtrx 433, and contains the raw bytes that were received.
-This event is emitted before the received data event for the packet type (if one is defined). 
+Emitted when any packet message is received from the RFXtrx 433, and passes the raw bytes that were received, as an
+array of bytes. This event is emitted before the received data event for the packet type (if one is defined). 
 
 RfxCom received data events - sensors
 =====================================
 
 The events are mostly named from the message identifiers used in the RFXtrx documentation. A protocol must
 be enabled to be received. This can be done using RFXmngr.exe, or the `enable()` function of the rfxcom object.
-Each event has an 'evt' property whose members contain the received sensor data, along with signal strength and
+Each event passes an object whose properties contain the received sensor data, along with signal strength and
 battery level (if available).
 
 "security1"
@@ -225,8 +283,8 @@ RfxCom received data events - remote controls
 These events are emitted when data arrives from a 'remote control' device, which may be a pushbutton
 unit or a dedicated remote control device such as a PIR light switch. The events are named from the
 message identifiers used in the RFXtrx documentation. A protocol must be enabled to be received. however not
-every protocols that can be transmitted can be received. Each event has an 'evt' property whose members contain
-the transmitted command, along with signal strength and battery level (if available).
+every protocol that can be transmitted can be received. Each event passes an object whose properties contain
+the received command, along with signal strength and battery level (if available).
 
 "lighting1"
 -----------
@@ -261,10 +319,10 @@ Connecting and disconnecting
 The function `rfxtrx.initialise()` will attempt to connect to the RFXtrx433 hardware. If this succeeds, a 'connecting' event
 is emitted, followed about 5.5 seconds later by a 'ready' event. If the device is not present (wrong device path, or device
 not plugged in) a 'connectfailed' event is emitted. If the the hardware is subsequently unplugged, a 'disconnect' event
-is emitted (this can happen before either the 'connecting' or 'ready' events are emitted).
+is emitted (this can also happen before either the 'connecting' or 'ready' events are emitted).
 
 If either the connection fails or the RFXtrx433 is unplugged, a subsequent call to `initialise()` will attempt to reconnect.
-The 'disconnect'/'connectfailed' handler may make repeated attempts to reconnect,
+Your 'disconnect'/'connectfailed' handler may make repeated attempts to reconnect,
 but <em>must</em> allow an interval of at least `rfxcom.initialiseWaitTime` milliseconds between each attempt. While
 disconnected, any data sent by a call to a command object is silently discarded, however the various received data event
 handlers are preserved.
@@ -275,3 +333,4 @@ Some variants of Linux will create a differently-named device file if the RFtxr4
 even if it is reconnected to the same USB port. For example, `/dev/ttyUSB0` may become `/dev/ttyUSB1`. To avoid any
 problems this may cause, use the equivalent alias device file in `/dev/serial/by-id/` when creating the RfxCom object.
 This should look something like `/dev/serial/by-id/usb_RFXCOM_RFXtrx433_12345678-if00-port0`.
+
