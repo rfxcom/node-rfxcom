@@ -8,7 +8,7 @@ To install
   npm install rfxcom
 </pre>
 
-Depends on serialport 4.0.4 and queue ^4.0.0
+Depends on serialport 4.* and queue ^4.0.0
 
 To Use
 ------
@@ -194,6 +194,9 @@ simulated remote control:
 * deviceId: Address/unitcode as a hexadecimal string, e.g. "0x123/2"
 * idBytes: Address as an array of 3 bytes, e.g. [0x00, 0x01, 0x23]
 * unitCode: Unit code as a byte, e.g. 0x02
+
+This event is emitted approximately 10s after the `listRemotes()` command is given, as the only way to detect the end of
+the list is to wait for the response timeout - the RFXtrx433E does not send an 'end of list' packet.
 
 "status"
 --------
