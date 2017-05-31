@@ -227,6 +227,10 @@ battery level (if available).
 -----------
 Emitted when an X10 or similar security device reports a status change.
 
+"bbq1"
+------
+Emitted when a message is received from a Maverick ET-732 BBQ temperature sensor.
+
 "temprain1"
 -----------
 Emitted when a message is received from an Allecto temperature/rainfall weather sensor.
