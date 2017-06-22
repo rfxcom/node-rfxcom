@@ -346,6 +346,44 @@ describe('Lighting5 class', function () {
             }).toThrow("Invalid deviceId format");
         });
     });
+    describe('.AOKE.addressChecking', function () {
+        beforeEach(function () {
+            lighting5 = new rfxcom.Lighting5(device, rfxcom.lighting5.AOKE);
+        });
+        it('should accept the lowest address value', function (done) {
+            var sentCommandId = NaN;
+            lighting5.switchOn('0x000001', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x07, 0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x1F, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should accept the highest address value', function (done) {
+            var sentCommandId = NaN;
+            lighting5.switchOn('0x00FFFF', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x07, 0x00, 0x00, 0xff, 0xff, 0x01, 0x01, 0x1F, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should throw an exception with an invalid address', function () {
+            expect(function () {
+                lighting5.switchOn('0x10000');
+            }).toThrow("Address 0x10000 outside valid range");
+        });
+        it('should throw an exception with an invalid address', function () {
+            expect(function () {
+                lighting5.switchOn('0x0');
+            }).toThrow("Address 0x0 outside valid range");
+        });
+        it('should throw an exception when the deviceId includes a unit number', function () {
+            expect(function () {
+                lighting5.switchOn('0xFFF/7');
+            }).toThrow("Invalid deviceId format");
+        });
+    });
     describe('.LIVOLO.specificCommands', function () {
         beforeEach(function () {
             lighting5 = new rfxcom.Lighting5(device, rfxcom.lighting5.LIVOLO);
