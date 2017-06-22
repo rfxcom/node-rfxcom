@@ -148,6 +148,7 @@ Devices:
     CONRAD
     LIVOLO
     TRC02
+    AOKE
     
 Commands:
 

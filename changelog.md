@@ -1,3 +1,8 @@
+Version 0.16.0
+--------------
+
+- Added support for AOKE relay (lighting5)
+
 Version 0.15.0
 --------------
 
