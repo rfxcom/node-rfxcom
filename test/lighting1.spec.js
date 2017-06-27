@@ -262,4 +262,28 @@ describe('Lighting1 class', function () {
             }).toThrow("Invalid unit code 11");
         });
     });
+    describe('.HQ adress checking', function () {
+        beforeEach(function () {
+            lighting1 = new rfxcom.Lighting1(device, rfxcom.lighting1.HQ);
+        });
+        it('should accept the highest house & unit codes', function (done) {
+            var sentCommandId = NaN;
+            lighting1.switchOn(['D', '16'], function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x07, 0x10, 0x0b, 0x00, 0x44, 0x10, 0x01, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should reject an invalid house code', function () {
+            expect(function () {
+                lighting1.switchOn(['E', '1'])
+            }).toThrow("Invalid house code 'E'");
+        });
+        it('should reject an invalid unit code', function () {
+            expect(function () {
+                lighting1.switchOn(['A', '65'])
+            }).toThrow("Invalid unit code 65");
+        });
+    });
 });

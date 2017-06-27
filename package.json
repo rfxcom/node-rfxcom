@@ -2,6 +2,7 @@
   "name": "rfxcom",
   "version": "1.0.0",
   "author": "Kevin McDermott <kevin@bigkevmcd.com>",
+  "engines" : { "node" : ">=4.0.0" },
   "dependencies": {
     "queue": "^4.0.0",
     "serialport": "4.*"
