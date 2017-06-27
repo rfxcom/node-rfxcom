@@ -8,7 +8,6 @@ Version 0.15.0
 
 - Added support for Maverick ET-732 BBQ thermometer
 
-
 Version 0.14.0
 --------------
 
