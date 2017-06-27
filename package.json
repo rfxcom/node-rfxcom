@@ -1,6 +1,6 @@
 {
   "name": "rfxcom",
-  "version": "0.16.0",
+  "version": "1.0.0",
   "author": "Kevin McDermott <kevin@bigkevmcd.com>",
   "dependencies": {
     "queue": "^4.0.0",
