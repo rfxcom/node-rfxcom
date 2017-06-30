@@ -1764,6 +1764,24 @@ describe('Blinds1 class', function () {
                 blinds1.reverse('0x1234/5')
             }).toThrow("Device does not support reverse()");
         });
+        it('should send the correct bytes for a venetianIncreaseAngle() command to the serialport', function (done) {
+            var sentCommandId = NaN;
+            blinds1.venetianIncreaseAngle('0x1234/5', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x0d, 0x00, 0x00, 0x12, 0x34, 0x05, 0x04, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should send the correct bytes for a venetianDecreaseAngle() command to the serialport', function (done) {
+            var sentCommandId = NaN;
+            blinds1.venetianDecreaseAngle('0x1234/5', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x0d, 0x00, 0x00, 0x12, 0x34, 0x05, 0x05, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
         it('should accept address = 0x1', function (done) {
             var sentCommandId = NaN;
             blinds1.open('0x1/5', function (err, response, cmdId) {
