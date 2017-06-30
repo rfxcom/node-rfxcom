@@ -21,6 +21,10 @@
     "url": "http://github.com/rfxcom/node-rfxcom.git"
   },
   "license": "MIT",
+  "keywords": [
+    "rfxcom",
+    "RFXtrx433"
+  ],
   "bugs": {
     "url": "https://github.com/rfxcom/node-rfxcom/issues"
   }
