@@ -341,7 +341,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "stop", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "stop", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -350,7 +350,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "up", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "up", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -359,7 +359,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "upstop", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "upstop", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -368,7 +368,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "down", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "down", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -377,7 +377,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "downstop", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "downstop", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -386,7 +386,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "updown", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "updown", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -395,7 +395,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "listRemotes", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "listRemotes", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -404,7 +404,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "program", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "program", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -413,7 +413,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "program2sec", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "program2sec", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -422,7 +422,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "program7sec", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "program7sec", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -431,7 +431,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "stop2sec", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "stop2sec", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -440,7 +440,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "stop5sec", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "stop5sec", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -449,7 +449,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "updown5sec", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "updown5sec", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -458,7 +458,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "erasethis", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "erasethis", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -467,7 +467,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "eraseall", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "eraseall", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -476,7 +476,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "up05sec", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "up05sec", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -485,7 +485,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "down05sec", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "down05sec", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -494,7 +494,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "up2sec", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "up2sec", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -503,7 +503,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "down2sec", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "down2sec", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -512,7 +512,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "sunwindenable", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "sunwindenable", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -521,7 +521,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "sundisable", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "sundisable", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -530,17 +530,17 @@ describe('Rfy class', function () {
             });
             it('should throw an exception with an invalid command string', function () {
                 expect(function () {
-                    rfy.do('0x010203/5', "INVALID_COMMAND");
+                    rfy.doCommand('0x010203/5', "INVALID_COMMAND");
                 }).toThrow("Unknown command 'INVALID_COMMAND'");
             });
             it('should throw an exception with an invalid command number', function () {
                 expect(function () {
-                    rfy.do('0x010203/5', -1);
+                    rfy.doCommand('0x010203/5', -1);
                 }).toThrow("Invalid command number -1");
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', 0, function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', 0, function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -549,7 +549,7 @@ describe('Rfy class', function () {
             });
             it('should round command numbers to the nearest integer', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', 0.499, function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', 0.499, function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -558,7 +558,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', 0x14, function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', 0x14, function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -567,7 +567,7 @@ describe('Rfy class', function () {
             });
             it('should throw an exception with an invalid command number', function () {
                 expect(function () {
-                    rfy.do('0x010203/5', 0x15);
+                    rfy.doCommand('0x010203/5', 0x15);
                 }).toThrow("Invalid command number 21");
             });
         });
@@ -889,7 +889,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "stop", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "stop", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -898,7 +898,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "up", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "up", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -907,7 +907,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "upstop", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "upstop", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -916,7 +916,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "down", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "down", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -925,7 +925,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "downstop", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "downstop", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -934,7 +934,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "updown", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "updown", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -943,7 +943,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "listRemotes", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "listRemotes", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -952,7 +952,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "program", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "program", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -961,7 +961,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "program2sec", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "program2sec", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -970,7 +970,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "program7sec", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "program7sec", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -979,7 +979,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "stop2sec", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "stop2sec", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -988,7 +988,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "stop5sec", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "stop5sec", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -997,7 +997,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "updown5sec", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "updown5sec", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1006,7 +1006,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "erasethis", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "erasethis", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1015,7 +1015,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "eraseall", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "eraseall", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1024,7 +1024,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "up05sec", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "up05sec", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1033,7 +1033,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "down05sec", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "down05sec", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1042,7 +1042,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "up2sec", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "up2sec", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1051,7 +1051,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "down2sec", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "down2sec", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1060,7 +1060,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "sunwindenable", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "sunwindenable", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1069,7 +1069,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "sundisable", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "sundisable", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1078,17 +1078,17 @@ describe('Rfy class', function () {
             });
             it('should throw an exception with an invalid command string', function () {
                 expect(function () {
-                    rfy.do('0x010203/5', "INVALID_COMMAND");
+                    rfy.doCommand('0x010203/5', "INVALID_COMMAND");
                 }).toThrow("Unknown command 'INVALID_COMMAND'");
             });
             it('should throw an exception with an invalid command number', function () {
                 expect(function () {
-                    rfy.do('0x010203/5', -1);
+                    rfy.doCommand('0x010203/5', -1);
                 }).toThrow("Invalid command number -1");
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', 0, function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', 0, function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1097,7 +1097,7 @@ describe('Rfy class', function () {
             });
             it('should round command numbers to the nearest integer', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', 0.499, function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', 0.499, function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1106,7 +1106,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', 0x14, function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', 0x14, function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1115,7 +1115,7 @@ describe('Rfy class', function () {
             });
             it('should throw an exception with an invalid command number', function () {
                 expect(function () {
-                    rfy.do('0x010203/5', 0x15);
+                    rfy.doCommand('0x010203/5', 0x15);
                 }).toThrow("Invalid command number 21");
             });
         });
@@ -1410,7 +1410,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "stop", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "stop", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1419,7 +1419,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "up", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "up", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1428,7 +1428,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "upstop", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "upstop", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1437,7 +1437,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "down", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "down", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1446,7 +1446,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "downstop", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "downstop", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1455,7 +1455,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "updown", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "updown", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1464,7 +1464,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "listRemotes", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "listRemotes", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1473,7 +1473,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "program", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "program", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1482,7 +1482,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "program2sec", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "program2sec", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1491,7 +1491,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "program7sec", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "program7sec", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1500,7 +1500,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "stop2sec", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "stop2sec", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1509,7 +1509,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "stop5sec", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "stop5sec", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1518,7 +1518,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "updown5sec", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "updown5sec", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1527,7 +1527,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "erasethis", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "erasethis", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1536,7 +1536,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "eraseall", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "eraseall", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1545,7 +1545,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "up05sec", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "up05sec", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1554,7 +1554,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "down05sec", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "down05sec", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1563,7 +1563,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "up2sec", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "up2sec", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1572,7 +1572,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "down2sec", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "down2sec", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1581,7 +1581,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "sunwindenable", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "sunwindenable", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1590,7 +1590,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', "sundisable", function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', "sundisable", function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1599,17 +1599,17 @@ describe('Rfy class', function () {
             });
             it('should throw an exception with an invalid command string', function () {
                 expect(function () {
-                    rfy.do('0x010203/5', "INVALID_COMMAND");
+                    rfy.doCommand('0x010203/5', "INVALID_COMMAND");
                 }).toThrow("Unknown command 'INVALID_COMMAND'");
             });
             it('should throw an exception with an invalid command number', function () {
                 expect(function () {
-                    rfy.do('0x010203/5', -1);
+                    rfy.doCommand('0x010203/5', -1);
                 }).toThrow("Invalid command number -1");
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', 0, function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', 0, function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1618,7 +1618,7 @@ describe('Rfy class', function () {
             });
             it('should round command numbers to the nearest integer', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', 0.499, function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', 0.499, function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1627,7 +1627,7 @@ describe('Rfy class', function () {
             });
             it('should send the correct bytes to the serialport', function (done) {
                 var sentCommandId = NaN;
-                rfy.do('0x010203/01', 0x14, function (err, response, cmdId) {
+                rfy.doCommand('0x010203/01', 0x14, function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
@@ -1636,7 +1636,7 @@ describe('Rfy class', function () {
             });
             it('should throw an exception with an invalid command number', function () {
                 expect(function () {
-                    rfy.do('0x010203/5', 0x15);
+                    rfy.doCommand('0x010203/5', 0x15);
                 }).toThrow("Invalid command number 21");
             });
         });
