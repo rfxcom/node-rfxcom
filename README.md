@@ -184,7 +184,7 @@ It passes three parameters:
   - 5: Unknown RFY remote ID
   - 6: Timed out waiting for response
 
-"listremotes"
+"rfyremoteslist"
 -------------
 Emitted in response to the Rfy command `listRemotes()` - this queries the RFXtrx433E for the list of currently stored
 simulated RFY remote controls. The list is passed an array, which may be of zero length, of objects describing each
