@@ -391,7 +391,7 @@ describe("RfxCom", function() {
                 };
                 device.initialise(handler);
                 expect(resetSpy).toHaveBeenCalled();
-                expect(delaySpy).toHaveBeenCalledWith(500);
+                expect(delaySpy).toHaveBeenCalledWith(50);
                 expect(flushSpy).toHaveBeenCalledWith(jasmine.any(Function));
                 expect(getStatusSpy).toHaveBeenCalledWith(jasmine.any(Function));
                 expect(startRxSpy).toHaveBeenCalledWith(jasmine.any(Function));
