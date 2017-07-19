@@ -96,6 +96,13 @@ describe('Security1 class', function () {
                     }).toThrow("Device does not support switchOnLight()");
                 });
             });
+            describe('switchOffLight', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        security.switchOffLight('0x1234', 1);
+                    }).toThrow("Device does not support switchOffLight()");
+                });
+            });
         });
         describe('address checking', function () {
             it('should throw an exception with an invalid deviceId format', function () {
@@ -198,6 +205,13 @@ describe('Security1 class', function () {
                     expect(function () {
                         security.switchOnLight('0x1234', 1);
                     }).toThrow("Device does not support switchOnLight()");
+                });
+            });
+            describe('switchOffLight', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        security.switchOffLight('0x1234', 1);
+                    }).toThrow("Device does not support switchOffLight()");
                 });
             });
         });
@@ -349,6 +363,31 @@ describe('Security1 class', function () {
                         security.switchOnLight('0x1234', 3);
                     }).toThrow("Invalid channel: value must be in range 1-2");
                 });
+                describe('switchOffLight', function () {
+                    it('should send the correct bytes to the serialport for channel 1', function (done) {
+                        let sentCommandId = NaN;
+                        security.switchOffLight('0x1234', 1, function (err, response, cmdId) {
+                            sentCommandId = cmdId;
+                            done();
+                        });
+                        expect(fakeSerialPort).toHaveSent([0x08, 0x20, 0x02, 0x00, 0x12, 0x00, 0x34, 0x10, 0x00]);
+                        expect(sentCommandId).toEqual(0);
+                    });
+                    it('should send the correct bytes to the serialport for channel 2', function (done) {
+                        let sentCommandId = NaN;
+                        security.switchOffLight('0x1234', 2, function (err, response, cmdId) {
+                            sentCommandId = cmdId;
+                            done();
+                        });
+                        expect(fakeSerialPort).toHaveSent([0x08, 0x20, 0x02, 0x00, 0x12, 0x00, 0x34, 0x12, 0x00]);
+                        expect(sentCommandId).toEqual(0);
+                    });
+                    it('should throw an exception for channel 3', function () {
+                        expect(function () {
+                            security.switchOffLight('0x1234', 3);
+                        }).toThrow("Invalid channel: value must be in range 1-2");
+                    });
+                });
             });
         });
         describe('address checking', function () {
@@ -452,6 +491,13 @@ describe('Security1 class', function () {
                     expect(function () {
                         security.switchOnLight('0x1234', 1);
                     }).toThrow("Device does not support switchOnLight()");
+                });
+            });
+            describe('switchOffLight', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        security.switchOffLight('0x1234', 1);
+                    }).toThrow("Device does not support switchOffLight()");
                 });
             });
         });
@@ -558,6 +604,13 @@ describe('Security1 class', function () {
                     }).toThrow("Device does not support switchOnLight()");
                 });
             });
+            describe('switchOffLight', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        security.switchOffLight('0x1234', 1);
+                    }).toThrow("Device does not support switchOffLight()");
+                });
+            });
         });
         describe('address checking', function () {
             it('should throw an exception with an invalid deviceId format', function () {
@@ -660,6 +713,13 @@ describe('Security1 class', function () {
                     expect(function () {
                         security.switchOnLight('0x1234', 1);
                     }).toThrow("Device does not support switchOnLight()");
+                });
+            });
+            describe('switchOffLight', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        security.switchOffLight('0x1234', 1);
+                    }).toThrow("Device does not support switchOffLight()");
                 });
             });
         });
@@ -766,6 +826,13 @@ describe('Security1 class', function () {
                     }).toThrow("Device does not support switchOnLight()");
                 });
             });
+            describe('switchOffLight', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        security.switchOffLight('0x1234', 1);
+                    }).toThrow("Device does not support switchOffLight()");
+                });
+            });
         });
         describe('address checking', function () {
             it('should throw an exception with an invalid deviceId format', function () {
@@ -868,6 +935,13 @@ describe('Security1 class', function () {
                     expect(function () {
                         security.switchOnLight('0x1234', 1);
                     }).toThrow("Device does not support switchOnLight()");
+                });
+            });
+            describe('switchOffLight', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        security.switchOffLight('0x1234', 1);
+                    }).toThrow("Device does not support switchOffLight()");
                 });
             });
         });
@@ -974,6 +1048,13 @@ describe('Security1 class', function () {
                     }).toThrow("Device does not support switchOnLight()");
                 });
             });
+            describe('switchOffLight', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        security.switchOffLight('0x1234', 1);
+                    }).toThrow("Device does not support switchOffLight()");
+                });
+            });
         });
         describe('address checking', function () {
             it('should throw an exception with an invalid deviceId format', function () {
@@ -1078,6 +1159,13 @@ describe('Security1 class', function () {
                     }).toThrow("Device does not support switchOnLight()");
                 });
             });
+            describe('switchOffLight', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        security.switchOffLight('0x1234', 1);
+                    }).toThrow("Device does not support switchOffLight()");
+                });
+            });
         });
         describe('address checking', function () {
             it('should throw an exception with an invalid deviceId format', function () {
@@ -1180,6 +1268,13 @@ describe('Security1 class', function () {
                     expect(function () {
                         security.switchOnLight('0x1234', 1);
                     }).toThrow("Device does not support switchOnLight()");
+                });
+            });
+            describe('switchOffLight', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        security.switchOffLight('0x1234', 1);
+                    }).toThrow("Device does not support switchOffLight()");
                 });
             });
         });
