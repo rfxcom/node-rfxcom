@@ -48,23 +48,19 @@ rfxtrx.initialise(function () {
 Sending Commands
 ================
 
-Prototype objects are provided for some of the most useful protocols (see the RFXCOM manual for details):
+Prototype transmitter objects are provided for almost all packet types (see the RFXCOM manual for details). The only
+packet types which can be transmitted but are *not* currently supported are:
 
-* Blinds1
-* Chime1
-* Curtain1
-* Lighting1
-* Lighting2
-* Lighting3
-* Lighting4
-* Lighting5
-* Lighting6
-* Rfy
+* 0x1C, Edisio (868 MHz devices only)
+* 0x21, Security2
+* 0x72, FS20 (868 MHz devices only)
+* 0x7F, Raw transmit
 
-Each prototype has a constructor, most of which must be called with the required subtype as a second parameter.
-The subtypes are exported from `index.js` and can be accessed as shown in the examples below. Each prototype has
+Each transmitter has a constructor, which must be called with an RfxCom object as the first parameter, the subtype as the
+second parameter, and an options object as an optional third parameter.
+The subtypes are exported from `index.js` and can be accessed as shown in the examples below. Each transmitter has
 functions to send the appropriate commands. File `DeviceCommands.md` contains a quick reference to all these transmitter
-prototype objects.
+ objects.
 
 Commands can only be sent when the RFXtrx433 is connected (see below). Commands are held in a queue, and will be sent as
 soon as the RFXtrx433 can accept them. No commands are sent (and no messages received) until the initial handshake
@@ -73,7 +69,7 @@ may contain.
 
 LightwaveRf
 -----------
-LightwaveRf devices use the specialised Lighting5 prototype, which itself uses an RfxCom object.
+LightwaveRf devices use the specialised Lighting5 transmitter, which itself uses an RfxCom object.
 
 <pre>
 var rfxcom = require('rfxcom');
@@ -98,7 +94,7 @@ The device ids don't have to be unique, but it's advisable.
 
 HomeEasy (EU)
 -------------
-HomeEasy devices use the specialised Lighting2 prototype, which itself uses an RfxCom object. There are two types of
+HomeEasy devices use the Lighting2 transmitter object. There are two types of
 HomeEasy: the ones marketed in UK are of type 'AC', while those in the Netherlands and elsewhere are of type 'HOMEEASY_EU'.
 
 <pre>
@@ -111,14 +107,17 @@ HomeEasy: the ones marketed in UK are of type 'AC', while those in the Netherlan
 
 Rfy (Somfy) Blinds
 ------------------
-There is a specialised Rfy prototype, which itself uses an RfxCom object. This supports three subtypes: 'RFY', 'RFYEXT'
-and 'ASA', one of which must be supplied to the Rfy constructor. RFY support requires an RFXtrx433E.
+There is a specialised Rfy transmitter object. This supports three subtypes: 'RFY', 'RFYEXT'
+and 'ASA', one of which must be supplied to the Rfy constructor. RFY support requires an RFXtrx433E. The 'RFY' and 'RFYEXT'
+subtypes can control venetian blinds, but the command modes differ between EU and US supplied blinds motors. The mode
+is specified by passing an options parameter to the constructor. The valid modes are `'EU'` and `'US'`: the default is `'EU'`.
+You can change the mode subsequently by calling the setOption() method with a new options parameter.
 
 <pre>
     var rfxtrx = new rfxcom.RfxCom("/dev/ttyUSB0", {debug: true}),
-           rfy = new rfxcom.Rfy(rfxtrx, rfxcom.rfy.RFY);
+           rfy = new rfxcom.Rfy(rfxtrx, rfxcom.rfy.RFY, {venetianBlindsMode: "US"});
 
-    rfy.up("0x10203/1");
+    rfy.venetianOpen("0x10203/1");
     // All commands can take an optional callback
     rfy.down("0x10203/1", function(err, res, sequenceNumber) {
                 if (!err) console.log('complete');
@@ -147,6 +146,20 @@ To list all the remotes (of either RFY or ASA subtype) send a listRemotes() comm
 entry from the list, send erase(ID) where ID is the address/unitcode of the entry to erase; or eraseAll()
 to clear the list.
 
+Transmitter
+-----------
+The Transmitter class serves as a prototype for all the other transmitters. However, you can also create an instance of
+Transmitter and use it to send any arbitrary packet (e.g. one of an unsupported type). The packet will be correctly formatted
+as the RFXtrx expects; it will be queued to avoid overruning the RFXtrx; and the response of the RFXtrx to the packet will
+be emitted as a "response" event. When creating a Transmitter, use `null` as the subtype.
+
+<pre>
+    var rfxtrx = new rfxcom.RfxCom("/dev/ttyUSB0", {debug: true}),
+        transmitter = new rfxcom.Transmitter(rfxtrx, null);
+    // Send a blinds1 packet (type 0x19) with subtype BLINDS_T6 (0x06) and appropriate data bytes
+    transmitter.sendRaw(0x19, 0x06, [0x12, 0x34, 0x56, 0x73, 0x01, 0x00]);
+</pre>
+
 RfxCom system events
 ====================
 
@@ -171,7 +184,7 @@ Emitted if the RFXtrx433 has been disconnected from the USB port
 
 "response"
 ----------
-Emitted when a response message is received from the RFXtrx 433, or RfxCom times out waiting for a response.
+Emitted when a command response message is received from the RFXtrx 433, or RfxCom times out waiting for a response.
 It passes three parameters:
 * A textual description of the response, as a string
 * The sequence number of the message responded to
@@ -187,7 +200,7 @@ It passes three parameters:
 "rfyremoteslist"
 -------------
 Emitted in response to the Rfy command `listRemotes()` - this queries the RFXtrx433E for the list of currently stored
-simulated RFY remote controls. The list is passed an array, which may be of zero length, of objects describing each
+simulated RFY remote controls. The list is given as an array, which may be of zero length, of objects describing each
 simulated remote control:
 * remoteNumber: index number of this entry in the RFXtrx433E's internal list
 * remoteType: "RFY" or "ASA",
@@ -227,59 +240,68 @@ battery level (if available).
 -----------
 Emitted when an X10 or similar security device reports a status change.
 
-"bbq1"
+"thermostat1"
+-------------
+Emitted when a message is received from a DigiMax thermostat.
+
+"bbq"
 ------
 Emitted when a message is received from a Maverick ET-732 BBQ temperature sensor.
 
-"temprain1"
+"temprain"
 -----------
-Emitted when a message is received from an Allecto temperature/rainfall weather sensor.
+Emitted when a message is received from an Alecto temperature/rainfall weather sensor.
 
-"temp1" - "temp11"
+"temp"
 -----------------
-Emitted when a message is received from a temperature sensor (inside/outside air temperature; pool water temperature).
+Emitted when a message is received from a temperature sensor (inside/outside air temperature;
+pool water temperature).
 
-"humidity1"
+"humidity"
 -----------
 Emitted when data arrives from humidity sensing devices
 
-"th1" - "th14"
+"temphumidity"
 -------------
 Emitted when a message is received from Oregon Scientific and other
 temperature/humidity sensors.
 
-"thb1" - "thb2"
+"temphumbaro"
 ---------------
 Emitted when a message is received from an Oregon Scientific
 temperature/humidity/barometric pressure sensor.
 
-"rain1" - "rain7"
+"rain"
 -----------------
 Emitted when data arrives from rainfall sensing devices
 
-"wind1" - "wind7"
+"wind"
 -----------------
-Emitted when data arrives from wind speed/direction sensors
+Emitted when data arrives from wind speed & direction sensors
 
-"uv1" - "uv3"
+"uv"
 -------------
 Emiied when data arrives from ultraviolet radiation sensors
-
-"weight1" - "weight2"
----------------------
-Emitted when a message is received from a weighing scale device.
 
 "elec1" - "elec5"
 -----------------
 Emitted when data is received from OWL or REVOLT electricity monitoring devices.
 
-"rfxmeter"
-----------
-Emitted whan a message is received from an RFXCOM rfxmeter device.
+"weight"
+---------------------
+Emitted when a message is received from a weighing scale device.
+
+"cartelectronic"
+----------------
+Emitted when data is received from a Cartelectronic smart-meter transmitter.
 
 "rfxsensor"
 -----------
 Emitted when a message is received from an RFXCOM rfxsensor device.
+
+"rfxmeter"
+----------
+Emitted whan a message is received from an RFXCOM rfxmeter device.
 
 RfxCom received data events - remote controls
 =============================================
@@ -310,13 +332,25 @@ Emitted when a message is received from LightwaveRF/Siemens type remote control 
 -----------
 Emitted when a message is received from Blyss lighting remote control devices.
 
+"chime"
+--------
+Emitted when data arrives from Byron or similar doorbell pushbutton
+
 "blinds1"
 --------
 Emitted when a message arrives from a compatible type 1 blinds remote controller (only a few subtypes can be received)
 
-"chime1"
+"camera1"
+---------
+Emitted when a message is received from an X10 Ninja Robocam camera mount remote control.
+
+"remote"
 --------
-Emitted when data arrives from Byron or similar doorbell pushbutton
+Emitted when a message is received from ATI or X10 universal remote controls (old type RFXtrx433 only).
+
+"thermostat3"
+-------------
+Emitted when a message is received from a Mertik-Maxitrol thermostat remote control.
 
 Connecting and disconnecting
 ============================
@@ -334,7 +368,7 @@ handlers are preserved.
 <em>Note:</em>
 
 Some variants of Linux will create a differently-named device file if the RFtxr433 is disconnected and then reconnected,
-even if it is reconnected to the same USB port. For example, `/dev/ttyUSB0` may become `/dev/ttyUSB1`. To avoid any
-problems this may cause, use the equivalent alias device file in `/dev/serial/by-id/` when creating the RfxCom object.
-This should look something like `/dev/serial/by-id/usb_RFXCOM_RFXtrx433_12345678-if00-port0`.
+even if it is reconnected to the same USB port. For example, `/dev/ttyUSB0` may become `/dev/ttyUSB1`. While a suitably-crafted
+UDEV rule can prevent this happening, it may be easier to use the equivalent alias device file in `/dev/serial/by-id/`
+when creating the RfxCom object. This should look something like `/dev/serial/by-id/usb_RFXCOM_RFXtrx433_12345678-if00-port0`.
 

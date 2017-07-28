@@ -1,8 +1,8 @@
 {
   "name": "rfxcom",
-  "version": "1.0.0",
+  "version": "1.0.0-alpha.0",
   "author": "Kevin McDermott <kevin@bigkevmcd.com>",
-  "engines" : { "node" : ">=4.0.0" },
+  "engines" : { "node" : ">=4.8.0" },
   "dependencies": {
     "queue": "^4.0.0",
     "serialport": "4.*"
