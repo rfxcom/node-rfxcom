@@ -244,51 +244,51 @@ Emitted when an X10 or similar security device reports a status change.
 -------------
 Emitted when a message is received from a DigiMax thermostat.
 
-"bbq"
+"bbq1"
 ------
 Emitted when a message is received from a Maverick ET-732 BBQ temperature sensor.
 
-"temprain"
------------
+"temperaturerain1"
+------------------
 Emitted when a message is received from an Alecto temperature/rainfall weather sensor.
 
-"temp"
------------------
+"temperature1"
+--------------
 Emitted when a message is received from a temperature sensor (inside/outside air temperature;
 pool water temperature).
 
-"humidity"
+"humidity1"
 -----------
 Emitted when data arrives from humidity sensing devices
 
-"temphumidity"
--------------
+"temperaturehumidity1"
+----------------------
 Emitted when a message is received from Oregon Scientific and other
 temperature/humidity sensors.
 
-"temphumbaro"
----------------
+"temphumbaro1"
+--------------
 Emitted when a message is received from an Oregon Scientific
 temperature/humidity/barometric pressure sensor.
 
-"rain"
------------------
+"rain1"
+-------
 Emitted when data arrives from rainfall sensing devices
 
-"wind"
------------------
+"wind1"
+-------
 Emitted when data arrives from wind speed & direction sensors
 
-"uv"
--------------
+"uv1"
+-----
 Emiied when data arrives from ultraviolet radiation sensors
 
 "elec1" - "elec5"
 -----------------
 Emitted when data is received from OWL or REVOLT electricity monitoring devices.
 
-"weight"
----------------------
+"weight1"
+---------
 Emitted when a message is received from a weighing scale device.
 
 "cartelectronic"
@@ -332,7 +332,7 @@ Emitted when a message is received from LightwaveRF/Siemens type remote control 
 -----------
 Emitted when a message is received from Blyss lighting remote control devices.
 
-"chime"
+"chime1"
 --------
 Emitted when data arrives from Byron or similar doorbell pushbutton
 

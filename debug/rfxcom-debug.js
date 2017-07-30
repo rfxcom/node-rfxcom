@@ -1,11 +1,14 @@
 
-const rfxcom = require('rfxcom');
+const rfxcom = require('rfxcom'), Transmitter = require('rfxcom/lib/transmitter.js');
 //const index = require('./index');
 
-var rfxtrx, blinds, rfy, homeConfort, fan, remote, t4, rad;
+let raw, rfxtrx, blinds, rfy, homeConfort, fan, remote, t4, rad;
 //rfxtrx = new rfxcom.RfxCom("/dev/tty.usbserial-A1XF9SIM", {debug: true});  // Old hardware
 rfxtrx = new rfxcom.RfxCom("/dev/tty.usbserial-A1R1A6A", {debug: true}); // E hardware
-rad = new rfxcom.Radiator1(rfxtrx, rfxcom.radiator1.SMARTWARES);
+
+raw = new Transmitter(rfxtrx, null);
+
+//rad = new rfxcom.Radiator1(rfxtrx, rfxcom.radiator1.SMARTWARES);
 // remote = new rfxcom.Remote(rfxtrx, rfxcom.remote.ATI_REMOTE_WONDER);
 // t4 = new rfxcom.Thermostat4(rfxtrx, rfxcom.thermostat4.MCZ_PELLET_STOVE_3_FAN);
     //blinds = new rfxcom.Blinds1(rfxtrx, rfxcom.blinds1.BLINDS_T10);
@@ -21,12 +24,15 @@ rad = new rfxcom.Radiator1(rfxtrx, rfxcom.radiator1.SMARTWARES);
 
 rfxtrx.initialise(function () {
     console.log("Device initialised");
-    rad.setNightMode('0x1234567/8');
-    rad.setDayMode('0x1234567/8');
-    rad.setTemperature('0x1234567/8', 22.1);
-    rad.setTemperature('0x1234567/8', 22.6);
-    rad.setTemperature('0x1234567/8', 0);
-    rad.setTemperature('0x1234567/8', 30);
+
+    raw.sendRaw(0x1c, 0x00, [0x00, 0x00, 0x00, 0x01, 0x01, 0x08, 0x5e, 0x12, 0x34, 0x56, 0x01, 0x00, 0x00, 0x00]);
+    raw.sendRaw(0x19, 0x06, [0x12, 0x34, 0x56, 0x73, 0x01, 0x00]);
+    // rad.setNightMode('0x1234567/8');
+    // rad.setDayMode('0x1234567/8');
+    // rad.setTemperature('0x1234567/8', 22.1);
+    // rad.setTemperature('0x1234567/8', 22.6);
+    // rad.setTemperature('0x1234567/8', 0);
+    // rad.setTemperature('0x1234567/8', 30);
 /*
     rfxtrx.enableRFXProtocols([{bit: 0x08, msg: 3} /!*LIGHTING4*!/,
         {bit: 0x20, msg: 5} /!*OREGON*!/,
