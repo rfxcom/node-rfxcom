@@ -203,7 +203,7 @@ describe("RfxCom", function() {
                 device.open();
                 fakeSerialPort.emit("error", "connectfailed\n");
             });
-            it("should prepare the device for use.", function(done) {
+            it("should prepare the device for use (early firmware).", function(done) {
                 var fakeSerialPort = new FakeSerialPort(),
                     device = new rfxcom.RfxCom("/dev/ttyUSB0", {
                         port: fakeSerialPort
@@ -211,9 +211,36 @@ describe("RfxCom", function() {
                     resetSpy = spyOn(device, "reset").andCallThrough(),
                     delaySpy = spyOn(device, "delay"),
                     flushSpy = spyOn(device, "flush").andCallThrough(),
-                    startRxSpy = spyOn(device, "startRx").andCallThrough(),
                     getStatusSpy = spyOn(device, "getStatus").andCallFake(function () {
                         device.statusHandler([0x00,0x01,0x02,0x53,0x5E,0x08,0x02,0x25,0x00,0x01,0x01,0x1C])
+                    }),
+                    openSpy = spyOn(device, "open").andCallFake(function() {
+                        device.emit("ready");
+                    });
+
+                var handler = function() {
+                    done();
+                };
+                device.initialise(handler);
+                expect(resetSpy).toHaveBeenCalled();
+                expect(delaySpy).toHaveBeenCalledWith(500);
+                expect(flushSpy).toHaveBeenCalledWith(jasmine.any(Function));
+                expect(getStatusSpy).toHaveBeenCalledWith(jasmine.any(Function));
+                expect(openSpy).toHaveBeenCalled();
+            });
+            it("should prepare the device for use (current firmware).", function(done) {
+                var fakeSerialPort = new FakeSerialPort(),
+                    device = new rfxcom.RfxCom("/dev/ttyUSB0", {
+                        port: fakeSerialPort
+                    }),
+                    resetSpy = spyOn(device, "reset").andCallThrough(),
+                    delaySpy = spyOn(device, "delay"),
+                    flushSpy = spyOn(device, "flush").andCallThrough(),
+                    startRxSpy = spyOn(device, "startRx").andCallFake(function () {
+                        device.statusHandler([0x07,0x02,0x07,0x43,0x6F,0x70,0x79,0x72,0x69,0x67,0x68,0x74,0x20,0x52,0x46,0x58,0x43,0x4F,0x4D])
+                    }),
+                    getStatusSpy = spyOn(device, "getStatus").andCallFake(function () {
+                        device.statusHandler([0x00,0x01,0x02,0x53,0x5E,0x08,0x02,0x25,0x00,0x01,0x01,0x1C,0x03,0x00,0x00,0x00,0x00,0x00,0x00])
                     }),
                     openSpy = spyOn(device, "open").andCallFake(function() {
                         device.emit("ready");
@@ -329,6 +356,7 @@ describe("RfxCom", function() {
                     device = new rfxcom.RfxCom("/dev/ttyUSB0", {
                         port: fakeSerialPort
                     });
+                device.connected = true; // Required now enable() uses the TxQueue
                 device.enable([protocols.LACROSSE, protocols.OREGON, protocols.AC, protocols.ARC, protocols.X10], function() {
                     done();
                 });
@@ -340,6 +368,7 @@ describe("RfxCom", function() {
                     device = new rfxcom.RfxCom("/dev/ttyUSB0", {
                         port: fakeSerialPort
                     });
+                device.connected = true; // Required now enable() uses the TxQueue
                 device.enable(protocols.LIGHTWAVERF, function() {
                     done();
                 });
