@@ -2,11 +2,12 @@
 const rfxcom = require('rfxcom'), Transmitter = require('rfxcom/lib/transmitter.js');
 //const index = require('./index');
 
-let raw, rfxtrx, blinds, rfy, homeConfort, fan, remote, t4, rad;
+let raw, rfxtrx, light, rfy, homeConfort, fan, remote, t4, rad;
 //rfxtrx = new rfxcom.RfxCom("/dev/tty.usbserial-A1XF9SIM", {debug: true});  // Old hardware
 rfxtrx = new rfxcom.RfxCom("/dev/tty.usbserial-A1R1A6A", {debug: true}); // E hardware
 
-raw = new Transmitter(rfxtrx, null);
+//raw = new Transmitter(rfxtrx, null);
+light = new rfxcom.Lighting1(rfxtrx, 1);
 
 //rad = new rfxcom.Radiator1(rfxtrx, rfxcom.radiator1.SMARTWARES);
 // remote = new rfxcom.Remote(rfxtrx, rfxcom.remote.ATI_REMOTE_WONDER);
@@ -25,8 +26,9 @@ raw = new Transmitter(rfxtrx, null);
 rfxtrx.initialise(function () {
     console.log("Device initialised");
 
-    raw.sendRaw(0x1c, 0x00, [0x00, 0x00, 0x00, 0x01, 0x01, 0x08, 0x5e, 0x12, 0x34, 0x56, 0x01, 0x00, 0x00, 0x00]);
-    raw.sendRaw(0x19, 0x06, [0x12, 0x34, 0x56, 0x73, 0x01, 0x00]);
+    light.switchOn('A1')
+    //raw.sendRaw(0x1c, 0x00, [0x00, 0x00, 0x00, 0x01, 0x01, 0x08, 0x5e, 0x12, 0x34, 0x56, 0x01, 0x00, 0x00, 0x00]);
+    //raw.sendRaw(0x19, 0x06, [0x12, 0x34, 0x56, 0x73, 0x01, 0x00]);
     // rad.setNightMode('0x1234567/8');
     // rad.setDayMode('0x1234567/8');
     // rad.setTemperature('0x1234567/8', 22.1);
