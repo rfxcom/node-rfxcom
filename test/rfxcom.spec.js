@@ -382,6 +382,9 @@ describe("RfxCom", function() {
         });
 
         describe(".initialise function", function () {
+            beforeEach(function() {
+                jasmine.Clock.useMock(); // There is a 500ms Timeout in the initialisation code, we must mock it
+            });
             it("should emit a 'connectfailed' event if the serial port device file does not exist", function (done) {
                 const fakeSerialPort = new FakeSerialPort(),
                     device = new rfxcom.RfxCom("/dev/tty-i-dont-exist", {
@@ -399,7 +402,6 @@ describe("RfxCom", function() {
                         port: fakeSerialPort
                     }),
                     resetSpy = spyOn(device, "resetRFX").andCallThrough(),
-                    delaySpy = spyOn(rfxcom.RfxCom, "_delay"),
                     flushSpy = spyOn(device, "flush").andCallThrough(),
                     getStatusSpy = spyOn(device, "getRFXStatus").andCallFake(function () {
                         device.statusMessageHandler([0x00,0x01,0x02,0x53,0x5E,0x08,0x02,0x25,0x00,0x01,0x01,0x1C])
@@ -412,8 +414,8 @@ describe("RfxCom", function() {
                     done();
                 };
                 device.initialise(handler);
+                jasmine.Clock.tick(501);
                 expect(resetSpy).toHaveBeenCalled();
-                expect(delaySpy).toHaveBeenCalledWith(500);
                 expect(flushSpy).toHaveBeenCalledWith(jasmine.any(Function));
                 expect(getStatusSpy).toHaveBeenCalledWith(jasmine.any(Function));
                 expect(openSpy).toHaveBeenCalled();
@@ -424,7 +426,6 @@ describe("RfxCom", function() {
                         port: fakeSerialPort
                     }),
                     resetSpy = spyOn(device, "resetRFX").andCallThrough(),
-                    delaySpy = spyOn(rfxcom.RfxCom, "_delay"),
                     flushSpy = spyOn(device, "flush").andCallThrough(),
                     startRxSpy = spyOn(device, "startRFXReceiver").andCallFake(function () {
                         device.statusMessageHandler([0x07,0x02,0x07,0x43,0x6F,0x70,0x79,0x72,0x69,0x67,0x68,0x74,0x20,0x52,0x46,0x58,0x43,0x4F,0x4D])
@@ -440,13 +441,13 @@ describe("RfxCom", function() {
                     done();
                 };
                 device.initialise(handler);
+                jasmine.Clock.tick(501);
                 expect(resetSpy).toHaveBeenCalled();
-                expect(delaySpy).toHaveBeenCalledWith(500);
                 expect(flushSpy).toHaveBeenCalledWith(jasmine.any(Function));
                 expect(getStatusSpy).toHaveBeenCalledWith(jasmine.any(Function));
                 expect(startRxSpy).toHaveBeenCalledWith(jasmine.any(Function));
                 expect(openSpy).toHaveBeenCalled();
-            });
+           });
         });
 
         describe(".bytesToUint48", function() {
