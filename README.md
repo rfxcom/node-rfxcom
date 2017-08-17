@@ -283,6 +283,10 @@ Emitted when data arrives from wind speed & direction sensors
 -----
 Emiied when data arrives from ultraviolet radiation sensors
 
+"datetime"
+----------
+Emitted when a time message arrives from a radio clock
+
 "elec1" - "elec5"
 -----------------
 Emitted when data is received from OWL or REVOLT electricity monitoring devices.

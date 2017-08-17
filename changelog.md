@@ -8,7 +8,6 @@ version 1020, with the exception of:
 * 0x1C, Edisio (868 MHz)
 * 0x21, Security2
 * 0x53, Barometric sensors (currently unused)
-* 0x58, Date/time sensors
 * 0x5E, Gas sensors (currently unused)
 * 0x5F, Water sensors (currently unused)
 * 0x72, FS20 (868 MHz)

@@ -277,6 +277,17 @@ describe("RfxCom", function() {
                 device.open();
                 fakeSerialPort.emit("data", [0x10, 0x56, 0x01, 0x12, 0x2F, 0x00, 0x00, 0x87, 0x00, 0x00, 0x00, 0x14, 0x00, 0x49, 0x00, 0x00, 0x79]);
             });
+            it("should emit a datetime event when it receives message type 0x58, with device type 1", function(done) {
+                const fakeSerialPort = new FakeSerialPort(),
+                    device = new rfxcom.RfxCom("/", {
+                        port: fakeSerialPort
+                    });
+                device.on("datetime", function() {
+                    done();
+                });
+                device.open();
+                fakeSerialPort.emit("data", [0x0D, 0x58, 0x01, 0x00, 0x12, 0x34, 0x11, 0x08, 0x11, 0x05, 0x14, 0x1B, 0x11, 0x79]);
+            });
             it("should emit a uv event when it receives message type 0x57, with device type 1", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
                     device = new rfxcom.RfxCom("/", {
@@ -1341,6 +1352,32 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.remoteHandler([0x00, 0x04, 0x0F, 0x0C, 0x82]);
+            });
+        });
+
+        describe(".dateTimeHandler", function () {
+            let device = {};
+            beforeEach(function() {
+                device = new rfxcom.RfxCom("/dev/ttyUSB0");
+            });
+            it("should handle a command packet", function (done) {
+                device.on("datetime", function (evt) {
+                    expect(evt.id).toBe("0x1234");
+                    expect(evt.subtype).toBe(1);
+                    expect(evt.seqnbr).toBe(0);
+                    expect(evt.year).toBe(17);
+                    expect(evt.month).toBe(8);
+                    expect(evt.day).toBe(17);
+                    expect(evt.hour).toBe(20);
+                    expect(evt.minute).toBe(27);
+                    expect(evt.second).toBe(17);
+                    expect(evt.weekDay).toBe(5);
+                    expect(evt.timestamp).toEqual(new Date(17,8,17,20,27,17));
+                    expect(evt.rssi).toBe(7);
+                    expect(evt.batteryLevel).toBe(9);
+                    done();
+                });
+                device.dateTimeHandler([0x01, 0x00, 0x12, 0x34, 0x11, 0x08, 0x11, 0x05, 0x14, 0x1B, 0x11, 0x79]);
             });
         });
 
