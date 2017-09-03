@@ -171,7 +171,7 @@ and to provide low-level access to received data (including unsupported packet t
 Emitted when the RFXcom has successfully opened the serial port.
 
 "connectfailed"
-------------
+---------------
 Emitted if the RFXcom was unable to open the serial port.
 
 "ready"
@@ -198,7 +198,7 @@ It passes three parameters:
   - 6: Timed out waiting for response
 
 "rfyremoteslist"
--------------
+----------------
 Emitted in response to the Rfy command `listRemotes()` - this queries the RFXtrx433E for the list of currently stored
 simulated RFY remote controls. The list is given as an array, which may be of zero length, of objects describing each
 simulated remote control:
@@ -215,12 +215,16 @@ the list is to wait for the response timeout - the RFXtrx433E does not send an '
 --------
 Emitted when a "status" message is received from the RFXtrx 433.
 
+"receiverstarted"
+-----------------
+Emitted when the RFXtrx respionds to a 'start receiver' command (not applicable for old versions of the firmware)
+
 "end"
---------
+-----
 Emitted when the serial port "ends".
 
 "drain"
---------
+-------
 Emitted when the serial port emits a "drain" event.
 
 "receive"
@@ -341,7 +345,7 @@ Emitted when a message is received from Blyss lighting remote control devices.
 Emitted when data arrives from Byron or similar doorbell pushbutton
 
 "blinds1"
---------
+---------
 Emitted when a message arrives from a compatible type 1 blinds remote controller (only a few subtypes can be received)
 
 "camera1"

@@ -393,9 +393,6 @@ describe("RfxCom", function() {
         });
 
         describe(".initialise function", function () {
-            beforeEach(function() {
-                jasmine.Clock.useMock(); // There is a 500ms Timeout in the initialisation code, we must mock it
-            });
             it("should emit a 'connectfailed' event if the serial port device file does not exist", function (done) {
                 const fakeSerialPort = new FakeSerialPort(),
                     device = new rfxcom.RfxCom("/dev/tty-i-dont-exist", {
@@ -407,58 +404,58 @@ describe("RfxCom", function() {
                 device.open();
                 fakeSerialPort.emit("error", "connectfailed\n");
             });
-            it("should prepare the device for use.", function(done) {
-                const fakeSerialPort = new FakeSerialPort(),
-                    device = new rfxcom.RfxCom("/dev/ttyUSB0", {
-                        port: fakeSerialPort
-                    }),
-                    resetSpy = spyOn(device, "resetRFX").andCallThrough(),
-                    flushSpy = spyOn(device, "flush").andCallThrough(),
-                    getStatusSpy = spyOn(device, "getRFXStatus").andCallFake(function () {
-                        device.statusMessageHandler([0x00,0x01,0x02,0x53,0x5E,0x08,0x02,0x25,0x00,0x01,0x01,0x1C])
-                    }),
-                    openSpy = spyOn(device, "open").andCallFake(function() {
-                        device.emit("ready");
+            describe("message sequence", function () {
+                let device = {};
+                beforeEach(function () {
+                    const fakeSerialPort = new FakeSerialPort();
+                        device = new rfxcom.RfxCom("/dev/ttyUSB0", {
+                            port: fakeSerialPort
+                        });
+                        jasmine.Clock.useMock(); // There is a 500ms Timeout in the initialisation code, we must mock it
                     });
+                it("should prepare the device for use.", function (done) {
+                    const
+                        resetSpy = spyOn(device, "resetRFX").andCallThrough(),
+                        flushSpy = spyOn(device, "flush").andCallThrough(),
+                        getStatusSpy = spyOn(device, "getRFXStatus").andCallFake(function () {
+                            device.statusMessageHandler([0x00, 0x01, 0x02, 0x53, 0x5E, 0x08, 0x02, 0x25, 0x00, 0x01, 0x01, 0x1C])
+                        }),
+                        openSpy = spyOn(device, "open").andCallFake(function () {
+                            device.connected = true;
+                            device.emit("ready");
+                        });
 
-                const handler = function() {
-                    done();
-                };
-                device.initialise(handler);
-                jasmine.Clock.tick(501);
-                expect(resetSpy).toHaveBeenCalled();
-                expect(flushSpy).toHaveBeenCalledWith(jasmine.any(Function));
-                expect(getStatusSpy).toHaveBeenCalledWith(jasmine.any(Function));
-                expect(openSpy).toHaveBeenCalled();
+                    device.initialise(() => { done() });
+                    jasmine.Clock.tick(501);
+                    expect(resetSpy).toHaveBeenCalled();
+                    expect(flushSpy).toHaveBeenCalledWith(jasmine.any(Function));
+                    expect(getStatusSpy).toHaveBeenCalledWith(jasmine.any(Function));
+                    expect(openSpy).toHaveBeenCalled();
+                });
+                it("should prepare the device for use (current firmware).", function (done) {
+                    const
+                        resetSpy = spyOn(device, "resetRFX").andCallThrough(),
+                        flushSpy = spyOn(device, "flush").andCallThrough(),
+                        startRxSpy = spyOn(device, "startRFXReceiver").andCallFake(function () {
+                            device.statusMessageHandler([0x07, 0x02, 0x07, 0x43, 0x6F, 0x70, 0x79, 0x72, 0x69, 0x67, 0x68, 0x74, 0x20, 0x52, 0x46, 0x58, 0x43, 0x4F, 0x4D])
+                        }),
+                        getStatusSpy = spyOn(device, "getRFXStatus").andCallFake(function () {
+                            device.statusMessageHandler([0x00, 0x01, 0x02, 0x53, 0x5E, 0x08, 0x02, 0x25, 0x00, 0x01, 0x01, 0x1C, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
+                        }),
+                        openSpy = spyOn(device, "open").andCallFake(function () {
+                            device.connected = true;
+                            device.emit("ready");
+                        });
+
+                    device.initialise(() => { done() });
+                    jasmine.Clock.tick(501);
+                    expect(resetSpy).toHaveBeenCalled();
+                    expect(flushSpy).toHaveBeenCalledWith(jasmine.any(Function));
+                    expect(getStatusSpy).toHaveBeenCalledWith(jasmine.any(Function));
+                    expect(startRxSpy).toHaveBeenCalledWith(jasmine.any(Function));
+                    expect(openSpy).toHaveBeenCalled();
+                });
             });
-            it("should prepare the device for use (current firmware).", function(done) {
-                const fakeSerialPort = new FakeSerialPort(),
-                    device = new rfxcom.RfxCom("/dev/ttyUSB0", {
-                        port: fakeSerialPort
-                    }),
-                    resetSpy = spyOn(device, "resetRFX").andCallThrough(),
-                    flushSpy = spyOn(device, "flush").andCallThrough(),
-                    startRxSpy = spyOn(device, "startRFXReceiver").andCallFake(function () {
-                        device.statusMessageHandler([0x07,0x02,0x07,0x43,0x6F,0x70,0x79,0x72,0x69,0x67,0x68,0x74,0x20,0x52,0x46,0x58,0x43,0x4F,0x4D])
-                    }),
-                    getStatusSpy = spyOn(device, "getRFXStatus").andCallFake(function () {
-                        device.statusMessageHandler([0x00,0x01,0x02,0x53,0x5E,0x08,0x02,0x25,0x00,0x01,0x01,0x1C,0x03,0x00,0x00,0x00,0x00,0x00,0x00])
-                    }),
-                    openSpy = spyOn(device, "open").andCallFake(function() {
-                        device.emit("ready");
-                    });
-
-                const handler = function() {
-                    done();
-                };
-                device.initialise(handler);
-                jasmine.Clock.tick(501);
-                expect(resetSpy).toHaveBeenCalled();
-                expect(flushSpy).toHaveBeenCalledWith(jasmine.any(Function));
-                expect(getStatusSpy).toHaveBeenCalledWith(jasmine.any(Function));
-                expect(startRxSpy).toHaveBeenCalledWith(jasmine.any(Function));
-                expect(openSpy).toHaveBeenCalled();
-           });
         });
 
         describe(".bytesToUint48", function() {
@@ -537,6 +534,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 expect(fakeSerialPort).toHaveSent([0x0D, 0x00, 0x00, 0x00, 0x03, 0x53, 0x00, 0x00, 0x08, 0x27, 0x0, 0x0, 0x0, 0x0]);
+                device.acknowledge.forEach(acknowledge => {if (typeof acknowledge === "function") {acknowledge()}});
             });
 
             it("should send the correct bytes to the serialport for a single protocol", function(done) {
@@ -549,6 +547,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 expect(fakeSerialPort).toHaveSent([0x0D, 0x00, 0x00, 0x00, 0x03, 0x53, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00]);
+                device.acknowledge.forEach(acknowledge => {if (typeof acknowledge === "function") {acknowledge()}});
             });
         });
         describe(".saveRFXProtocols", function() {
@@ -561,6 +560,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 expect(fakeSerialPort).toHaveSent([0x0D, 0x00, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0, 0x00, 0x00, 0x00]);
+                device.acknowledge.forEach(acknowledge => {if (typeof acknowledge === "function") {acknowledge()}});
             });
         });
 

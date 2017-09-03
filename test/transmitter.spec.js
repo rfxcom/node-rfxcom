@@ -18,9 +18,7 @@ describe('Transmitter class', function () {
 //        transmitter = new Transmitter(device, null, {});
     });
     afterEach(function () {
-        if (typeof device.acknowledge[0] === "function") {
-            device.acknowledge[0]();
-        }
+        device.acknowledge.forEach(acknowledge => {if (typeof acknowledge === "function") {acknowledge()}});
     });
     describe('constructor', function () {
         it ('should construct an object if asked nicely', function () {

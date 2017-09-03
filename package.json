@@ -14,9 +14,15 @@
   },
   "scripts": {
     "test": "./node_modules/.bin/jasmine-node test",
-    "watch": "./node_modules/.bin/jasmine-node --autotest ."
+    "watch": "./node_modules/.bin/jasmine-node --autotest .",
+    "find-rfxcom": "./node_modules/.bin/find-rfxcom",
+    "set-protocols": "./node_modules/.bin/set-protocols"
   },
-  "repository": {
+  "bin": {
+    "find-rfxcom": ".bin/find-rfxcom.js",
+    "set-protocols": ".bin/set-protocols.js"
+  },
+    "repository": {
     "type": "git",
     "url": "http://github.com/rfxcom/node-rfxcom.git"
   },

@@ -20,9 +20,7 @@ describe('Thermostat1 class', function () {
         device.connected = true;
     });
     afterEach(function () {
-        if (typeof device.acknowledge[0] === "function") {
-            device.acknowledge[0]();
-        }
+        device.acknowledge.forEach(acknowledge => {if (typeof acknowledge === "function") {acknowledge()}});
     });
     describe('DIGIMAX_TLX7506', function () {
         beforeEach(function () {
