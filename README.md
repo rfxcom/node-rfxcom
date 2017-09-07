@@ -213,11 +213,11 @@ the list is to wait for the response timeout - the RFXtrx433E does not send an '
 
 "status"
 --------
-Emitted when a "status" message is received from the RFXtrx 433.
+Emitted when a "status" message is received from the RFXtrx 433 - usually in reply to a receiver control command (packet type 0x00)
 
 "receiverstarted"
 -----------------
-Emitted when the RFXtrx respionds to a 'start receiver' command (not applicable for old versions of the firmware)
+Emitted when the RFXtrx responds to a 'start receiver' command (not applicable for old versions of the firmware)
 
 "end"
 -----
@@ -235,7 +235,7 @@ array of bytes. This event is emitted before the received data event for the pac
 RfxCom received data events - sensors
 =====================================
 
-The events are mostly named from the message identifiers used in the RFXtrx documentation. A protocol must
+The events are mostly named from the message identifiers used in the RFXtrx documentation. Some (but not all) protocols must
 be enabled to be received. This can be done using RFXmngr.exe, or the `enable()` function of the rfxcom object.
 Each event passes an object whose properties contain the received sensor data, along with signal strength and
 battery level (if available).
@@ -316,7 +316,7 @@ RfxCom received data events - remote controls
 
 These events are emitted when data arrives from a 'remote control' device, which may be a pushbutton
 unit or a dedicated remote control device such as a PIR light switch. The events are named from the
-message identifiers used in the RFXtrx documentation. A protocol must be enabled to be received. however not
+message identifiers used in the RFXtrx documentation. Most protocols must be enabled to be received. however not
 every protocol that can be transmitted can be received. Each event passes an object whose properties contain
 the received command, along with signal strength and battery level (if available).
 
@@ -363,7 +363,8 @@ Emitted when a message is received from a Mertik-Maxitrol thermostat remote cont
 Connecting and disconnecting
 ============================
 The function `rfxtrx.initialise()` will attempt to connect to the RFXtrx433 hardware. If this succeeds, a 'connecting' event
-is emitted, followed about 5.5 seconds later by a 'ready' event. If the device is not present (wrong device path, or device
+is emitted, followed about 5.5 seconds later by a 'ready' event. Finally (for recent device firmware versions) a
+'receiverstarted' event is emitted. If the device is not present (wrong device path, or device
 not plugged in) a 'connectfailed' event is emitted. If the the hardware is subsequently unplugged, a 'disconnect' event
 is emitted (this can also happen before either the 'connecting' or 'ready' events are emitted).
 

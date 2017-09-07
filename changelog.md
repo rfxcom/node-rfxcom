@@ -17,7 +17,10 @@ Other enhancements:
 - Added extra subtypes and commands to lighting5 (though there are still one or two missing)
 - Added a sendRaw() method to Transmitter to allow *any* packet type to be sent (including the 0x7F raw packet, if required)
 - Improved unit tests (unit tests are no longer installed by npm)
+- For firmware versions that support it, the RF transmitter power is reported in the `status` event
 - Transmitters for all packet types now accept an (optional) options parameter. Currently only Lighting4 and Rfy make use of it
+- Added a "receiverstarted" event
+- Added scripts to find all RFXCOM devices attached to a computer (`find-rfxcom`), and to manage the enabled receive protocols (`set-protocols`)
 
 Breaking changes:
 - Curtain1 constructor now requires a subtype
@@ -27,6 +30,7 @@ are relaced by `venetianOpen()`. An options parameter to the Rfy constructor set
 - Receive data events now correspond strictly one-to-one with received packet types. Previously, some of the 'sensor' 
 events corresponded with subtypes. For example, the `thb1` and `thb2` events from the two different subtypes of the
 temperature, humidity and barometric pressure sensing devices (packet type 0x54) are replaced by a single `temphumbaro` event.
+- Adopted the use of camelCase for all event properties, so that `unitcode` is now `unitCode`, and housecode is now `houseCode`
 
 Version 0.16.0
 --------------

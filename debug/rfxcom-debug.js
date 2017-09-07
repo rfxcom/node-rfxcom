@@ -4,17 +4,18 @@ const rfxcom = require('rfxcom'), Transmitter = require('rfxcom/lib/transmitter.
 
 let raw, rfxtrx, light, rfy, homeConfort, fan, remote, t4, rad;
 //rfxtrx = new rfxcom.RfxCom("/dev/tty.usbserial-A1XF9SIM", {debug: true});  // Old hardware
-rfxtrx = new rfxcom.RfxCom("/dev/tty.usbserial-A1R1A6A", {debug: true}); // E hardware
+//rfxtrx = new rfxcom.RfxCom("/dev/tty.usbserial-A1R1A6A", {debug: true}); // E hardware /dev/cu.usbserial-A1R1A6A
+rfxtrx = new rfxcom.RfxCom("/dev/cu.usbserial-A1R1A6A", {debug: true}); // E hardware /dev/cu.usbserial-A1R1A6A
 
 //raw = new Transmitter(rfxtrx, null);
-light = new rfxcom.Lighting1(rfxtrx, 1);
+//light = new rfxcom.Lighting1(rfxtrx, 1);
 
 //rad = new rfxcom.Radiator1(rfxtrx, rfxcom.radiator1.SMARTWARES);
 // remote = new rfxcom.Remote(rfxtrx, rfxcom.remote.ATI_REMOTE_WONDER);
 // t4 = new rfxcom.Thermostat4(rfxtrx, rfxcom.thermostat4.MCZ_PELLET_STOVE_3_FAN);
     //blinds = new rfxcom.Blinds1(rfxtrx, rfxcom.blinds1.BLINDS_T10);
 //fan = new rfxcom.Fan(rfxtrx, rfxcom.fan.SEAV_TXS4)
-    //rfy = new rfxcom.Rfy(rfxtrx, rfxcom.rfy.RFY);
+    rfy = new rfxcom.Rfy(rfxtrx, rfxcom.rfy.RFY);
     //homeConfort = new rfxcom.HomeConfort(rfxtrx, rfxcom.homeConfort.TEL_010);
 // rfxtrx.on("list", function (evt) {
 //     console.log(evt);
@@ -22,11 +23,12 @@ light = new rfxcom.Lighting1(rfxtrx, 1);
 //  rfxtrx.on("security1", function (evt) {
 //      console.log(evt);
 //  });
+rfxtrx.on("rfyremoteslist", evt => { console.log(evt) });
 
 rfxtrx.initialise(function () {
     console.log("Device initialised");
 
-    light.switchOn('A1')
+    //light.switchOn('A1')
     //raw.sendRaw(0x1c, 0x00, [0x00, 0x00, 0x00, 0x01, 0x01, 0x08, 0x5e, 0x12, 0x34, 0x56, 0x01, 0x00, 0x00, 0x00]);
     //raw.sendRaw(0x19, 0x06, [0x12, 0x34, 0x56, 0x73, 0x01, 0x00]);
     // rad.setNightMode('0x1234567/8');
@@ -44,7 +46,7 @@ rfxtrx.initialise(function () {
         {bit: 0x40, msg: 5} /!*ATI*!/
     ]);
 */
-//    rfy.listRemotes();
+    rfy.listRemotes();
 //    rfy.eraseAll();
 //    rfy.program("0x01abcd/3")
  //   rfy.listRemotes();
