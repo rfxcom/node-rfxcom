@@ -20,17 +20,24 @@ describe('Curtain1 class', function () {
         device.connected = true;
     });
     afterEach(function () {
-        if (typeof device.acknowledge[0] === "function") {
-            device.acknowledge[0]();
-        }
+        device.acknowledge.forEach(acknowledge => {if (typeof acknowledge === "function") {acknowledge()}});
     });
     describe('.open', function () {
         beforeEach(function () {
-            curtain1 = new rfxcom.Curtain1(device);
+            curtain1 = new rfxcom.Curtain1(device, rfxcom.curtain1.HARRISON);
         });
         it('should send the correct bytes to the serialport', function (done) {
             var sentCommandId = NaN;
-            curtain1.open('0x41/01', function (err, response, cmdId) {
+            curtain1.open('A1', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x07, 0x18, 0x00, 0x00, 0x41, 0x01, 0x00, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should accept an array deviceId', function (done) {
+            var sentCommandId = NaN;
+            curtain1.open(['A', '1'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
             });
@@ -42,45 +49,73 @@ describe('Curtain1 class', function () {
                     port:  fakeSerialPort,
                     debug: true
                 }),
-                curtain = new rfxcom.Curtain1(debugDevice),
+                curtain = new rfxcom.Curtain1(debugDevice, rfxcom.curtain1.HARRISON),
                 consoleSpy = spyOn(console, 'log');
             debugDevice.connected = true;
-            curtain.open('0x41/01', done);
+            curtain.open('a1', done);
             expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 07,18,00,00,41,01,00,00');
             debugDevice.acknowledge[0]();
         });
-        // TODO: Add checking for valid housecodes / unitcodes pg. 28.
-        it('should throw an exception with an invalid deviceId', function () {
+        it('should throw an exception with an invalid format deviceId', function () {
             expect(function () {
-                curtain1.open('0x40');
-            }).toThrow("Invalid deviceId format.");
+                curtain1.open(['A', '1', 1]);
+            }).toThrow("Invalid deviceId format");
+        });
+        it('should throw an exception with houseCode < \'A\'', function () {
+            expect(function () {
+                curtain1.open(['@', '1']);
+            }).toThrow("Invalid house code '@'");
+        });
+        it('should accept house code \'P\'', function (done) {
+            var sentCommandId = NaN;
+            curtain1.open('P1', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x07, 0x18, 0x00, 0x00, 0x50, 0x01, 0x00, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should throw an exception with houseCode > \'P\'', function () {
+            expect(function () {
+                curtain1.open(['q', '1']);
+            }).toThrow("Invalid house code 'q'");
+        });
+        it('should throw an exception with unitCode < 1', function () {
+            expect(function () {
+                curtain1.open(['d', '0']);
+            }).toThrow("Invalid unit code 0");
+        });
+        it('should throw an exception with a unitCode > 16', function () {
+            expect(function () {
+                curtain1.open(['d', '17']);
+            }).toThrow("Invalid unit code 17");
         });
         it('should handle no callback', function () {
-            curtain1.open('0x41/10');
+            curtain1.open('A16');
             expect(fakeSerialPort).toHaveSent([0x07, 0x18, 0x00, 0x00, 0x41, 0x10, 0x00, 0x00]);
         });
     });
     describe('.close', function () {
         beforeEach(function () {
-            curtain1 = new rfxcom.Curtain1(device);
+            curtain1 = new rfxcom.Curtain1(device, rfxcom.curtain1.HARRISON);
         });
         it('should send the correct bytes to the serialport', function (done) {
             var sentCommandId = NaN;
-            curtain1.close('0xA5/01', function (err, response, cmdId) {
+            curtain1.close('E1', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
             });
-            expect(fakeSerialPort).toHaveSent([0x07, 0x18, 0x00, 0x00, 0xA5, 0x01, 0x01, 0x00]);
+            expect(fakeSerialPort).toHaveSent([0x07, 0x18, 0x00, 0x00, 0x45, 0x01, 0x01, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
     });
     describe('.stop', function () {
         beforeEach(function () {
-            curtain1 = new rfxcom.Curtain1(device);
+            curtain1 = new rfxcom.Curtain1(device, rfxcom.curtain1.HARRISON);
         });
         it('should send the correct bytes to the serialport', function (done) {
             var sentCommandId = NaN;
-            curtain1.stop('0x41/01', function (err, response, cmdId) {
+            curtain1.stop('A01', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
             });
@@ -90,11 +125,11 @@ describe('Curtain1 class', function () {
     });
     describe('.program', function () {
         beforeEach(function () {
-            curtain1 = new rfxcom.Curtain1(device);
+            curtain1 = new rfxcom.Curtain1(device, rfxcom.curtain1.HARRISON);
         });
         it('should send the correct bytes to the serialport', function (done) {
             var sentCommandId = NaN;
-            curtain1.program('0x41/01', function (err, response, cmdId) {
+            curtain1.program('A01', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
             });

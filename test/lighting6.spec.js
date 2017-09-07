@@ -24,9 +24,7 @@ describe('Lighting6 class', function () {
         device.connected = true;
     });
     afterEach(function () {
-        if (typeof device.acknowledge[0] === "function") {
-            device.acknowledge[0]();
-        }
+        device.acknowledge.forEach(acknowledge => {if (typeof acknowledge === "function") {acknowledge()}});
     });
     describe('instantiation', function () {
         it('should throw an error if no subtype is specified', function () {
@@ -91,11 +89,11 @@ describe('Lighting6 class', function () {
         });
         it('should accept the highest ID, group code & unit code numbers', function (done) {
             var sentCommandId = NaN;
-            lighting6.switchOn(['0xFFFF', 'P', '8'], function (err, response, cmdId) {
+            lighting6.switchOn(['0xFFFF', 'P', '5'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
             });
-            expect(fakeSerialPort).toHaveSent([0x0b, 0x15, 0x00, 0x00, 0xff, 0xff, 0x50, 0x08, 0x00, 0x00, 0x00, 0x00]);
+            expect(fakeSerialPort).toHaveSent([0x0b, 0x15, 0x00, 0x00, 0xff, 0xff, 0x50, 0x05, 0x00, 0x00, 0x00, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
         it('should throw an exception with an invalid group code', function () {
@@ -105,8 +103,8 @@ describe('Lighting6 class', function () {
         });
         it('should throw an exception with an invalid unit code', function () {
             expect(function () {
-                lighting6.switchOn(['0xFFFF', 'P', '9']);
-            }).toThrow("Invalid unit number 9");
+                lighting6.switchOn(['0xFFFF', 'P', '6']);
+            }).toThrow("Invalid unit number 6");
         });
         it('should throw an exception with a badly formatted deviceId', function () {
             expect(function () {

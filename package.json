@@ -1,7 +1,8 @@
 {
   "name": "rfxcom",
-  "version": "0.16.1",
+  "version": "1.0.0",
   "author": "Kevin McDermott <kevin@bigkevmcd.com>",
+  "engines" : { "node" : ">=4.8.0" },
   "dependencies": {
     "queue": "^4.0.0",
     "serialport": "4.*"
@@ -13,13 +14,23 @@
   },
   "scripts": {
     "test": "./node_modules/.bin/jasmine-node test",
-    "watch": "./node_modules/.bin/jasmine-node --autotest ."
+    "watch": "./node_modules/.bin/jasmine-node --autotest .",
+    "find-rfxcom": "./node_modules/.bin/find-rfxcom",
+    "set-protocols": "./node_modules/.bin/set-protocols"
   },
-  "repository": {
+  "bin": {
+    "find-rfxcom": ".bin/find-rfxcom.js",
+    "set-protocols": ".bin/set-protocols.js"
+  },
+    "repository": {
     "type": "git",
     "url": "http://github.com/rfxcom/node-rfxcom.git"
   },
   "license": "MIT",
+  "keywords": [
+    "rfxcom",
+    "RFXtrx433"
+  ],
   "bugs": {
     "url": "https://github.com/rfxcom/node-rfxcom/issues"
   }

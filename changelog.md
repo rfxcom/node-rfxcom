@@ -1,3 +1,37 @@
+Version 1.0.0
+-------------
+
+First production release
+
+Added (almost) complete transmit & receive support for **all** packet types supported by 433 MHz hardware and firmware
+version 1020, with the exception of:
+* 0x1C, Edisio (868 MHz)
+* 0x21, Security2
+* 0x53, Barometric sensors (currently unused)
+* 0x5E, Gas sensors (currently unused)
+* 0x5F, Water sensors (currently unused)
+* 0x72, FS20 (868 MHz)
+* 0x7F, Raw transmit
+
+Other enhancements:
+- Added extra subtypes and commands to lighting5 (though there are still one or two missing)
+- Added a sendRaw() method to Transmitter to allow *any* packet type to be sent (including the 0x7F raw packet, if required)
+- Improved unit tests (unit tests are no longer installed by npm)
+- For firmware versions that support it, the RF transmitter power is reported in the `status` event
+- Transmitters for all packet types now accept an (optional) options parameter. Currently only Lighting4 and Rfy make use of it
+- Added a "receiverstarted" event
+- Added scripts to find all RFXCOM devices attached to a computer (`find-rfxcom`), and to manage the enabled receive protocols (`set-protocols`)
+
+Breaking changes:
+- Curtain1 constructor now requires a subtype
+- Lighting5 `switchOn()` method no longer accepts a parameter to set moods & levels - use `setMood()` & `setLevel()` instead
+- Rfy venetian blinds commands are no longer duplicated in EU & US variants, e.g. `venetianOpenEU()` & `venetianOpenUS`
+are relaced by `venetianOpen()`. An options parameter to the Rfy constructor sets which variant is used, e.g. `{venetianBlindsMode: "EU"}`
+- Receive data events now correspond strictly one-to-one with received packet types. Previously, some of the 'sensor' 
+events corresponded with subtypes. For example, the `thb1` and `thb2` events from the two different subtypes of the
+temperature, humidity and barometric pressure sensing devices (packet type 0x54) are replaced by a single `temphumbaro` event.
+- Adopted the use of camelCase for all event properties, so that `unitcode` is now `unitCode`, and housecode is now `houseCode`
+
 Version 0.16.0
 --------------
 
