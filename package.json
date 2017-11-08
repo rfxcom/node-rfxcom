@@ -1,6 +1,6 @@
 {
   "name": "rfxcom",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "author": "Kevin McDermott <kevin@bigkevmcd.com>",
   "engines" : { "node" : ">=4.8.0" },
   "dependencies": {
@@ -15,16 +15,16 @@
   "scripts": {
     "test": "./node_modules/.bin/jasmine-node test",
     "watch": "./node_modules/.bin/jasmine-node --autotest .",
-    "find-rfxcom": "./node_modules/.bin/find-rfxcom",
-    "set-protocols": "./node_modules/.bin/set-protocols"
+    "find-rfxcom": "./node_modules/.bin/bin/find-rfxcom.js",
+    "set-protocols": "./node_modules/.bin/bin/set-protocols.js"
   },
   "bin": {
-    "find-rfxcom": ".bin/find-rfxcom.js",
-    "set-protocols": ".bin/set-protocols.js"
+    "find-rfxcom": "./bin/find-rfxcom.js",
+    "set-protocols": "./bin/set-protocols.js"
   },
-    "repository": {
-    "type": "git",
-    "url": "http://github.com/rfxcom/node-rfxcom.git"
+  "repository": {
+  "type": "git",
+  "url": "http://github.com/rfxcom/node-rfxcom.git"
   },
   "license": "MIT",
   "keywords": [
