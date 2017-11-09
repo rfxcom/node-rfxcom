@@ -381,3 +381,37 @@ even if it is reconnected to the same USB port. For example, `/dev/ttyUSB0` may 
 UDEV rule can prevent this happening, it may be easier to use the equivalent alias device file in `/dev/serial/by-id/`
 when creating the RfxCom object. This should look something like `/dev/serial/by-id/usb_RFXCOM_RFXtrx433_12345678-if00-port0`.
 
+Utility scripts
+===============
+
+There are two scripts to help you get started talking to your RFXtrx433, and to set its configuration:
+* *find-rfxcom* - searches all serial ports for RFXCOM devices, and prints information about each device it finds.
+* *set-protocols* - changes and optionally saves to non-volatile memory the set of protocols that a device will receive and decode.
+
+These scripts must be run from the directory containing the `package.json` file, normally `node_modules/rfxcom`, unless
+the package has been installed globally.
+
+`npm run find-rfxcom` will print status information for each device as shown:
+
+    Scanning for RFXCOM devices...
+    Devices found at:
+      /dev/cu.usbserial-A1R1A6A
+        433.92MHz transceiver hardware version 1.3, firmware version 1017 Ext
+        Enabled protocols:  AC,LIGHTING4,OREGON
+        Disabled protocols: ARC,ATI,BLINDST0,BLINDST1,BLYSS,BYRONSX,FINEOFFSET,FS20,HIDEKI,HOMECONFORT,HOMEEASY,IMAGINTRONIX,KEELOQ,LACROSSE,LIGHTWAVERF,MEIANTECH,MERTIK,PROGUARD,RSL,RUBICSON,UNDECODED,VISONIC,X10
+
+You will need to pass the device port - in this case `/dev/cu.usbserial-A1R1A6A` - to `rfxcom` to control the device.
+*set-protocols* also uses the device port to locate the RFXCOM device to program.
+
+`npm run set-protocols -- --list device_port` will print the same information as *find-rfxcom*, for the specified device.
+
+`npm run set-protocols -- --save device_port` will save the current set of enabled protocols to non-volatile memory (use with
+caution, as the number of write cycles is limited)
+
+`npm run set-protocols -- [--enable protocol_list] [--disable protocol_list] [--save] device_port` will enable the protocols
+in the list of protocols to enable, and disable the the protocols in the list of protocols to disable. If the `--save`
+switch is present, the new protocol settings will be saved to non-volatile memory immediately.
+
+A protocol list is a comma-separated list of protocol names, in the format returned by *find-rfxcom* shown above.
+Protocols which are currently enabled, and which do not appear in the list of protocols to disable, will remain enabled.
+If a protocol appears in both the `--enable` and `--disable` lists, its current status will remain unchanged.
