@@ -69,9 +69,27 @@ describe('Lighting3 class', function () {
             expect(fakeSerialPort).toHaveSent([0x08, 0x12, 0x00, 0x00, 0x00, 0x01, 0x00, 0x08, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
+        it('should accept a decreaseLevel command with a room number', function (done) {
+            var sentCommandId = NaN;
+            lighting3.decreaseLevel(['1', '1'], 1, function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x08, 0x12, 0x00, 0x00, 0x00, 0x01, 0x00, 0x08, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
         it('should accept an increaseLevel command', function (done) {
             var sentCommandId = NaN;
             lighting3.increaseLevel(['1', '1'], function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x08, 0x12, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should accept an increaseLevel command with a room number', function (done) {
+            var sentCommandId = NaN;
+            lighting3.increaseLevel(['1', '1'], 1, function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
             });
