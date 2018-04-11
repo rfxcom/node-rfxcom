@@ -792,6 +792,15 @@ describe('Lighting5 class', function () {
                     expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x03, 0x00, 0x00, 0x12, 0x34, 0x01, 0x02, 0x00, 0x00]);
                     expect(sentCommandId).toEqual(0);
                 });
+                it('should accept an optional room number', function (done) {
+                    let sentCommandId = NaN;
+                    lighting5.increaseLevel('0x1234', 1, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x03, 0x00, 0x00, 0x12, 0x34, 0x01, 0x02, 0x00, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.increaseLevel('0x1234/0');
@@ -802,6 +811,15 @@ describe('Lighting5 class', function () {
                 it('should send the correct bytes to the serialport', function (done) {
                     let sentCommandId = NaN;
                     lighting5.decreaseLevel('0x1234', function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x03, 0x00, 0x00, 0x12, 0x34, 0x01, 0x03, 0x00, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should accept an optional room number', function (done) {
+                    let sentCommandId = NaN;
+                    lighting5.decreaseLevel('0x1234', 1, function (err, response, cmdId) {
                         sentCommandId = cmdId;
                         done();
                     });
@@ -1213,11 +1231,29 @@ describe('Lighting5 class', function () {
                     expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x05, 0x00, 0x00, 0x12, 0x34, 0x01, 0x02, 0x00, 0x00]);
                     expect(sentCommandId).toEqual(0);
                 });
+                it('should accept an optional room number', function (done) {
+                    let sentCommandId = NaN;
+                    lighting5.increaseLevel('0x1234/1', 1, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x05, 0x00, 0x00, 0x12, 0x34, 0x01, 0x02, 0x00, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
             });
             describe('decreaseLevel()', function () {
                 it('should send the correct bytes to the serial port', function (done) {
                     let sentCommandId = NaN;
                     lighting5.decreaseLevel('0x1234/1', function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x05, 0x00, 0x00, 0x12, 0x34, 0x01, 0x03, 0x00, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should accept an optional room number', function (done) {
+                    let sentCommandId = NaN;
+                    lighting5.decreaseLevel('0x1234/1', 1, function (err, response, cmdId) {
                         sentCommandId = cmdId;
                         done();
                     });
@@ -1410,6 +1446,15 @@ describe('Lighting5 class', function () {
                     expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x06, 0x00, 0x12, 0x34, 0x56, 0x01, 0x02, 0x00, 0x00]);
                     expect(sentCommandId).toEqual(0);
                 });
+                it('should accept an optional room number', function (done) {
+                    let sentCommandId = NaN;
+                    lighting5.increaseLevel('0x123456', 1, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x06, 0x00, 0x12, 0x34, 0x56, 0x01, 0x02, 0x00, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.increaseLevel('0x123456/0');
@@ -1418,6 +1463,15 @@ describe('Lighting5 class', function () {
             });
             describe('decreaseLevel()', function () {
                 it('should send the correct bytes to the serialport', function (done) {
+                    let sentCommandId = NaN;
+                    lighting5.decreaseLevel('0x123456', function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x06, 0x00, 0x12, 0x34, 0x56, 0x01, 0x03, 0x00, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should accept an optional room number', function (done) {
                     let sentCommandId = NaN;
                     lighting5.decreaseLevel('0x123456', function (err, response, cmdId) {
                         sentCommandId = cmdId;
@@ -1850,6 +1904,15 @@ describe('Lighting5 class', function () {
                     expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x08, 0x00, 0x00, 0x12, 0x34, 0x01, 0x02, 0x00, 0x00]);
                     expect(sentCommandId).toEqual(0);
                 });
+                it('should accept an optional room number', function (done) {
+                    let sentCommandId = NaN;
+                    lighting5.increaseLevel('0x1234', 1, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x08, 0x00, 0x00, 0x12, 0x34, 0x01, 0x02, 0x00, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.increaseLevel('0x1234/0');
@@ -1860,6 +1923,15 @@ describe('Lighting5 class', function () {
                 it('should send the correct bytes to the serialport', function (done) {
                     let sentCommandId = NaN;
                     lighting5.decreaseLevel('0x1234', function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x08, 0x00, 0x00, 0x12, 0x34, 0x01, 0x03, 0x00, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should accept an optional room number', function (done) {
+                    let sentCommandId = NaN;
+                    lighting5.decreaseLevel('0x1234', 1, function (err, response, cmdId) {
                         sentCommandId = cmdId;
                         done();
                     });
@@ -2313,6 +2385,11 @@ describe('Lighting5 class', function () {
                         lighting5.increaseLevel('0x1234/1', 0);
                     }).toThrow("Invalid room number 0");
                 });
+                it('should throw an exception with a missing room number', function () {
+                    expect(function () {
+                        lighting5.increaseLevel('0x1234/1');
+                    }).toThrow("Missing room number");
+                });
             });
             describe('decreaseLevel()', function () {
                 it('should send the correct bytes to the serial port for room 1', function (done) {
@@ -2337,6 +2414,11 @@ describe('Lighting5 class', function () {
                     expect(function () {
                         lighting5.decreaseLevel('0x1234/1', 0);
                     }).toThrow("Invalid room number 0");
+                });
+                it('should throw an exception with a missing room number', function () {
+                    expect(function () {
+                        lighting5.decreaseLevel('0x1234/1');
+                    }).toThrow("Missing room number");
                 });
             });
             describe('setMood()', function () {
@@ -2565,6 +2647,15 @@ describe('Lighting5 class', function () {
                     expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x0B, 0x00, 0x00, 0x12, 0x34, 0x01, 0x02, 0x00, 0x00]);
                     expect(sentCommandId).toEqual(0);
                 });
+                it('should accept an optional room number', function (done) {
+                    let sentCommandId = NaN;
+                    lighting5.increaseLevel('0x1234', 1, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x0B, 0x00, 0x00, 0x12, 0x34, 0x01, 0x02, 0x00, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.increaseLevel('0x1234/0');
@@ -2575,6 +2666,15 @@ describe('Lighting5 class', function () {
                 it('should send the correct bytes to the serialport', function (done) {
                     let sentCommandId = NaN;
                     lighting5.decreaseLevel('0x1234', function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x0B, 0x00, 0x00, 0x12, 0x34, 0x01, 0x03, 0x00, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should accept an optional room number', function (done) {
+                    let sentCommandId = NaN;
+                    lighting5.decreaseLevel('0x1234', 1, function (err, response, cmdId) {
                         sentCommandId = cmdId;
                         done();
                     });
@@ -2836,6 +2936,15 @@ describe('Lighting5 class', function () {
                     expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x0C, 0x00, 0x00, 0x12, 0x34, 0x01, 0x01, 0x00, 0x00]);
                     expect(sentCommandId).toEqual(0);
                 });
+                it('should accept an optional room number', function (done) {
+                    let sentCommandId = NaN;
+                    lighting5.increaseLevel('0x1234', 1, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x0C, 0x00, 0x00, 0x12, 0x34, 0x01, 0x01, 0x00, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.increaseLevel('0x1234/0');
@@ -2846,6 +2955,15 @@ describe('Lighting5 class', function () {
                 it('should send the correct bytes to the serialport', function (done) {
                     let sentCommandId = NaN;
                     lighting5.decreaseLevel('0x1234', function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x0C, 0x00, 0x00, 0x12, 0x34, 0x01, 0x02, 0x00, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should accept an optional room number', function (done) {
+                    let sentCommandId = NaN;
+                    lighting5.decreaseLevel('0x1234', 1, function (err, response, cmdId) {
                         sentCommandId = cmdId;
                         done();
                     });
@@ -3682,6 +3800,15 @@ describe('Lighting5 class', function () {
                     expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x10, 0x00, 0x00, 0x12, 0x34, 0x01, 0x02, 0x00, 0x00]);
                     expect(sentCommandId).toEqual(0);
                 });
+                it('should accept an optional room number', function (done) {
+                    let sentCommandId = NaN;
+                    lighting5.increaseLevel('0x1234', 1, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x10, 0x00, 0x00, 0x12, 0x34, 0x01, 0x02, 0x00, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.increaseLevel('0x1234/0');
@@ -3692,6 +3819,15 @@ describe('Lighting5 class', function () {
                 it('should send the correct bytes to the serialport', function (done) {
                     let sentCommandId = NaN;
                     lighting5.decreaseLevel('0x1234', function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x10, 0x00, 0x00, 0x12, 0x34, 0x01, 0x03, 0x00, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should accept an optional room number', function (done) {
+                    let sentCommandId = NaN;
+                    lighting5.decreaseLevel('0x1234', 1, function (err, response, cmdId) {
                         sentCommandId = cmdId;
                         done();
                     });
