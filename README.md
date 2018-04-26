@@ -1,5 +1,5 @@
-Evented communication with RFXtrx433.
-=====================================
+Evented communication with RFXtrx433
+====================================
 
 To install
 ----------

@@ -105,9 +105,27 @@ describe('Lighting1 class', function () {
             expect(fakeSerialPort).toHaveSent([0x07, 0x10, 0x00, 0x00, 0x43, 0x02, 0x02, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
+        it('should accept a dim command with a room number', function (done) {
+            var sentCommandId = NaN;
+            lighting1.decreaseLevel(['C', '2'], 1, function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x07, 0x10, 0x00, 0x00, 0x43, 0x02, 0x02, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
         it('should accept a bright command', function (done) {
             var sentCommandId = NaN;
             lighting1.increaseLevel(['C', '2'], function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x07, 0x10, 0x00, 0x00, 0x43, 0x02, 0x03, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should accept a bright command with a room number', function (done) {
+            var sentCommandId = NaN;
+            lighting1.increaseLevel(['C', '2'], 1, function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
             });

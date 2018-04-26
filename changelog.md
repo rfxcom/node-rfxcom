@@ -1,3 +1,9 @@
+Version 1.1.0
+-------------
+
+- Added support for an optional room number to increaseLevel() & decreaseLevel() for all lighting transmitters supporting
+ these functions. Only the LIVOLO_APPLIANCE Lighting5 subtype makes any use of it, and will throw an error if it is missing.
+
 Version 1.0.0
 -------------
 
