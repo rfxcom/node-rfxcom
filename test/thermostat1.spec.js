@@ -37,6 +37,15 @@ describe('Thermostat1 class', function () {
                     expect(fakeSerialPort).toHaveSent([0x09, 0x40, 0x00, 0x00, 0x12, 0x34, 0x19, 0x17, 0x02, 0x00]);
                     expect(sentCommandId).toEqual(0);
                 });
+                it('should handle string "mode" and "status" parameters', function (done) {
+                    let sentCommandId = NaN;
+                    thermostat.sendMessage('0x1234', {temperature:24.5, setpoint:22.5, status:"No Demand", mode:"Heating"}, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x09, 0x40, 0x00, 0x00, 0x12, 0x34, 0x19, 0x17, 0x02, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
                 it('should throw an error with an invalid temperature', function () {
                     expect(function () {
                         thermostat.sendMessage('0x1234', {temperature:99, setpoint:22.5, status:2, mode:0});

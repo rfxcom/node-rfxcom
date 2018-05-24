@@ -1456,7 +1456,9 @@ describe("RfxCom", function() {
                     expect(evt.temperature).toBe(22);
                     expect(evt.setpoint).toBe(21);
                     expect(evt.mode).toBe("Heating");
+                    expect(evt.modeNumber).toBe(0);
                     expect(evt.status).toBe("No Demand");
+                    expect(evt.statusNumber).toBe(2);
                     expect(evt.rssi).toBe(7);
                     done();
                 });
