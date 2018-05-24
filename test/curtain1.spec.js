@@ -1,7 +1,8 @@
 /* global require: false, beforeEach: false, describe: false, it: false, expect: false,
    spyOn: false, console: false
 */
-var rfxcom = require('../lib'),
+const rfxcom = require('../lib'),
+    util = require('util'),
     matchers = require('./matchers'),
     FakeSerialPort = require('./helper');
 
@@ -45,15 +46,15 @@ describe('Curtain1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should log the bytes being sent in debug mode', function (done) {
-            var debugDevice = new rfxcom.RfxCom('/dev/ttyUSB0', {
+            const debugDevice = new rfxcom.RfxCom('/dev/ttyUSB0', {
                     port:  fakeSerialPort,
                     debug: true
                 }),
                 curtain = new rfxcom.Curtain1(debugDevice, rfxcom.curtain1.HARRISON),
-                consoleSpy = spyOn(console, 'log');
+                utilLogSpy = spyOn(util, 'log');
             debugDevice.connected = true;
             curtain.open('a1', done);
-            expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 07,18,00,00,41,01,00,00');
+            expect(utilLogSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 07,18,00,00,41,01,00,00');
             debugDevice.acknowledge[0]();
         });
         it('should throw an exception with an invalid format deviceId', function () {

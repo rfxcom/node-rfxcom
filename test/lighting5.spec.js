@@ -1,5 +1,6 @@
 /* global require: false, beforeEach: false, describe: false, it: false, expect: false */
 const rfxcom = require('../lib'),
+    util = require('util'),
     matchers = require('./matchers'),
     FakeSerialPort = require('./helper');
 
@@ -68,11 +69,11 @@ describe('Lighting5 class', function () {
                         }),
                         debug = new rfxcom.Lighting5(debugDevice, rfxcom.lighting5.LIGHTWAVERF);
                     debugDevice.connected = true;
-                    const consoleSpy = spyOn(console, 'log');
+                    const utilLogSpy = spyOn(util, 'log');
                     debug.switchOn('0xF09AC8/1', function () {
                         done();
                     });
-                    expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 0A,14,00,00,F0,9A,C8,01,01,1F,00');
+                    expect(utilLogSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 0A,14,00,00,F0,9A,C8,01,01,1F,00');
                     debugDevice.acknowledge[0]();
                 });
                 it('should throw an exception with a group address', function () {

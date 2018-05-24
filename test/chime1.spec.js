@@ -1,4 +1,5 @@
-var rfxcom = require('../lib'),
+const rfxcom = require('../lib'),
+    util = require('util'),
     matchers = require('./matchers'),
     FakeSerialPort = require('./helper');
 
@@ -49,15 +50,15 @@ describe('Chime1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should log the bytes being sent in debug mode', function (done) {
-            var debugDevice = new rfxcom.RfxCom('/dev/ttyUSB0', {
+            const debugDevice = new rfxcom.RfxCom('/dev/ttyUSB0', {
                     port:  fakeSerialPort,
                     debug: true
                 }),
                 debug = new rfxcom.Chime1(debugDevice, rfxcom.chime1.BYRON_SX);
             debugDevice.connected = true;
-            var consoleSpy = spyOn(console, 'log');
+            const utilLogSpy = spyOn(util, 'log');
             debug.chime('0x2a', done);
-            expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 07,16,00,00,00,2A,05,00');
+            expect(utilLogSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 07,16,00,00,00,2A,05,00');
             debugDevice.acknowledge[0]();
         });
         it('should accept a valid tone number', function (done) {

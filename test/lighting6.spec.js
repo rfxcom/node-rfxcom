@@ -1,5 +1,6 @@
 /* global require: false, beforeEach: false, describe: false, it: false, expect: false */
-var rfxcom = require('../lib'),
+const rfxcom = require('../lib'),
+    util = require('util'),
     matchers = require('./matchers'),
     FakeSerialPort = require('./helper');
 
@@ -53,11 +54,11 @@ describe('Lighting6 class', function () {
                 }),
                 debug = new rfxcom.Lighting6(debugDevice, rfxcom.lighting6.BLYSS);
             debugDevice.connected = true;
-            var consoleSpy = spyOn(console, 'log');
+            const utilLogSpy = spyOn(util, 'log');
             debug.switchOn('0xF09A/B/1', function () {
                 done();
             });
-            expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 0B,15,00,00,F0,9A,42,01,00,00,00,00');
+            expect(utilLogSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 0B,15,00,00,F0,9A,42,01,00,00,00,00');
             debugDevice.acknowledge[0]();
         });
         it('should accept an array address', function (done) {
