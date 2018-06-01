@@ -1,4 +1,5 @@
 var rfxcom = require('../lib'),
+    util = require('util'),
     matchers = require('./matchers'),
     FakeSerialPort = require('./helper');
 
@@ -58,9 +59,9 @@ describe('Blinds1 class', function () {
                 }),
                 debug = new rfxcom.Blinds1(debugDevice, rfxcom.blinds1.BLINDS_T0);
             debugDevice.connected = true;
-            var consoleSpy = spyOn(console, 'log');
+            var utilLogSpy = spyOn(util, 'log');
             debug.open('0x1234/5', done);
-            expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 09,19,00,00,00,12,34,05,00,00');
+            expect(utilLogSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 09,19,00,00,00,12,34,05,00,00');
             debugDevice.acknowledge[0]();
         });
         it('should send the correct bytes for a close() command to the serialport', function (done) {

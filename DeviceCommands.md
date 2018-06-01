@@ -373,7 +373,7 @@ Devices:
 Commands:
 
     Thermostat3.switchOn()
-    Thermostat3.switchOf()
+    Thermostat3.switchOff()
     Thermostat3.switchOn2()
     Thermostat3.switchOff2()
     Thermostat3.up()

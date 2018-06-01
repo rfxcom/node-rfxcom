@@ -1,7 +1,8 @@
 /* global require: false, beforeEach: false, describe: false, it: false, expect: false,
  spyOn: false, console: false
  */
-var rfxcom = require('../lib'),
+const rfxcom = require('../lib'),
+    util = require('util'),
     matchers = require('./matchers'),
     FakeSerialPort = require('./helper');
 
@@ -135,9 +136,9 @@ describe('Lighting3 class', function () {
                 }),
                 debugLight = new rfxcom.Lighting3(debugDevice, rfxcom.lighting3.KOPPLA);
             debugDevice.connected = true;
-            var consoleSpy = spyOn(console, 'log');
+            const utilLogSpy = spyOn(util, 'log');
             debugLight.switchOn(['16', '0'], done);
-            expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 08,12,00,00,0F,FF,03,10,00');
+            expect(utilLogSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 08,12,00,00,0F,FF,03,10,00');
             debugDevice.acknowledge[0]();
         });
         it('should accept the highest system code & channel number', function (done) {

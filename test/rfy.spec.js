@@ -2,6 +2,7 @@
    spyOn: false, console: false
 */
 const rfxcom = require('../lib'),
+    util = require('util'),
     matchers = require('./matchers'),
     FakeSerialPort = require('./helper');
 
@@ -42,10 +43,10 @@ describe('Rfy class', function () {
                         debug: true
                     }),
                     rfyd = new rfxcom.Rfy(debugDevice, rfxcom.rfy.RFY),
-                    consoleSpy = spyOn(console, 'log');
+                    utilLogSpy = spyOn(util, 'log');
                 debugDevice.connected = true;
                 rfyd.stop('0x010203/01', done);
-                expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 0C,1A,00,00,01,02,03,01,00,00,00,00,00');
+                expect(utilLogSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 0C,1A,00,00,01,02,03,01,00,00,00,00,00');
                 debugDevice.acknowledge[0]();
             });
             it('should handle no callback', function () {
@@ -576,10 +577,10 @@ describe('Rfy class', function () {
                         debug: true
                     }),
                     rfyd = new rfxcom.Rfy(debugDevice, rfxcom.rfy.RFY),
-                    consoleSpy = spyOn(console, 'log');
+                    utilLogSpy = spyOn(util, 'log');
                 debugDevice.connected = true;
                 rfyd.stop('0x010203/01', done);
-                expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 0C,1A,00,00,01,02,03,01,00,00,00,00,00');
+                expect(utilLogSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 0C,1A,00,00,01,02,03,01,00,00,00,00,00');
                 debugDevice.acknowledge[0]();
             });
             it('should handle no callback', function () {
@@ -1110,10 +1111,10 @@ describe('Rfy class', function () {
                         debug: true
                     }),
                     rfyd = new rfxcom.Rfy(debugDevice, rfxcom.rfy.RFY),
-                    consoleSpy = spyOn(console, 'log');
+                    utilLogSpy = spyOn(util, 'log');
                 debugDevice.connected = true;
                 rfyd.stop('0x010203/01', done);
-                expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 0C,1A,00,00,01,02,03,01,00,00,00,00,00');
+                expect(utilLogSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 0C,1A,00,00,01,02,03,01,00,00,00,00,00');
                 debugDevice.acknowledge[0]();
             });
             it('should handle no callback', function () {

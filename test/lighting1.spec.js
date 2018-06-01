@@ -2,6 +2,7 @@
    spyOn: false, console: false
 */
 var rfxcom = require('../lib'),
+    util = require('util'),
     matchers = require('./matchers'),
     FakeSerialPort = require('./helper');
 
@@ -58,9 +59,9 @@ describe('Lighting1 class', function () {
                 }),
                 debug = new rfxcom.Lighting1(debugDevice, rfxcom.lighting1.ARC);
             debugDevice.connected = true;
-            var consoleSpy = spyOn(console, 'log');
+            const utilLogSpy = spyOn(util, 'log');
             debug.chime('C14', done);
-            expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 07,10,01,00,43,0E,07,00');
+            expect(utilLogSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 07,10,01,00,43,0E,07,00');
             debugDevice.acknowledge[0]();
         });
     });

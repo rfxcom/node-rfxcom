@@ -1,7 +1,8 @@
 /* global require: false, beforeEach: false, describe: false, it: false, expect: false,
    spyOn: false, console: false
 */
-var rfxcom = require('../lib'),
+const rfxcom = require('../lib'),
+    util = require('util'),
     matchers = require('./matchers'),
     FakeSerialPort = require('./helper');
 
@@ -67,9 +68,9 @@ describe('Lighting2 class', function () {
                 }),
                 debugLight = new rfxcom.Lighting2(debugDevice, rfxcom.lighting2.ANSLUT);
             debugDevice.connected = true;
-            var consoleSpy = spyOn(console, 'log');
+            const utilLogSpy = spyOn(util, 'log');
             debugLight.switchOn('0x03FFFFFF/1', done);
-            expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 0B,11,02,00,03,FF,FF,FF,01,01,0F,00');
+            expect(utilLogSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 0B,11,02,00,03,FF,FF,FF,01,01,0F,00');
             debugDevice.acknowledge[0]();
         });
         it('should throw an exception with a badly formatted deviceId', function () {

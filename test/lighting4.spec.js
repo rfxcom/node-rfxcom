@@ -1,7 +1,8 @@
 /* global require: false, beforeEach: false, describe: false, it: false, expect: false,
 spyOn: false, console: false
 */
-var rfxcom = require('../lib'),
+const rfxcom = require('../lib'),
+    util = require('util'),
     matchers = require('./matchers'),
     FakeSerialPort = require('./helper');
 
@@ -49,11 +50,11 @@ describe('Lighting4 class', function () {
                 }),
                 debugLight = new rfxcom.Lighting4(debugDevice, rfxcom.lighting4.PT2262);
             debugDevice.connected = true;
-            var consoleSpy = spyOn(console, 'log');
+            const utilLogSpy = spyOn(util, 'log');
             debugLight.sendData(0, null, function () {
                 done();
             });
-            expect(consoleSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 09,13,00,00,00,00,00,01,5E,00');
+            expect(utilLogSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 09,13,00,00,00,00,00,01,5E,00');
             debugDevice.acknowledge[0]();
         });
         it('should send the correct bytes to the serialport (numeric data, hex string pulse width)', function (done) {
