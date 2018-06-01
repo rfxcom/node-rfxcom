@@ -1,8 +1,22 @@
+Version 1.3.0
+-------------
+
+* Add timestamp to debug messages.
+* Thermostat1 receive events now provide both numeric & string representations of mode and
+status. Thermostat1 transmitter now accepts both numbers & strings.
+
+Version 1.2.0
+-------------
+
+Added deviceNames object & additional _type_ parmeter to received packet events - enables
+access to the device name (as found in the SDK) for every subtype of every received
+packet.
+
 Version 1.1.0
 -------------
 
-- Added support for an optional room number to increaseLevel() & decreaseLevel() for all lighting transmitters supporting
- these functions. Only the LIVOLO_APPLIANCE Lighting5 subtype makes any use of it, and will throw an error if it is missing.
+Added support for an optional room number to increaseLevel() & decreaseLevel() for all lighting transmitters supporting
+these functions. Only the LIVOLO_APPLIANCE Lighting5 subtype makes any use of it, and will throw an error if it is missing.
 
 Version 1.0.0
 -------------
