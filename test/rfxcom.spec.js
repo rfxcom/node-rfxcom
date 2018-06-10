@@ -2311,6 +2311,7 @@ describe("RfxCom", function() {
                 device.on("rfxmeter", function(evt) {
                     expect(evt.subtype).toBe(0x00);
                     expect(evt.seqnbr).toBe(55);
+                    expect(evt.rssi).toBe(7);
                     expect(evt.counter).toBe(9069671);
                     done();
                 });
