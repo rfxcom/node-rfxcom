@@ -4,12 +4,12 @@
 /* global require: false, beforeEach: false, describe: false, it: false, expect: false,
    spyOn: false, console: false
 */
-var rfxcom = require('../lib'),
+const rfxcom = require('../lib'),
     matchers = require('./matchers'),
     FakeSerialPort = require('./helper');
 
 describe('HomeConfort class', function () {
-    var homeConfort,
+    let homeConfort,
         fakeSerialPort,
         device;
     beforeEach(function () {
@@ -32,7 +32,7 @@ describe('HomeConfort class', function () {
         describe('commands', function () {
             describe('switchOn()', function () {
                 it('should send the correct bytes to the serialport', function (done) {
-                    var sentCommandId = NaN;
+                    let sentCommandId = NaN;
                     homeConfort.switchOn('0x1234/A/1', function (err, response, cmdId) {
                         sentCommandId = cmdId;
                         done();
@@ -41,7 +41,7 @@ describe('HomeConfort class', function () {
                     expect(sentCommandId).toEqual(0);
                 });
                 it('should handle a group command', function (done) {
-                    var sentCommandId = NaN;
+                    let sentCommandId = NaN;
                     homeConfort.switchOn('0x1234/A/0', function (err, response, cmdId) {
                         sentCommandId = cmdId;
                         done();
@@ -52,7 +52,7 @@ describe('HomeConfort class', function () {
             });
             describe('switchOff()', function () {
                 it('should send the correct bytes to the serialport', function (done) {
-                    var sentCommandId = NaN;
+                    let sentCommandId = NaN;
                     homeConfort.switchOff('0x1234/A/1', function (err, response, cmdId) {
                         sentCommandId = cmdId;
                         done();
@@ -61,7 +61,7 @@ describe('HomeConfort class', function () {
                     expect(sentCommandId).toEqual(0);
                 });
                 it('should handle a group command', function (done) {
-                    var sentCommandId = NaN;
+                    let sentCommandId = NaN;
                     homeConfort.switchOff('0x1234/A/0', function (err, response, cmdId) {
                         sentCommandId = cmdId;
                         done();
@@ -78,7 +78,7 @@ describe('HomeConfort class', function () {
                 }).toThrow("Invalid deviceId format");
             });
             it('should accept the highest address, house and unit code values', function (done) {
-                var sentCommandId = NaN;
+                let sentCommandId = NaN;
                 homeConfort.switchOn('0x7FFFF/D/4', function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
@@ -87,7 +87,7 @@ describe('HomeConfort class', function () {
                 expect(sentCommandId).toEqual(0);
             });
             it('should accept the lowest address and unit code values', function (done) {
-                var sentCommandId = NaN;
+                let sentCommandId = NaN;
                 homeConfort.switchOn('0x1/A/1', function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();

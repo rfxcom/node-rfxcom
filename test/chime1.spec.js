@@ -4,7 +4,7 @@ const rfxcom = require('../lib'),
     FakeSerialPort = require('./helper');
 
 describe('Chime1 class', function () {
-    var chime1,
+    let chime1,
         fakeSerialPort,
         device;
     beforeEach(function () {
@@ -32,7 +32,7 @@ describe('Chime1 class', function () {
             chime1 = new rfxcom.Chime1(device, rfxcom.chime1.BYRON_SX);
         });
         it('should send the correct bytes to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             chime1.chime('0x2a', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -41,7 +41,7 @@ describe('Chime1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept an array deviceId', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             chime1.chime(['0x2a'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -62,7 +62,7 @@ describe('Chime1 class', function () {
             debugDevice.acknowledge[0]();
         });
         it('should accept a valid tone number', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             chime1.chime('0x2a', 0x0d, function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -91,7 +91,7 @@ describe('Chime1 class', function () {
             chime1 = new rfxcom.Chime1(device, rfxcom.chime1.BYRON_MP001);
         });
         it('should send the correct bytes to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             chime1.chime('101000', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -115,7 +115,7 @@ describe('Chime1 class', function () {
             chime1 = new rfxcom.Chime1(device, rfxcom.chime1.SELECT_PLUS);
         });
         it('should send the correct bytes to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             chime1.chime('0x3ff', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -124,7 +124,7 @@ describe('Chime1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept the highest allowed address', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             chime1.chime('0x3fffff', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -143,7 +143,7 @@ describe('Chime1 class', function () {
             chime1 = new rfxcom.Chime1(device, rfxcom.chime1.ENVIVO);
         });
         it('should send the correct bytes to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             chime1.chime('0x3ff', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -152,7 +152,7 @@ describe('Chime1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             chime1.chime('0xffffff', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();

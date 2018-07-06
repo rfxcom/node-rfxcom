@@ -22,7 +22,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x01]);
+                device.parser.emit("data", [0x01]);
             });
             it("should emit a status event when it receives message type 0x01", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -33,7 +33,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x0D, 0x01, 0x00, 0x01, 0x02, 0x53, 0x30, 0x00, 0x02, 0x21, 0x01, 0x00, 0x00, 0x00]);
+                device.parser.emit("data", [0x0D, 0x01, 0x00, 0x01, 0x02, 0x53, 0x30, 0x00, 0x02, 0x21, 0x01, 0x00, 0x00, 0x00]);
             });
             it("should emit a response event when it receives message type 0x02", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -44,7 +44,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x04, 0x02, 0x01, 0x00, 0x00]);
+                device.parser.emit("data", [0x04, 0x02, 0x01, 0x00, 0x00]);
             });
             it("should emit a lighting1 event when it receives message type 0x10", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -57,7 +57,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x07, 0x10, 0x00, 0x00, 0x41, 0x03, 0x00, 0x0F]);
+                device.parser.emit("data", [0x07, 0x10, 0x00, 0x00, 0x41, 0x03, 0x00, 0x0F]);
             });
             it("should emit a lighting2 event when it receives message type 0x11", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -70,7 +70,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x0B, 0x11, 0x01, 0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x0F, 0x0F]);
+                device.parser.emit("data", [0x0B, 0x11, 0x01, 0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x0F, 0x0F]);
             });
             it("should emit a lighting4 event when it receives message type 0x13", function (done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -83,7 +83,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x09, 0x13, 0x00, 0x00, 0x00, 0x01, 0x02, 0x03, 0x12, 0x00]);
+                device.parser.emit("data", [0x09, 0x13, 0x00, 0x00, 0x00, 0x01, 0x02, 0x03, 0x12, 0x00]);
             });
             it("should emit a lighting5 event when it receives message type 0x14", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -96,7 +96,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x0A, 0x14, 0x00, 0x01, 0xF0, 0x9A, 0xC7, 0x02, 0x00, 0x00, 0x80]);
+                device.parser.emit("data", [0x0A, 0x14, 0x00, 0x01, 0xF0, 0x9A, 0xC7, 0x02, 0x00, 0x00, 0x80]);
             });
             it("should emit a lighting6 event when it receives message type 0x15", function (done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -109,7 +109,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x0b, 0x15, 0x00, 0x00, 0xF0, 0x9A, 0x42, 0x00, 0x03, 0x00, 0x00, 0x00]);
+                device.parser.emit("data", [0x0b, 0x15, 0x00, 0x00, 0xF0, 0x9A, 0x42, 0x00, 0x03, 0x00, 0x00, 0x00]);
             });
             it("should emit a chime event when it receives message type 0x16", function (done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -122,7 +122,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x07, 0x16, 0x00, 0x00, 0x00, 0xff, 0x0d, 0x30]);
+                device.parser.emit("data", [0x07, 0x16, 0x00, 0x00, 0x00, 0xff, 0x0d, 0x30]);
             });
             it("should emit a blinds1 event when it receives message type 0x19", function (done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -135,7 +135,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x09, 0x19, 0x04, 0x06, 0x00, 0xA2, 0x1B, 0x01, 0x02, 0x80]);
+                device.parser.emit("data", [0x09, 0x19, 0x04, 0x06, 0x00, 0xA2, 0x1B, 0x01, 0x02, 0x80]);
             });
             it("should emit a security1 event when it receives message type 0x20", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -148,7 +148,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x08, 0x20, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
+                device.parser.emit("data", [0x08, 0x20, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
             });
             it("should emit a camera1 event when it receives message type 0x28", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -161,7 +161,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x06, 0x28, 0x00, 0x00, 0x42, 0x03, 0x90]);
+                device.parser.emit("data", [0x06, 0x28, 0x00, 0x00, 0x42, 0x03, 0x90]);
             });
             it("should emit a remote event when it receives message type 0x30", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -174,7 +174,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x06, 0x30, 0x00, 0x04, 0x0F, 0x0D, 0x82]);
+                device.parser.emit("data", [0x06, 0x30, 0x00, 0x04, 0x0F, 0x0D, 0x82]);
             });
             it("should emit a thermostat1 event when it receives message type 0x40", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -187,7 +187,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x09, 0x40, 0x00, 0x1B, 0x6B, 0x18, 0x16, 0x15, 0x02, 0x70]);
+                device.parser.emit("data", [0x09, 0x40, 0x00, 0x1B, 0x6B, 0x18, 0x16, 0x15, 0x02, 0x70]);
             });
             it("should emit a thermostat3 event when it receives message type 0x42", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -200,7 +200,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x08, 0x42, 0x01, 0x01, 0x01, 0x9F, 0xAB, 0x02, 0x81]);
+                device.parser.emit("data", [0x08, 0x42, 0x01, 0x01, 0x01, 0x9F, 0xAB, 0x02, 0x81]);
             });
             it("should emit a bbq event when it receives message type 0x4e", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -213,7 +213,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x0A, 0x4E, 0x01, 0x00, 0x00, 0x00, 0x00, 0x19, 0x00, 0x17, 0x89]);
+                device.parser.emit("data", [0x0A, 0x4E, 0x01, 0x00, 0x00, 0x00, 0x00, 0x19, 0x00, 0x17, 0x89]);
             });
             it("should emit a temprain event when it receives message type 0x4f, with device type 1", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -226,7 +226,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x0a, 0x4f, 0x01, 0x00, 0x12, 0x34, 0x01, 0x17, 0x00, 0x42, 0x55]);
+                device.parser.emit("data", [0x0a, 0x4f, 0x01, 0x00, 0x12, 0x34, 0x01, 0x17, 0x00, 0x42, 0x55]);
             });
             it("should emit a temp event when it receives message type 0x50, with device type 1", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -239,7 +239,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x08, 0x50, 0x01, 0x01, 0xFA, 0xAF, 0x80, 0x14, 0x42]);
+                device.parser.emit("data", [0x08, 0x50, 0x01, 0x01, 0xFA, 0xAF, 0x80, 0x14, 0x42]);
             });
             it("should emit a temp event when it receives message type 0x50, with device type 2", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -252,7 +252,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x08, 0x50, 0x02, 0x01, 0xFA, 0xAF, 0x80, 0x14, 0x42]);
+                device.parser.emit("data", [0x08, 0x50, 0x02, 0x01, 0xFA, 0xAF, 0x80, 0x14, 0x42]);
             });
             it("should emit a humidity event when it receives message type 0x51", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -265,7 +265,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x08, 0x51, 0x01, 0x02, 0x77, 0x00, 0x36, 0x01, 0x89]);
+                device.parser.emit("data", [0x08, 0x51, 0x01, 0x02, 0x77, 0x00, 0x36, 0x01, 0x89]);
             });
             it("should emit a temphumidity event when it receives message type 0x52, with device type 1", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -278,7 +278,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x0A, 0x52, 0x01, 0x04, 0xAF, 0x01, 0x00, 0x90, 0x36, 0x02, 0x59]);
+                device.parser.emit("data", [0x0A, 0x52, 0x01, 0x04, 0xAF, 0x01, 0x00, 0x90, 0x36, 0x02, 0x59]);
             });
             it("should emit a temphumbaro event when it receives message type 0x54", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -291,7 +291,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x0D, 0x54, 0x02, 0x0E, 0xE9, 0x00, 0x00, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
+                device.parser.emit("data", [0x0D, 0x54, 0x02, 0x0E, 0xE9, 0x00, 0x00, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
             });
             it("should emit a rain event when it receives message type 0x55, with device type 2", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -304,7 +304,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x0B, 0x55, 0x02, 0x17, 0xB6, 0x00, 0x00, 0x00, 0x00, 0x4D, 0x3C, 0x69]);
+                device.parser.emit("data", [0x0B, 0x55, 0x02, 0x17, 0xB6, 0x00, 0x00, 0x00, 0x00, 0x4D, 0x3C, 0x69]);
             });
             it("should emit a wind event when it receives message type 0x56, with device type 1", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -317,7 +317,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x10, 0x56, 0x01, 0x12, 0x2F, 0x00, 0x00, 0x87, 0x00, 0x00, 0x00, 0x14, 0x00, 0x49, 0x00, 0x00, 0x79]);
+                device.parser.emit("data", [0x10, 0x56, 0x01, 0x12, 0x2F, 0x00, 0x00, 0x87, 0x00, 0x00, 0x00, 0x14, 0x00, 0x49, 0x00, 0x00, 0x79]);
             });
             it("should emit a uv event when it receives message type 0x57, with device type 1", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -330,7 +330,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x09, 0x57, 0x01, 0x00, 0x12, 0x34, 0x38, 0x01, 0x11, 0x79]);
+                device.parser.emit("data", [0x09, 0x57, 0x01, 0x00, 0x12, 0x34, 0x38, 0x01, 0x11, 0x79]);
             });
             it("should emit a datetime event when it receives message type 0x58, with device type 1", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -343,7 +343,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x0D, 0x58, 0x01, 0x00, 0x12, 0x34, 0x11, 0x08, 0x11, 0x05, 0x14, 0x1B, 0x11, 0x79]);
+                device.parser.emit("data", [0x0D, 0x58, 0x01, 0x00, 0x12, 0x34, 0x11, 0x08, 0x11, 0x05, 0x14, 0x1B, 0x11, 0x79]);
             });
             it("should emit an elec1 event when it receives message type 0x59", function (done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -356,7 +356,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x0D, 0x59, 0x01, 0x0F, 0x86, 0x00, 0x04, 0x00, 0x1D, 0x00, 0x00, 0x00, 0x00, 0x49]);
+                device.parser.emit("data", [0x0D, 0x59, 0x01, 0x0F, 0x86, 0x00, 0x04, 0x00, 0x1D, 0x00, 0x00, 0x00, 0x00, 0x49]);
             });
             it("should emit an elec23 event when it receives message type 0x5a, with device type 1", function (done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -369,7 +369,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x11, 0x5a, 0x01, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
+                device.parser.emit("data", [0x11, 0x5a, 0x01, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
             });
             it("should emit an elec4 event when it receives message type 0x5b", function (done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -382,8 +382,8 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x13, 0x5B, 0x01, 0x06, 0xB8, 0x00, 0x00, 0x00, 0x16, 0x00, 0x00, 0x00,
-                    0x00, 0x00, 0x00, 0x00, 0x6F, 0x14, 0x88, 0x89]);
+                device.parser.emit("data", [0x13, 0x5B, 0x01, 0x06, 0xB8, 0x00, 0x00, 0x00, 0x16, 0x00, 0x00, 0x00,
+                                            0x00, 0x00, 0x00, 0x00, 0x6F, 0x14, 0x88, 0x89]);
             });
             it("should emit an elec5 event when it receives message type 0x5c", function (done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -396,8 +396,8 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x0F, 0x5C, 0x01, 0x03, 0x00, 0x2D, 0xE4, 0x00, 0x00, 0x00, 0x00, 0x00,
-                                             0x03, 0x00, 0x32, 0x80]);
+                device.parser.emit("data", [0x0F, 0x5C, 0x01, 0x03, 0x00, 0x2D, 0xE4, 0x00, 0x00, 0x00, 0x00, 0x00,
+                                            0x03, 0x00, 0x32, 0x80]);
             });
             it("should emit a weight event when it receives message type 0x5D", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -410,7 +410,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x08, 0x5D, 0x01, 0xF5, 0x00, 0x07, 0x03, 0x40, 0x40]);
+                device.parser.emit("data", [0x08, 0x5D, 0x01, 0xF5, 0x00, 0x07, 0x03, 0x40, 0x40]);
             });
             it("should emit a cartelectronic event when it receives message type 0x60", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -423,8 +423,8 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x15, 0x60, 0x01, 0x00, 0x12, 0x34, 0x56, 0x78, 0x9a,
-                0x01, 0x12, 0x34, 0x56, 0x78, 0x12, 0x34, 0x56, 0x78, 0x07, 0x5a, 0x012, 0x79]);
+                device.parser.emit("data", [0x15, 0x60, 0x01, 0x00, 0x12, 0x34, 0x56, 0x78, 0x9a, 0x01, 0x12,
+                                            0x34, 0x56, 0x78, 0x12, 0x34, 0x56, 0x78, 0x07, 0x5a, 0x012, 0x79]);
             });
             it("should emit an rfxsensor event when it receives message type 0x70", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -437,7 +437,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x07, 0x70, 0x00, 0xE9, 0x28, 0x02, 0xE1, 0x70]);
+                device.parser.emit("data", [0x07, 0x70, 0x00, 0xE9, 0x28, 0x02, 0xE1, 0x70]);
             });
             it("should emit an rfxmeter event when it receives message type 0x71", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -450,7 +450,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("data", [0x0A, 0x71, 0x00, 0x37, 0x08, 0xF8, 0x00, 0x8A, 0x64, 0x67, 0x70]);
+                device.parser.emit("data", [0x0A, 0x71, 0x00, 0x37, 0x08, 0xF8, 0x00, 0x8A, 0x64, 0x67, 0x70]);
             });
         });
 
@@ -464,7 +464,7 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.open();
-                fakeSerialPort.emit("error", "connectfailed\n");
+                fakeSerialPort.emit("error", new Error("Error: No such file or directory, cannot open /dev/tty-i-dont-exist"));
             });
             describe("message sequence", function () {
                 let device = {};
@@ -490,7 +490,9 @@ describe("RfxCom", function() {
                     device.initialise(() => { done() });
                     jasmine.Clock.tick(501);
                     expect(resetSpy).toHaveBeenCalled();
+                    // noinspection JSCheckFunctionSignatures
                     expect(flushSpy).toHaveBeenCalledWith(jasmine.any(Function));
+                    // noinspection JSCheckFunctionSignatures
                     expect(getStatusSpy).toHaveBeenCalledWith(jasmine.any(Function));
                     expect(openSpy).toHaveBeenCalled();
                 });
@@ -512,8 +514,11 @@ describe("RfxCom", function() {
                     device.initialise(() => { done() });
                     jasmine.Clock.tick(501);
                     expect(resetSpy).toHaveBeenCalled();
+                    // noinspection JSCheckFunctionSignatures
                     expect(flushSpy).toHaveBeenCalledWith(jasmine.any(Function));
+                    // noinspection JSCheckFunctionSignatures
                     expect(getStatusSpy).toHaveBeenCalledWith(jasmine.any(Function));
+                    // noinspection JSCheckFunctionSignatures
                     expect(startRxSpy).toHaveBeenCalledWith(jasmine.any(Function));
                     expect(openSpy).toHaveBeenCalled();
                 });

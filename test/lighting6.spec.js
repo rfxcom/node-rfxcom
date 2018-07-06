@@ -11,7 +11,7 @@ beforeEach(function () {
 });
 
 describe('Lighting6 class', function () {
-    var lighting6,
+    let lighting6,
         fakeSerialPort,
         device;
     beforeEach(function () {
@@ -39,7 +39,7 @@ describe('Lighting6 class', function () {
             lighting6 = new rfxcom.Lighting6(device, rfxcom.lighting6.BLYSS);
         });
         it('should send the correct bytes to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting6.switchOn('0xF09A/B/1', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -48,7 +48,7 @@ describe('Lighting6 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should log the bytes being sent in debug mode', function (done) {
-            var debugDevice = new rfxcom.RfxCom('/dev/ttyUSB0', {
+            const debugDevice = new rfxcom.RfxCom('/dev/ttyUSB0', {
                     port:  fakeSerialPort,
                     debug: true
                 }),
@@ -62,7 +62,7 @@ describe('Lighting6 class', function () {
             debugDevice.acknowledge[0]();
         });
         it('should accept an array address', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting6.switchOff(['0xF09A', 'B', '1'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -71,7 +71,7 @@ describe('Lighting6 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept an group address to switch off', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting6.switchOff(['0xF09A', 'B', '0'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -80,7 +80,7 @@ describe('Lighting6 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept an group address to switch on', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting6.switchOn(['0xF09A', 'B', '0'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -89,7 +89,7 @@ describe('Lighting6 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept the highest ID, group code & unit code numbers', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting6.switchOn(['0xFFFF', 'P', '5'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();

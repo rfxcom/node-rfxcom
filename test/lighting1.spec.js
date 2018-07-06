@@ -1,13 +1,13 @@
 /* global require: false, beforeEach: false, describe: false, it: false, expect: false,
    spyOn: false, console: false
 */
-var rfxcom = require('../lib'),
+const rfxcom = require('../lib'),
     util = require('util'),
     matchers = require('./matchers'),
     FakeSerialPort = require('./helper');
 
 describe('Lighting1 class', function () {
-    var lighting1,
+    let lighting1,
         fakeSerialPort,
         device;
     beforeEach(function () {
@@ -35,7 +35,7 @@ describe('Lighting1 class', function () {
             lighting1 = new rfxcom.Lighting1(device, rfxcom.lighting1.ARC);
         });
         it('should send the correct bytes to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting1.chime('C14', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -44,7 +44,7 @@ describe('Lighting1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept an array deviceId', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting1.chime(['C', '14'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -53,7 +53,7 @@ describe('Lighting1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should log the bytes being sent in debug mode', function (done) {
-            var debugDevice = new rfxcom.RfxCom('/dev/ttyUSB0', {
+            const debugDevice = new rfxcom.RfxCom('/dev/ttyUSB0', {
                     port:  fakeSerialPort,
                     debug: true
                 }),
@@ -80,7 +80,7 @@ describe('Lighting1 class', function () {
             lighting1 = new rfxcom.Lighting1(device, rfxcom.lighting1.X10);
         });
         it('should accept an array deviceId', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting1.switchOn(['C', '14'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -89,7 +89,7 @@ describe('Lighting1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept a group command', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting1.switchOff(['C', '0'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -98,7 +98,7 @@ describe('Lighting1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept a dim command', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting1.decreaseLevel(['C', '2'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -107,7 +107,7 @@ describe('Lighting1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept a dim command with a room number', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting1.decreaseLevel(['C', '2'], 1, function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -116,7 +116,7 @@ describe('Lighting1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept a bright command', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting1.increaseLevel(['C', '2'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -125,7 +125,7 @@ describe('Lighting1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept a bright command with a room number', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting1.increaseLevel(['C', '2'], 1, function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -164,7 +164,7 @@ describe('Lighting1 class', function () {
             lighting1 = new rfxcom.Lighting1(device, rfxcom.lighting1.CHACON);
         });
         it('should accept the highest house & unit codes', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting1.switchOn(['C', '4'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -188,7 +188,7 @@ describe('Lighting1 class', function () {
             lighting1 = new rfxcom.Lighting1(device, rfxcom.lighting1.COCO);
         });
         it('should accept the highest house & unit codes', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting1.switchOn(['D', '4'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -212,7 +212,7 @@ describe('Lighting1 class', function () {
             lighting1 = new rfxcom.Lighting1(device, rfxcom.lighting1.IMPULS);
         });
         it('should accept the highest house & unit codes', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting1.switchOn(['P', '64'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -236,7 +236,7 @@ describe('Lighting1 class', function () {
             lighting1 = new rfxcom.Lighting1(device, rfxcom.lighting1.PHILIPS_SBC);
         });
         it('should accept the highest house & unit codes', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting1.switchOn(['P', '8'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -260,7 +260,7 @@ describe('Lighting1 class', function () {
             lighting1 = new rfxcom.Lighting1(device, rfxcom.lighting1.ENERGENIE_5_GANG);
         });
         it('should accept the highest house & unit codes', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting1.switchOn(['P', '10'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -284,7 +284,7 @@ describe('Lighting1 class', function () {
             lighting1 = new rfxcom.Lighting1(device, rfxcom.lighting1.HQ);
         });
         it('should accept the highest house & unit codes', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting1.switchOn(['D', '16'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();

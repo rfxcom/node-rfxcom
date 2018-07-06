@@ -7,7 +7,7 @@ const rfxcom = require('../lib'),
     FakeSerialPort = require('./helper');
 
 describe('Lighting4 class', function () {
-    var lighting4,
+    let lighting4,
         fakeSerialPort,
         device;
     beforeEach(function () {
@@ -35,7 +35,7 @@ describe('Lighting4 class', function () {
             lighting4 = new rfxcom.Lighting4(device, rfxcom.lighting4.PT2262);
         });
         it('should send the correct bytes to the serialport (numeric data, default pulse width)', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting4.sendData(0, null, function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -44,7 +44,7 @@ describe('Lighting4 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should log the bytes being sent in debug mode', function (done) {
-            var debugDevice = new rfxcom.RfxCom('/dev/ttyUSB0', {
+            const debugDevice = new rfxcom.RfxCom('/dev/ttyUSB0', {
                     port:  fakeSerialPort,
                     debug: true
                 }),
@@ -58,7 +58,7 @@ describe('Lighting4 class', function () {
             debugDevice.acknowledge[0]();
         });
         it('should send the correct bytes to the serialport (numeric data, hex string pulse width)', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting4.sendData(0, "0x0578", function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -67,7 +67,7 @@ describe('Lighting4 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes to the serialport (string data, default pulse width)', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting4.sendData("0", null, function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -76,7 +76,7 @@ describe('Lighting4 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes to the serialport (array data, default pulse width)', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting4.sendData([0, 1, 2], null, function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -85,7 +85,7 @@ describe('Lighting4 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes to the serialport (undersize array data, default pulse width)', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting4.sendData([1, 2], null, function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -94,7 +94,7 @@ describe('Lighting4 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes to the serialport (hex string data, default pulse width)', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting4.sendData("0x000102", null, function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -103,7 +103,7 @@ describe('Lighting4 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes to the serialport (hex string data, hex string pulse width)', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting4.sendData("0x000102", "0x0312", function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -112,7 +112,7 @@ describe('Lighting4 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes to the serialport (decimal string data, decimal string pulse width)', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting4.sendData("258", "786", function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -121,7 +121,7 @@ describe('Lighting4 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes to the serialport (numeric data, numeric pulse width)', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting4.sendData(0x000102, 0x0312, function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();

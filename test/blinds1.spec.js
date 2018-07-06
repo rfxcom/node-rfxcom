@@ -1,10 +1,10 @@
-var rfxcom = require('../lib'),
+const rfxcom = require('../lib'),
     util = require('util'),
     matchers = require('./matchers'),
     FakeSerialPort = require('./helper');
 
 describe('Blinds1 class', function () {
-    var blinds1,
+    let blinds1,
         fakeSerialPort,
         device;
     beforeEach(function () {
@@ -35,7 +35,7 @@ describe('Blinds1 class', function () {
             blinds1 = new rfxcom.Blinds1(device, rfxcom.blinds1.BLINDS_T0);
         });
         it('should send the correct bytes for an open() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -44,7 +44,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept an array deviceId', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close(['0x1234', '5'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -53,19 +53,19 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should log the bytes being sent in debug mode', function (done) {
-            var debugDevice = new rfxcom.RfxCom('/dev/ttyUSB0', {
+            const debugDevice = new rfxcom.RfxCom('/dev/ttyUSB0', {
                     port:  fakeSerialPort,
                     debug: true
                 }),
                 debug = new rfxcom.Blinds1(debugDevice, rfxcom.blinds1.BLINDS_T0);
             debugDevice.connected = true;
-            var utilLogSpy = spyOn(util, 'log');
+            const utilLogSpy = spyOn(util, 'log');
             debug.open('0x1234/5', done);
             expect(utilLogSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 09,19,00,00,00,12,34,05,00,00');
             debugDevice.acknowledge[0]();
         });
         it('should send the correct bytes for a close() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -74,7 +74,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a stop() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.stop('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -83,7 +83,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a confirm() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.confirm('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -92,7 +92,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a setLimit() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.setLimit('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -126,7 +126,7 @@ describe('Blinds1 class', function () {
             }).toThrow("Address 0x0 outside valid range");
         });
         it('should accept address = 0x1', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -135,7 +135,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept address = 0xffff', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0xffff/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -149,7 +149,7 @@ describe('Blinds1 class', function () {
             }).toThrow("Address 0x10000 outside valid range");
         });
         it('should accept unitcode = 0x0', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1234/0', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -158,7 +158,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept unitcode = 0xf', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1234/0xf', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -179,7 +179,7 @@ describe('Blinds1 class', function () {
             blinds1 = new rfxcom.Blinds1(device, rfxcom.blinds1.BLINDS_T1);
         });
         it('should send the correct bytes for an open() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -188,7 +188,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept an array deviceId', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close(['0x1234', '5'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -197,7 +197,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a close() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -206,7 +206,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a stop() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.stop('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -215,7 +215,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a confirm() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.confirm('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -224,7 +224,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a setLimit() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.setLimit('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -258,7 +258,7 @@ describe('Blinds1 class', function () {
             }).toThrow("Address 0x0 outside valid range");
         });
         it('should accept address = 0x1', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -267,7 +267,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept address = 0xffff', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0xffff/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -281,7 +281,7 @@ describe('Blinds1 class', function () {
             }).toThrow("Address 0x10000 outside valid range");
         });
         it('should accept unitcode = 0x0', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1234/0', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -290,7 +290,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept unitcode = 0xf', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1234/0xf', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -311,7 +311,7 @@ describe('Blinds1 class', function () {
             blinds1 = new rfxcom.Blinds1(device, rfxcom.blinds1.BLINDS_T2);
         });
         it('should send the correct bytes for an open() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -320,7 +320,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept an array deviceId', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close(['0x1234', '5'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -329,7 +329,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept a deviceId with no unit code', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close(['0x1234'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -338,7 +338,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a close() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -347,7 +347,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a stop() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.stop('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -356,7 +356,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a confirm() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.confirm('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -395,7 +395,7 @@ describe('Blinds1 class', function () {
             }).toThrow("Address 0x0 outside valid range");
         });
         it('should accept address = 0x1', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -404,7 +404,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept address = 0xffffff', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0xffffff/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -425,7 +425,7 @@ describe('Blinds1 class', function () {
             blinds1 = new rfxcom.Blinds1(device, rfxcom.blinds1.BLINDS_T3);
         });
         it('should send the correct bytes for an open() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -434,7 +434,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept an array deviceId', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close(['0x1234', '5'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -443,7 +443,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept a deviceId with no unit code', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close(['0x1234'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -452,7 +452,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a close() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -461,7 +461,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a stop() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.stop('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -470,7 +470,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a confirm() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.confirm('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -509,7 +509,7 @@ describe('Blinds1 class', function () {
             }).toThrow("Address 0x0 outside valid range");
         });
         it('should accept address = 0x1', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -518,7 +518,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept address = 0xffffff', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0xffffff/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -539,7 +539,7 @@ describe('Blinds1 class', function () {
             blinds1 = new rfxcom.Blinds1(device, rfxcom.blinds1.BLINDS_T4);
         });
         it('should send the correct bytes for an open() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -548,7 +548,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept an array deviceId', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close(['0x1234', '5'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -557,7 +557,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept a deviceId with no unit code', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close(['0x1234'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -566,7 +566,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a close() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -575,7 +575,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a stop() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.stop('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -584,7 +584,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a confirm() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.confirm('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -593,7 +593,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a setLimit() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.setLimit('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -612,7 +612,7 @@ describe('Blinds1 class', function () {
             }).toThrow("Device does not support up()");
         });
         it('should send the correct bytes for a setLowerLimit() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.setLowerLimit('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -621,7 +621,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a reverse() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.reverse('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -635,7 +635,7 @@ describe('Blinds1 class', function () {
             }).toThrow("Address 0x0 outside valid range");
         });
         it('should accept address = 0x1', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -644,7 +644,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept address = 0xffffff', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0xffffff/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -665,7 +665,7 @@ describe('Blinds1 class', function () {
             blinds1 = new rfxcom.Blinds1(device, rfxcom.blinds1.BLINDS_T5);
         });
         it('should send the correct bytes for an open() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -674,7 +674,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept an array deviceId', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close(['0x1234', '5'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -683,7 +683,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept a deviceId with no unit code', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close(['0x1234'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -692,7 +692,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a close() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -701,7 +701,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a stop() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.stop('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -720,7 +720,7 @@ describe('Blinds1 class', function () {
             }).toThrow("Device does not support setLimit()");
         });
         it('should send the correct bytes for a down() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.down('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -729,7 +729,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for an up() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.up('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -753,7 +753,7 @@ describe('Blinds1 class', function () {
             }).toThrow("Address 0x0 outside valid range");
         });
         it('should accept address = 0x1', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -762,7 +762,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept address = 0xffffff', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0xffffff/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -783,7 +783,7 @@ describe('Blinds1 class', function () {
             blinds1 = new rfxcom.Blinds1(device, rfxcom.blinds1.BLINDS_T6);
         });
         it('should send the correct bytes for an open() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -792,7 +792,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept an array deviceId', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close(['0x1234', '5'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -801,7 +801,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a close() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -810,7 +810,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a stop() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.stop('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -819,7 +819,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a confirm() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.confirm('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -858,7 +858,7 @@ describe('Blinds1 class', function () {
             }).toThrow("Address 0x0 outside valid range");
         });
         it('should accept address = 0x1', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -867,7 +867,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept address = 0xfffffff', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0xfffffff/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -881,7 +881,7 @@ describe('Blinds1 class', function () {
             }).toThrow("Address 0x10000000 outside valid range");
         });
         it('should accept unitcode = 0x0', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1234/0', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -890,7 +890,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept unitcode = 0xf', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1234/0xf', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -911,7 +911,7 @@ describe('Blinds1 class', function () {
             blinds1 = new rfxcom.Blinds1(device, rfxcom.blinds1.BLINDS_T7);
         });
         it('should send the correct bytes for an open() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -920,7 +920,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept an array deviceId', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close(['0x1234', '5'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -929,7 +929,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a close() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -938,7 +938,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a stop() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.stop('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -947,7 +947,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a confirm() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.confirm('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -986,7 +986,7 @@ describe('Blinds1 class', function () {
             }).toThrow("Address 0x0 outside valid range");
         });
         it('should accept address = 0x1', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -995,7 +995,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept address = 0xfffffff', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0xfffffff/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1009,7 +1009,7 @@ describe('Blinds1 class', function () {
             }).toThrow("Address 0x10000000 outside valid range");
         });
         it('should accept unitcode = 0x0', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1234/0', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1018,7 +1018,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept unitcode = 0xf', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1234/0xf', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1039,7 +1039,7 @@ describe('Blinds1 class', function () {
             blinds1 = new rfxcom.Blinds1(device, rfxcom.blinds1.BLINDS_T8);
         });
         it('should send the correct bytes for an open() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x123/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1048,7 +1048,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept an array deviceId', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close(['0x123', '5'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1057,7 +1057,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a close() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close('0x123/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1066,7 +1066,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a stop() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.stop('0x123/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1085,7 +1085,7 @@ describe('Blinds1 class', function () {
             }).toThrow("Device does not support setLimit()");
         });
         it('should send the correct bytes for a down() command', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.down('0x123/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1094,7 +1094,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for an up() command', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close('0x123/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1118,7 +1118,7 @@ describe('Blinds1 class', function () {
             }).toThrow("Address 0x0 outside valid range");
         });
         it('should accept address = 0x1', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1127,7 +1127,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept address = 0xfff', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0xfff/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1146,7 +1146,7 @@ describe('Blinds1 class', function () {
             }).toThrow("Subtype doesn't support group commands");
         });
         it('should accept unitcode = 0x1', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x123/1', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1155,7 +1155,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept unitcode = 0x6', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x123/0x6', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1176,7 +1176,7 @@ describe('Blinds1 class', function () {
             blinds1 = new rfxcom.Blinds1(device, rfxcom.blinds1.BLINDS_T9);
         });
         it('should send the correct bytes for an open() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x12345/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1185,7 +1185,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept an array deviceId', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close(['0x12345', '5'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1194,7 +1194,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a close() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close('0x12345/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1203,7 +1203,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a stop() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.stop('0x12345/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1212,7 +1212,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a confirm() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.confirm('0x12345/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1221,7 +1221,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a setLimit() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.setLimit('0x12345/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1240,7 +1240,7 @@ describe('Blinds1 class', function () {
             }).toThrow("Device does not support up()");
         });
         it('should send the correct bytes for a setLowerLimit() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.setLowerLimit('0x12345/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1249,7 +1249,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a reverse() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.reverse('0x12345/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1263,7 +1263,7 @@ describe('Blinds1 class', function () {
             }).toThrow("Address 0x0 outside valid range");
         });
         it('should accept address = 0x1', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1272,7 +1272,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept address = 0xfffff', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0xfffff/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1286,7 +1286,7 @@ describe('Blinds1 class', function () {
             }).toThrow("Address 0x100000 outside valid range");
         });
         it('should accept unitcode = 0x0', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x12345/0', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1295,7 +1295,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept unitcode = 0x6', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x12345/0x6', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1316,7 +1316,7 @@ describe('Blinds1 class', function () {
             blinds1 = new rfxcom.Blinds1(device, rfxcom.blinds1.BLINDS_T10);
         });
         it('should send the correct bytes for an open() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1325,7 +1325,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept an array deviceId', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close(['0x1234', '5'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1334,7 +1334,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept a deviceId with no unit code', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close(['0x1234'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1343,7 +1343,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a close() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1352,7 +1352,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a stop() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.stop('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1361,7 +1361,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a confirm() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.confirm('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1375,7 +1375,7 @@ describe('Blinds1 class', function () {
             }).toThrow("Device does not support setLimit()");
         });
         it('should send the correct bytes for a down() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.down('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1384,7 +1384,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for an up() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.up('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1398,7 +1398,7 @@ describe('Blinds1 class', function () {
             }).toThrow("Device does not support setLowerLimit()");
         });
         it('should send the correct bytes for a reverse() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.reverse('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1412,7 +1412,7 @@ describe('Blinds1 class', function () {
             }).toThrow("Address 0x0 outside valid range");
         });
         it('should accept address = 0x1', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1421,7 +1421,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept address = 0xffffff', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0xffffff/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1442,7 +1442,7 @@ describe('Blinds1 class', function () {
             blinds1 = new rfxcom.Blinds1(device, rfxcom.blinds1.BLINDS_T11);
         });
         it('should send the correct bytes for an open() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1451,7 +1451,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept an array deviceId', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close(['0x1234', '5'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1460,7 +1460,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept a deviceId with no unit code', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close(['0x1234'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1469,7 +1469,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a close() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1478,7 +1478,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a stop() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.stop('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1487,7 +1487,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a confirm() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.confirm('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1526,7 +1526,7 @@ describe('Blinds1 class', function () {
             }).toThrow("Device does not support reverse()");
         });
         it('should accept address = 0x1', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1535,7 +1535,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept address = 0xffffff', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0xffffff/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1556,7 +1556,7 @@ describe('Blinds1 class', function () {
             blinds1 = new rfxcom.Blinds1(device, rfxcom.blinds1.BLINDS_T12);
         });
         it('should send the correct bytes for an open() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1565,7 +1565,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept an array deviceId', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close(['0x1234', '5'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1574,7 +1574,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a close() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1583,7 +1583,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a stop() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.stop('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1592,7 +1592,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a confirm() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.confirm('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1631,7 +1631,7 @@ describe('Blinds1 class', function () {
             }).toThrow("Address 0x0 outside valid range");
         });
         it('should accept address = 0x1', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1640,7 +1640,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept address = 0xffff', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0xffff/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1654,7 +1654,7 @@ describe('Blinds1 class', function () {
             }).toThrow("Address 0x10000 outside valid range");
         });
         it('should send a group code (0x0f) for unitcode 0', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1234/0', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1663,7 +1663,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept unitcode = 0x1', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1234/1', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1672,7 +1672,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept unitcode = 0xf', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1234/0xf', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1693,7 +1693,7 @@ describe('Blinds1 class', function () {
             blinds1 = new rfxcom.Blinds1(device, rfxcom.blinds1.BLINDS_T13);
         });
         it('should send the correct bytes for an open() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1702,7 +1702,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept an array deviceId', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close(['0x1234', '5'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1711,7 +1711,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a close() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.close('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1725,7 +1725,7 @@ describe('Blinds1 class', function () {
             }).toThrow("Device does not support stop()");
         });
         it('should send the correct bytes for a confirm() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.confirm('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1764,7 +1764,7 @@ describe('Blinds1 class', function () {
             }).toThrow("Device does not support reverse()");
         });
         it('should send the correct bytes for a venetianIncreaseAngle() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.venetianIncreaseAngle('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1773,7 +1773,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a venetianDecreaseAngle() command to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.venetianDecreaseAngle('0x1234/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1782,7 +1782,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept address = 0x1', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1791,7 +1791,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept address = 0xffff', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0xffff/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1805,7 +1805,7 @@ describe('Blinds1 class', function () {
             }).toThrow("Address 0x10000 outside valid range");
         });
         it('should accept unitcode = 0x10', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1234/0', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1814,7 +1814,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept unitcode = 0x1', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1234/1', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -1823,7 +1823,7 @@ describe('Blinds1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept unitcode = 99', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             blinds1.open('0x1234/99', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
