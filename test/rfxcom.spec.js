@@ -12,6 +12,24 @@ describe("RfxCom", function() {
     });
 
     describe("RfxCom class", function() {
+        describe("constructor", function() {
+            it("should be initialised correctly when created", function (done) {
+                const fakeSerialPort = new FakeSerialPort(),
+                    device = new rfxcom.RfxCom("/", {
+                        port: fakeSerialPort
+                    });
+                expect(device.portEventHandlersInstalled).toEqual(false);
+                expect(device.initialiseWaitTime).toBe(6000);
+                expect(device._seqnbr).toBe(0);
+                expect(device.connected).toEqual(false);
+                expect(device.initialising).toEqual(false);
+                expect(device.receiving).toEqual(false);
+                expect(device.startReceiverRequired).toEqual(true);
+                expect(device.transmitters).toEqual({});
+                expect(device.readyCallback).toBe(null);
+                done();
+            });
+        });
         describe("data event handler", function() {
             it("should emit a receive event when it receives a message", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -53,6 +71,7 @@ describe("RfxCom", function() {
                     });
                 device.on("lighting1", function (evt, packetType) {
                     expect(packetType).toBe(0x10);
+                    expect(this.packetNames[packetType]).toEqual("lighting1");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["X10 lighting"]);
                     done();
                 });
@@ -66,6 +85,7 @@ describe("RfxCom", function() {
                     });
                 device.on("lighting2", function (evt, packetType) {
                     expect(packetType).toBe(0x11);
+                    expect(this.packetNames[packetType]).toEqual("lighting2");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["HomeEasy EU"]);
                     done();
                 });
@@ -79,6 +99,7 @@ describe("RfxCom", function() {
                     });
                 device.on("lighting4", function (evt, packetType) {
                     expect(packetType).toBe(0x13);
+                    expect(this.packetNames[packetType]).toEqual("lighting4");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["PT2262"]);
                     done();
                 });
@@ -92,6 +113,7 @@ describe("RfxCom", function() {
                     });
                 device.on("lighting5", function (evt, packetType) {
                     expect(packetType).toBe(0x14);
+                    expect(this.packetNames[packetType]).toEqual("lighting5");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["LightwaveRF", "Siemens"]);
                     done();
                 });
@@ -105,19 +127,21 @@ describe("RfxCom", function() {
                     });
                 device.on("lighting6", function (evt, packetType) {
                     expect(packetType).toBe(0x15);
+                    expect(this.packetNames[packetType]).toEqual("lighting6");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["Blyss"]);
                     done();
                 });
                 device.open();
                 device.parser.emit("data", [0x0b, 0x15, 0x00, 0x00, 0xF0, 0x9A, 0x42, 0x00, 0x03, 0x00, 0x00, 0x00]);
             });
-            it("should emit a chime event when it receives message type 0x16", function (done) {
+            it("should emit a chime1 event when it receives message type 0x16", function (done) {
                 const fakeSerialPort = new FakeSerialPort(),
                     device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
                 device.on("chime1", function (evt, packetType) {
                     expect(packetType).toBe(0x16);
+                    expect(this.packetNames[packetType]).toEqual("chime1");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["Byron SX"]);
                     done();
                 });
@@ -131,6 +155,7 @@ describe("RfxCom", function() {
                     });
                 device.on("blinds1", function (evt, packetType) {
                     expect(packetType).toBe(0x19);
+                    expect(this.packetNames[packetType]).toEqual("blinds1");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["Raex YR1326"]);
                     done();
                 });
@@ -144,6 +169,7 @@ describe("RfxCom", function() {
                     });
                 device.on("security1", function (evt, packetType) {
                     expect(packetType).toBe(0x20);
+                    expect(this.packetNames[packetType]).toEqual("security1");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["X10 security motion sensor"]);
                     done();
                 });
@@ -157,6 +183,7 @@ describe("RfxCom", function() {
                     });
                 device.on("camera1", function (evt, packetType) {
                     expect(packetType).toBe(0x28);
+                    expect(this.packetNames[packetType]).toEqual("camera1");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["X10 Ninja Camera"]);
                     done();
                 });
@@ -170,6 +197,7 @@ describe("RfxCom", function() {
                     });
                 device.on("remote", function (evt, packetType) {
                     expect(packetType).toBe(0x30);
+                    expect(this.packetNames[packetType]).toEqual("remote");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["ATI Remote Wonder"]);
                     done();
                 });
@@ -183,6 +211,7 @@ describe("RfxCom", function() {
                     });
                 device.on("thermostat1", function (evt, packetType) {
                     expect(packetType).toBe(0x40);
+                    expect(this.packetNames[packetType]).toEqual("thermostat1");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["Digimax", "TLX7506"]);
                     done();
                 });
@@ -196,136 +225,147 @@ describe("RfxCom", function() {
                     });
                 device.on("thermostat3", function (evt, packetType) {
                     expect(packetType).toBe(0x42);
+                    expect(this.packetNames[packetType]).toEqual("thermostat3");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["Mertik G6R-H4TB", "Mertik G6R-H4T", "Mertik G6R-H4T21-Z22"]);
                     done();
                 });
                 device.open();
                 device.parser.emit("data", [0x08, 0x42, 0x01, 0x01, 0x01, 0x9F, 0xAB, 0x02, 0x81]);
             });
-            it("should emit a bbq event when it receives message type 0x4e", function(done) {
+            it("should emit a bbq1 event when it receives message type 0x4e", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
                     device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
                 device.on("bbq1", function (evt, packetType) {
                     expect(packetType).toBe(0x4e);
+                    expect(this.packetNames[packetType]).toEqual("bbq1");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["Maverick ET-732"]);
                     done();
                 });
                 device.open();
                 device.parser.emit("data", [0x0A, 0x4E, 0x01, 0x00, 0x00, 0x00, 0x00, 0x19, 0x00, 0x17, 0x89]);
             });
-            it("should emit a temprain event when it receives message type 0x4f, with device type 1", function(done) {
+            it("should emit a temperaturerain1 event when it receives message type 0x4f, with device type 1", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
                     device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
                 device.on("temperaturerain1", function (evt, packetType) {
                     expect(packetType).toBe(0x4f);
+                    expect(this.packetNames[packetType]).toEqual("temperaturerain1");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["Alecto WS1200"]);
                     done();
                 });
                 device.open();
                 device.parser.emit("data", [0x0a, 0x4f, 0x01, 0x00, 0x12, 0x34, 0x01, 0x17, 0x00, 0x42, 0x55]);
             });
-            it("should emit a temp event when it receives message type 0x50, with device type 1", function(done) {
+            it("should emit a temperature1 event when it receives message type 0x50, with device type 1", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
                     device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
                 device.on("temperature1", function (evt, packetType) {
                     expect(packetType).toBe(0x50);
+                    expect(this.packetNames[packetType]).toEqual("temperature1");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["THR128", "THR138", "THC138"]);
                     done();
                 });
                 device.open();
                 device.parser.emit("data", [0x08, 0x50, 0x01, 0x01, 0xFA, 0xAF, 0x80, 0x14, 0x42]);
             });
-            it("should emit a temp event when it receives message type 0x50, with device type 2", function(done) {
+            it("should emit a temperature1 event when it receives message type 0x50, with device type 2", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
                     device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
                 device.on("temperature1", function (evt, packetType) {
                     expect(packetType).toBe(0x50);
+                    expect(this.packetNames[packetType]).toEqual("temperature1");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["THC238", "THC268", "THN132", "THWR288", "THRN122", "THN122", "AW129", "AW131", "THN129"]);
                     done();
                 });
                 device.open();
                 device.parser.emit("data", [0x08, 0x50, 0x02, 0x01, 0xFA, 0xAF, 0x80, 0x14, 0x42]);
             });
-            it("should emit a humidity event when it receives message type 0x51", function(done) {
+            it("should emit a humidity1 event when it receives message type 0x51", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
                     device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
                 device.on("humidity1", function (evt, packetType) {
                     expect(packetType).toBe(0x51);
+                    expect(this.packetNames[packetType]).toEqual("humidity1");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["La Crosse TX3"]);
                     done();
                 });
                 device.open();
                 device.parser.emit("data", [0x08, 0x51, 0x01, 0x02, 0x77, 0x00, 0x36, 0x01, 0x89]);
             });
-            it("should emit a temphumidity event when it receives message type 0x52, with device type 1", function(done) {
+            it("should emit a temperaturehumidity1 event when it receives message type 0x52, with device type 1", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
                     device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
                 device.on("temperaturehumidity1", function (evt, packetType) {
                     expect(packetType).toBe(0x52);
+                    expect(this.packetNames[packetType]).toEqual("temperaturehumidity1");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["THGN122", "THGN123", "THGN132", "THGR122", "THGR228", "THGR238", "THGR268"]);
                     done();
                 });
                 device.open();
                 device.parser.emit("data", [0x0A, 0x52, 0x01, 0x04, 0xAF, 0x01, 0x00, 0x90, 0x36, 0x02, 0x59]);
             });
-            it("should emit a temphumbaro event when it receives message type 0x54", function(done) {
+            it("should emit a temphumbaro1 event when it receives message type 0x54", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
                     device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
                 device.on("temphumbaro1", function (evt, packetType) {
                     expect(packetType).toBe(0x54);
+                    expect(this.packetNames[packetType]).toEqual("temphumbaro1");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["BTHR918N", "BTHR968"]);
                     done();
                 });
                 device.open();
                 device.parser.emit("data", [0x0D, 0x54, 0x02, 0x0E, 0xE9, 0x00, 0x00, 0xC9, 0x27, 0x02, 0x03, 0xE7, 0x04, 0x39]);
             });
-            it("should emit a rain event when it receives message type 0x55, with device type 2", function(done) {
+            it("should emit a rain1 event when it receives message type 0x55, with device type 2", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
                     device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
                 device.on("rain1", function (evt, packetType) {
                     expect(packetType).toBe(0x55);
+                    expect(this.packetNames[packetType]).toEqual("rain1");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["PCR800"]);
                     done();
                 });
                 device.open();
                 device.parser.emit("data", [0x0B, 0x55, 0x02, 0x17, 0xB6, 0x00, 0x00, 0x00, 0x00, 0x4D, 0x3C, 0x69]);
             });
-            it("should emit a wind event when it receives message type 0x56, with device type 1", function(done) {
+            it("should emit a wind1 event when it receives message type 0x56, with device type 1", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
                     device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
                 device.on("wind1", function (evt, packetType) {
                     expect(packetType).toBe(0x56);
+                    expect(this.packetNames[packetType]).toEqual("wind1");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["WTGR800"]);
                     done();
                 });
                 device.open();
                 device.parser.emit("data", [0x10, 0x56, 0x01, 0x12, 0x2F, 0x00, 0x00, 0x87, 0x00, 0x00, 0x00, 0x14, 0x00, 0x49, 0x00, 0x00, 0x79]);
             });
-            it("should emit a uv event when it receives message type 0x57, with device type 1", function(done) {
+            it("should emit a uv1 event when it receives message type 0x57, with device type 1", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
                     device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
                 device.on("uv1", function (evt, packetType) {
                     expect(packetType).toBe(0x57);
+                    expect(this.packetNames[packetType]).toEqual("uv1");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["UVN128", "UV138"]);
                     done();
                 });
@@ -339,6 +379,7 @@ describe("RfxCom", function() {
                     });
                 device.on("datetime", function (evt, packetType) {
                     expect(packetType).toBe(0x58);
+                    expect(this.packetNames[packetType]).toEqual("datetime");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["RTGR328N", "RTGR383"]);
                     done();
                 });
@@ -351,6 +392,7 @@ describe("RfxCom", function() {
                         port: fakeSerialPort
                     });
                 device.on("elec1", function (evt, packetType) {
+                    expect(this.packetNames[packetType]).toEqual("elec1");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["CM113", "Electrisave", "Cent-a-meter"]);
                     expect(packetType).toBe(0x59);
                     done();
@@ -365,6 +407,7 @@ describe("RfxCom", function() {
                     });
                 device.on("elec23", function (evt, packetType) {
                     expect(packetType).toBe(0x5a);
+                    expect(this.packetNames[packetType]).toEqual("elec23");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["CM119", "M160"]);
                     done();
                 });
@@ -378,6 +421,7 @@ describe("RfxCom", function() {
                     });
                 device.on("elec4", function (evt, packetType) {
                     expect(packetType).toBe(0x5b);
+                    expect(this.packetNames[packetType]).toEqual("elec4");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["CM180i"]);
                     done();
                 });
@@ -392,6 +436,7 @@ describe("RfxCom", function() {
                     });
                 device.on("elec5", function (evt, packetType) {
                     expect(packetType).toBe(0x5c);
+                    expect(this.packetNames[packetType]).toEqual("elec5");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["Revolt"]);
                     done();
                 });
@@ -399,13 +444,14 @@ describe("RfxCom", function() {
                 device.parser.emit("data", [0x0F, 0x5C, 0x01, 0x03, 0x00, 0x2D, 0xE4, 0x00, 0x00, 0x00, 0x00, 0x00,
                                             0x03, 0x00, 0x32, 0x80]);
             });
-            it("should emit a weight event when it receives message type 0x5D", function(done) {
+            it("should emit a weight1 event when it receives message type 0x5D", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
                     device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
                     });
                 device.on("weight1", function (evt, packetType) {
                     expect(packetType).toBe(0x5d);
+                    expect(this.packetNames[packetType]).toEqual("weight1");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["BWR102", "BWR102"]);
                     done();
                 });
@@ -419,6 +465,7 @@ describe("RfxCom", function() {
                     });
                 device.on("cartelectronic", function (evt, packetType) {
                     expect(packetType).toBe(0x60);
+                    expect(this.packetNames[packetType]).toEqual("cartelectronic");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["TIC"]);
                     done();
                 });
@@ -433,6 +480,7 @@ describe("RfxCom", function() {
                     });
                 device.on("rfxsensor", function (evt, packetType) {
                     expect(packetType).toBe(0x70);
+                    expect(this.packetNames[packetType]).toEqual("rfxsensor");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["RFXSensor temperature"]);
                     done();
                 });
@@ -446,6 +494,7 @@ describe("RfxCom", function() {
                     });
                 device.on("rfxmeter", function (evt, packetType) {
                     expect(packetType).toBe(0x71);
+                    expect(this.packetNames[packetType]).toEqual("rfxmeter");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["RFXMeter data"]);
                     done();
                 });
