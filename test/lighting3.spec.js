@@ -7,7 +7,7 @@ const rfxcom = require('../lib'),
     FakeSerialPort = require('./helper');
 
 describe('Lighting3 class', function () {
-    var lighting3,
+    let lighting3,
         fakeSerialPort,
         device;
     beforeEach(function () {
@@ -35,7 +35,7 @@ describe('Lighting3 class', function () {
             lighting3 = new rfxcom.Lighting3(device, rfxcom.lighting3.KOPPLA);
         });
         it('should send the correct bytes to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting3.switchOn('1/1', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -44,7 +44,7 @@ describe('Lighting3 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept an array deviceId', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting3.switchOn(['1', '1'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -53,7 +53,7 @@ describe('Lighting3 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept a switchOff command', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting3.switchOff(['1', '1'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -62,7 +62,7 @@ describe('Lighting3 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept a decreaseLevel command', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting3.decreaseLevel(['1', '1'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -71,7 +71,7 @@ describe('Lighting3 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept a decreaseLevel command with a room number', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting3.decreaseLevel(['1', '1'], 1, function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -80,7 +80,7 @@ describe('Lighting3 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept an increaseLevel command', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting3.increaseLevel(['1', '1'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -89,7 +89,7 @@ describe('Lighting3 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept an increaseLevel command with a room number', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting3.increaseLevel(['1', '1'], 1, function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -98,7 +98,7 @@ describe('Lighting3 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept a setLevel command', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting3.setLevel(['1', '1'], 7, function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -112,7 +112,7 @@ describe('Lighting3 class', function () {
             }).toThrow("Invalid level: value must be in range 0-10");
         });
         it('should accept a program command', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting3.program(['1', '1'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -121,7 +121,7 @@ describe('Lighting3 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should handle a group address correctly', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting3.switchOn(['16', '0'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -130,7 +130,7 @@ describe('Lighting3 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should log the bytes being sent in debug mode', function (done) {
-            var debugDevice = new rfxcom.RfxCom('/dev/ttyUSB0', {
+            const debugDevice = new rfxcom.RfxCom('/dev/ttyUSB0', {
                     port:  fakeSerialPort,
                     debug: true
                 }),
@@ -142,7 +142,7 @@ describe('Lighting3 class', function () {
             debugDevice.acknowledge[0]();
         });
         it('should accept the highest system code & channel number', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting3.switchOn(['16', '10'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();

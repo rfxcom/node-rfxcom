@@ -7,7 +7,7 @@ const rfxcom = require('../lib'),
     FakeSerialPort = require('./helper');
 
 describe('Lighting2 class', function () {
-    var lighting2,
+    let lighting2,
         fakeSerialPort,
         device;
     beforeEach(function () {
@@ -35,7 +35,7 @@ describe('Lighting2 class', function () {
             lighting2 = new rfxcom.Lighting2(device, rfxcom.lighting2.ANSLUT);
         });
         it('should send the correct bytes to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting2.switchOn('0x03FFFFFF/1', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -44,7 +44,7 @@ describe('Lighting2 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept an array deviceId', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting2.switchOn(['0x03FFFFFF', '1'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -53,7 +53,7 @@ describe('Lighting2 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should handle a group address correctly', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting2.switchOn(['0x03FFFFFF', '0'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -62,7 +62,7 @@ describe('Lighting2 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should log the bytes being sent in debug mode', function (done) {
-            var debugDevice = new rfxcom.RfxCom('/dev/ttyUSB0', {
+            const debugDevice = new rfxcom.RfxCom('/dev/ttyUSB0', {
                     port:  fakeSerialPort,
                     debug: true
                 }),
@@ -93,7 +93,7 @@ describe('Lighting2 class', function () {
             lighting2 = new rfxcom.Lighting2(device, rfxcom.lighting2.ANSLUT);
         });
         it('should send the correct bytes to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting2.switchOff('0x03FFFFFF/1', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -102,7 +102,7 @@ describe('Lighting2 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should handle a group address correctly', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting2.switchOff(['0x03FFFFFF', '0'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -120,7 +120,7 @@ describe('Lighting2 class', function () {
             lighting2 = new rfxcom.Lighting2(device, rfxcom.lighting2.ANSLUT);
         });
         it('should send the correct bytes to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting2.setLevel('0x03FFFFFF/1', 7, function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -129,7 +129,7 @@ describe('Lighting2 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should handle a group address correctly', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting2.setLevel(['0x03FFFFFF', '0'], 7, function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -152,7 +152,7 @@ describe('Lighting2 class', function () {
             lighting2 = new rfxcom.Lighting2(device, rfxcom.lighting2.KAMBROOK);
         });
         it('should send the correct bytes to the serialport for switchOn', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting2.switchOn('A/0xFFFFFF/1', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -161,7 +161,7 @@ describe('Lighting2 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes to the serialport for switchOff', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             lighting2.switchOff(['A', '0xFFFFFF', '1'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();

@@ -7,7 +7,7 @@ const rfxcom = require('../lib'),
     FakeSerialPort = require('./helper');
 
 describe('Curtain1 class', function () {
-    var curtain1,
+    let curtain1,
         fakeSerialPort,
         device;
     beforeEach(function () {
@@ -28,7 +28,7 @@ describe('Curtain1 class', function () {
             curtain1 = new rfxcom.Curtain1(device, rfxcom.curtain1.HARRISON);
         });
         it('should send the correct bytes to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             curtain1.open('A1', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -37,7 +37,7 @@ describe('Curtain1 class', function () {
             expect(sentCommandId).toEqual(0);
         });
         it('should accept an array deviceId', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             curtain1.open(['A', '1'], function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -68,7 +68,7 @@ describe('Curtain1 class', function () {
             }).toThrow("Invalid house code '@'");
         });
         it('should accept house code \'P\'', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             curtain1.open('P1', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -101,7 +101,7 @@ describe('Curtain1 class', function () {
             curtain1 = new rfxcom.Curtain1(device, rfxcom.curtain1.HARRISON);
         });
         it('should send the correct bytes to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             curtain1.close('E1', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -115,7 +115,7 @@ describe('Curtain1 class', function () {
             curtain1 = new rfxcom.Curtain1(device, rfxcom.curtain1.HARRISON);
         });
         it('should send the correct bytes to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             curtain1.stop('A01', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
@@ -129,7 +129,7 @@ describe('Curtain1 class', function () {
             curtain1 = new rfxcom.Curtain1(device, rfxcom.curtain1.HARRISON);
         });
         it('should send the correct bytes to the serialport', function (done) {
-            var sentCommandId = NaN;
+            let sentCommandId = NaN;
             curtain1.program('A01', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
