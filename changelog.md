@@ -1,3 +1,13 @@
+Version 1.4.1
+-------------
+
+Add initial support for Pro 1 & Pro 2 firmware
+
+Version 1.4.0
+-------------
+
+Change to use Serialport version 6 (changes to underlying API)
+
 Version 1.3.0
 -------------
 
