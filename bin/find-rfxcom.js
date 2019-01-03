@@ -41,7 +41,13 @@ rfxcom.RfxCom.list(function (err, ports) {
             device.rfxtrx.on("connectfailed", () => {
                 console.log(device.message + "\n    Unable to open serial port, RFXCOM device may be in use!")
             });
-            device.rfxtrx.initialise(() => {device.rfxtrx.close()});
+            // The interval business is a work-around for serialport bug #1751. Nobody seems to know why this makes it work
+            // 10ms is a compromise between response (smaller is better) and CPU load (larger is better)
+            device.interval = setInterval(() => {}, 10);
+            device.rfxtrx.initialise(() => {
+                    device.rfxtrx.close();
+                    clearInterval(device.interval);
+                });
             devices.push(device);
         });
     }
