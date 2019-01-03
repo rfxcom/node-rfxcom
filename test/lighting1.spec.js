@@ -65,6 +65,41 @@ describe('Lighting1 class', function () {
             debugDevice.acknowledge[0]();
         });
     });
+    describe('.program', function () {
+        beforeEach(function () {
+            lighting1 = new rfxcom.Lighting1(device, rfxcom.lighting1.OASE_FM);
+        });
+        it('should send the correct bytes to the serialport', function (done) {
+            let sentCommandId = NaN;
+            lighting1.program('C1', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x07, 0x10, 0x0C, 0x00, 0x43, 0x01, 0x04, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should accept an array deviceId', function (done) {
+            let sentCommandId = NaN;
+            lighting1.program(['C', '1'], function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x07, 0x10, 0x0C, 0x00, 0x43, 0x01, 0x04, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should log the bytes being sent in debug mode', function (done) {
+            const debugDevice = new rfxcom.RfxCom('/dev/ttyUSB0', {
+                    port:  fakeSerialPort,
+                    debug: true
+                }),
+                debug = new rfxcom.Lighting1(debugDevice, rfxcom.lighting1.OASE_FM);
+            debugDevice.connected = true;
+            const utilLogSpy = spyOn(util, 'log');
+            debug.program('C1', done);
+            expect(utilLogSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 07,10,0C,00,43,01,04,00');
+            debugDevice.acknowledge[0]();
+        });
+    });
     describe('.unsupportedCommands', function () {
         beforeEach(function () {
             lighting1 = new rfxcom.Lighting1(device, rfxcom.lighting1.IMPULS);
@@ -73,6 +108,11 @@ describe('Lighting1 class', function () {
             expect(function () {
                 lighting1.switchOn('C0')
             }).toThrow("Device does not support group on/off commands");
+        });
+        it('should reject a program command', function () {
+            expect(function () {
+                lighting1.program('C0')
+            }).toThrow("Device does not support program()");
         });
     });
     describe('.lampCommands', function () {
@@ -139,7 +179,7 @@ describe('Lighting1 class', function () {
             }).toThrow("Device does not support group dim/bright commands");
         });
     });
-    describe('.X10 adress checking', function () {
+    describe('.X10 address checking', function () {
         beforeEach(function () {
             lighting1 = new rfxcom.Lighting1(device, rfxcom.lighting1.X10);
         });
@@ -159,7 +199,7 @@ describe('Lighting1 class', function () {
             }).toThrow("Invalid deviceId format");
         });
     });
-    describe('.CHACON adress checking', function () {
+    describe('.CHACON address checking', function () {
         beforeEach(function () {
             lighting1 = new rfxcom.Lighting1(device, rfxcom.lighting1.CHACON);
         });
@@ -183,7 +223,7 @@ describe('Lighting1 class', function () {
             }).toThrow("Invalid unit code 5");
         });
     });
-    describe('.COCO adress checking', function () {
+    describe('.COCO address checking', function () {
         beforeEach(function () {
             lighting1 = new rfxcom.Lighting1(device, rfxcom.lighting1.COCO);
         });
@@ -207,7 +247,7 @@ describe('Lighting1 class', function () {
             }).toThrow("Invalid unit code 5");
         });
     });
-    describe('.IMPULS adress checking', function () {
+    describe('.IMPULS address checking', function () {
         beforeEach(function () {
             lighting1 = new rfxcom.Lighting1(device, rfxcom.lighting1.IMPULS);
         });
@@ -231,7 +271,7 @@ describe('Lighting1 class', function () {
             }).toThrow("Invalid unit code 65");
         });
     });
-    describe('.PHILIPS_SBC adress checking', function () {
+    describe('.PHILIPS_SBC address checking', function () {
         beforeEach(function () {
             lighting1 = new rfxcom.Lighting1(device, rfxcom.lighting1.PHILIPS_SBC);
         });
@@ -255,7 +295,7 @@ describe('Lighting1 class', function () {
             }).toThrow("Invalid unit code 9");
         });
     });
-    describe('.ENERGENIE_5_GANG adress checking', function () {
+    describe('.ENERGENIE_5_GANG address checking', function () {
         beforeEach(function () {
             lighting1 = new rfxcom.Lighting1(device, rfxcom.lighting1.ENERGENIE_5_GANG);
         });
@@ -279,7 +319,7 @@ describe('Lighting1 class', function () {
             }).toThrow("Invalid unit code 11");
         });
     });
-    describe('.HQ adress checking', function () {
+    describe('.HQ address checking', function () {
         beforeEach(function () {
             lighting1 = new rfxcom.Lighting1(device, rfxcom.lighting1.HQ);
         });
@@ -301,6 +341,30 @@ describe('Lighting1 class', function () {
             expect(function () {
                 lighting1.switchOn(['A', '65'])
             }).toThrow("Invalid unit code 65");
+        });
+    });
+    describe('.OASE_FM address checking', function () {
+        beforeEach(function () {
+            lighting1 = new rfxcom.Lighting1(device, rfxcom.lighting1.OASE_FM);
+        });
+        it('should accept the highest house & unit codes', function (done) {
+            let sentCommandId = NaN;
+            lighting1.switchOn(['P', '3'], function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x07, 0x10, 0x0c, 0x00, 0x50, 0x03, 0x01, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should reject an invalid house code', function () {
+            expect(function () {
+                lighting1.switchOn(['Q', '1'])
+            }).toThrow("Invalid house code 'Q'");
+        });
+        it('should reject an invalid unit code', function () {
+            expect(function () {
+                lighting1.switchOn(['A', '4'])
+            }).toThrow("Invalid unit code 4");
         });
     });
 });

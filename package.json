@@ -6,13 +6,13 @@
     "node": ">=4.8.0"
   },
   "dependencies": {
-    "queue": "^4.0.0",
-    "serialport": ">=6.2.0"
+    "queue": "^5.0.0",
+    "serialport": "^7.1.1"
   },
   "main": "rfxcom.js",
   "devDependencies": {
-    "jasmine-node": "<2.0.0",
-    "jshint": "*"
+    "jasmine-node": "^1.16.2",
+    "jshint": "^2.9.7"
   },
   "scripts": {
     "test": "./node_modules/.bin/jasmine-node test",

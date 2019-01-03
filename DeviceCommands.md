@@ -28,6 +28,9 @@ Devices:
     BLINDS_T11
     BLINDS_T12
     BLINDS_T13
+    BLINDS_T14
+    BLINDS_T15 (not yet implemented in the RFXCOM firmware)
+    BLINDS_T16
 
 Commands:
 
@@ -98,6 +101,11 @@ Devices:
     LUCCI_AIR
     SEAV_TXS4
     WESTINGHOUSE_7226640
+    LUCCI_AIR_DC
+    CASAFAN
+    FT1211R
+    FALMEC
+    LUCCI_AIR_DCII
     
 Commands:
 
@@ -107,11 +115,37 @@ Commands:
     Fan.increaseSpeed()
     Fan.switchOff()
     Fan.startTimer()
+    Fan.toggleOnOff()
+    Fan.toggleFanDirection()
+    Fan.setFanDirection()
     Fan.toggleLightOnOff()
+    Fan.switchLightOn()
+    Fan.switchLightOff()
     Fan.learn()
     Fan.confirm()
     Fan.eraseAll()
     
+The Fan button names (subtype SEAV_TXS4 only) are *T1*, *T2*, *T3*, and *T4*
+    
+Funkbus
+-------
+    
+Devices:
+
+    GIRA
+    INSTA
+
+Commands:
+
+    Funkbus.buttonPress()
+    Funkbus.switchOn()
+    Funkbus.switchOff()
+    Funkbus.increaseLevel()
+    Funkbus.decreaseLevel()
+    Funkbus.setScene()
+
+The Funkbus button names are *Up*, *Down*, *All On*, *All Off*, *Scene*, *Master Up*, and *Master Down*
+
 HomeConfort
 -----------
 
@@ -141,6 +175,7 @@ Devices:
     ENERGENIE_5_GANG
     COCO
     HQ
+    OASE_FM
 
 Commands:
 
@@ -149,6 +184,7 @@ Commands:
     Lighting1.increaseLevel()
     Lighting1.decreaseLevel()
     Lighting1.chime()
+    Lighting1.program()
     
 Lighting2
 ---------
@@ -243,6 +279,7 @@ Lighting6
 Devices:
 
     BLYSS
+    CUVEO
     
 Commands:
 
@@ -262,7 +299,6 @@ Commands:
     Radiator1.setDayMode()
     Radiator1.setTemperature()
 
-
 Remote
 ------
 
@@ -277,6 +313,10 @@ Devices:
 Commands:
 
     Remote.buttonPress()
+    
+Refer to the RFXCOM user guide section 7.1 for the supported Remote button names for each subtype. Either the button number
+or the button name may be used. If using names, you should use the same letter case as appears in the user guide, as
+case-insensitive matching, although it is supported, gives ambiguous results for some button names.
     
 Rfy
 ---
@@ -344,7 +384,20 @@ Devices:
     
 Commands:
 
-    Thermostat1.sendMessage()
+    Thermostat1.sendMessage(deviceId, params)
+
+Send the message with the specified parameters, given by the fields of the `params` object:
+
+    {
+        temperature:[0.0 .. 50.0]   Mandatory (degrees C)
+        setpoint:[5.0 .. 45.0]      Mandatory (optional for subtype DIGIMAX_SHORT)
+        status:<0, 1, 2, 3>, or
+               <"N/A", "Demand", "No Demand", "Initializing"> (case-insensitive)
+                                    Optional
+        mode:<0, 1>, or
+             <"Heating", "Cooling"> (case-insensitive)
+                                    Optional
+    }
 
 Thermostat2
 ---------
@@ -369,6 +422,7 @@ Devices:
     G6R_H4TB
     G6R_H4TD
     G6R_H4S
+    G6R_H3T1
     
 Commands:
 
@@ -393,4 +447,16 @@ Devices:
     
 Commands:
 
-    Thermostat4.sendMessage()
+    Thermostat4.sendMessage(deviceId, params)
+    
+Send the message with the specified parameters, given by the fields of the `params` object:
+
+    {
+        beep:<truthy, falsy>        Optional, defaults to true
+        fanSpeed:[0-6, 0-6, 0-6]    Optional, one speed for each fan, defaults to 6 (auto), excess ignored, "auto" --> 6
+        flamePower:<1, 2, 3, 4, 5>  Mandatory
+        mode:<0, 1, 2, 3>, or
+             <"Off", "Manual", "Auto", "Eco"> (case-insensitive, 3 characters needed)
+                                    Mandatory
+    }
+
