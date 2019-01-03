@@ -21,12 +21,13 @@ describe('Fan class', function () {
         device.connected = true;
     });
     afterEach(function () {
-        device.acknowledge.forEach(acknowledge => {if (typeof acknowledge === "function") {acknowledge()}});    });
+        device.acknowledge.forEach(acknowledge => {if (typeof acknowledge === "function") {acknowledge()}});
+    });
     describe('SIEMENS_SF01', function () {
         beforeEach(function () {
             fan = new rfxcom.Fan(device, rfxcom.fan.SIEMENS_SF01);
         });
-        describe('commands', function () {
+        describe('commands:', function () {
             describe('buttonPress', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
@@ -82,6 +83,27 @@ describe('Fan class', function () {
                     expect(sentCommandId).toEqual(0);
                 });
             });
+            describe('toggleOnOff()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.toggleOnOff('0x1234');
+                    }).toThrow("Device does not support toggleOnOff()");
+                });
+            });
+            describe('toggleFanDirection()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.toggleFanDirection('0x1234');
+                    }).toThrow("Device does not support toggleFanDirection()");
+                });
+            });
+            describe('setFanDirection()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.setFanDirection('0x1234', 'forward');
+                    }).toThrow("Device does not support setFanDirection()");
+                });
+            });
             describe('toggleLightOnOff()', function () {
                 it('should send the correct bytes to the serialport', function (done) {
                     let sentCommandId = NaN;
@@ -91,6 +113,20 @@ describe('Fan class', function () {
                     });
                     expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x00, 0x00, 0x00, 0x12, 0x34, 0x06, 0x00]);
                     expect(sentCommandId).toEqual(0);
+                });
+            });
+            describe('switchLightOn()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.switchLightOn('0x1234');
+                    }).toThrow("Device does not support switchLightOn()");
+                });
+            });
+            describe('switchLightOff()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.switchLightOff('0x1234');
+                    }).toThrow("Device does not support switchLightOff()");
                 });
             });
             describe('learn()', function () {
@@ -123,7 +159,7 @@ describe('Fan class', function () {
                 });
             });
         });
-        describe('address checking', function () {
+        describe('address checking:', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     fan.startTimer('0x1234/A');
@@ -163,7 +199,7 @@ describe('Fan class', function () {
         beforeEach(function () {
             fan = new rfxcom.Fan(device, rfxcom.fan.ITHO_CVE_RFT);
         });
-        describe('commands', function () {
+        describe('commands:', function () {
             describe('buttonPress', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
@@ -241,12 +277,56 @@ describe('Fan class', function () {
                     expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x01, 0x00, 0x12, 0x34, 0x56, 0x04, 0x00]);
                     expect(sentCommandId).toEqual(0);
                 });
+                it('should ignore the timeout parameter', function (done) {
+                    let sentCommandId = NaN;
+                    fan.startTimer('0x123456', 1, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x01, 0x00, 0x12, 0x34, 0x56, 0x04, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+            });
+            describe('toggleOnOff()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.toggleOnOff('0x123456');
+                    }).toThrow("Device does not support toggleOnOff()");
+                });
+            });
+            describe('toggleFanDirection()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.toggleFanDirection('0x123456');
+                    }).toThrow("Device does not support toggleFanDirection()");
+                });
+            });
+            describe('setFanDirection()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.setFanDirection('0x123456', 'reverse');
+                    }).toThrow("Device does not support setFanDirection()");
+                });
             });
             describe('toggleLightOnOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.toggleLightOnOff('0x123456');
                     }).toThrow("Device does not support toggleLightOnOff()");
+                });
+            });
+            describe('switchLightOn()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.switchLightOn('0x123456');
+                    }).toThrow("Device does not support switchLightOn()");
+                });
+            });
+            describe('switchLightOff()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.switchLightOff('0x123456');
+                    }).toThrow("Device does not support switchLightOff()");
                 });
             });
             describe('learn()', function () {
@@ -279,7 +359,7 @@ describe('Fan class', function () {
                 });
             });
         });
-        describe('address checking', function () {
+        describe('address checking:', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     fan.startTimer('0x1234/A');
@@ -319,7 +399,7 @@ describe('Fan class', function () {
         beforeEach(function () {
             fan = new rfxcom.Fan(device, rfxcom.fan.LUCCI_AIR);
         });
-        describe('commands', function () {
+        describe('commands:', function () {
             describe('buttonPress', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
@@ -398,6 +478,27 @@ describe('Fan class', function () {
                     }).toThrow("Device does not support startTimer()");
                 });
             });
+            describe('toggleOnOff()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.toggleOnOff('0x1');
+                    }).toThrow("Device does not support toggleOnOff()");
+                });
+            });
+            describe('toggleFanDirection()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.toggleFanDirection('0x1');
+                    }).toThrow("Device does not support toggleFanDirection()");
+                });
+            });
+            describe('setFanDirection()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.setFanDirection('0x1', 1);
+                    }).toThrow("Device does not support setFanDirection()");
+                });
+            });
             describe('toggleLightOnOff()', function () {
                 it('should send the correct bytes to the serialport', function (done) {
                     let sentCommandId = NaN;
@@ -407,6 +508,20 @@ describe('Fan class', function () {
                     });
                     expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x02, 0x00, 0x00, 0x00, 0x01, 0x05, 0x00]);
                     expect(sentCommandId).toEqual(0);
+                });
+            });
+            describe('switchLightOn()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.switchLightOn('0x1');
+                    }).toThrow("Device does not support switchLightOn()");
+                });
+            });
+            describe('switchLightOff()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.switchLightOff('0x1', 1);
+                    }).toThrow("Device does not support switchLightOff()");
                 });
             });
             describe('learn()', function () {
@@ -431,7 +546,7 @@ describe('Fan class', function () {
                 });
             });
         });
-        describe('address checking', function () {
+        describe('address checking:', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     fan.switchOff('0x1/A');
@@ -448,11 +563,11 @@ describe('Fan class', function () {
             });
             it('should accept the lowest address value', function (done) {
                 let sentCommandId = NaN;
-                fan.switchOff('0x1', function (err, response, cmdId) {
+                fan.switchOff('0x0', function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
-                expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x02, 0x00, 0x00, 0x00, 0x01, 0x04, 0x00]);
+                expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x02, 0x00, 0x00, 0x00, 0x00, 0x04, 0x00]);
                 expect(sentCommandId).toEqual(0);
             });
             it('should throw an exception with an invalid address 0x10', function () {
@@ -460,10 +575,10 @@ describe('Fan class', function () {
                     fan.switchOff('0x10');
                 }).toThrow("Address 0x10 outside valid range");
             });
-            it('should throw an exception with an invalid address 0x0', function () {
+            it('should throw an exception with an invalid address -1', function () {
                 expect(function () {
-                    fan.switchOff('0x0');
-                }).toThrow("Address 0x0 outside valid range");
+                    fan.switchOff('-1');
+                }).toThrow("Address 0x-1 outside valid range");
             });
         });
     });
@@ -471,7 +586,7 @@ describe('Fan class', function () {
         beforeEach(function () {
             fan = new rfxcom.Fan(device, rfxcom.fan.SEAV_TXS4);
         });
-        describe('commands', function () {
+        describe('commands:', function () {
             describe('buttonPress', function () {
                 it('should send the correct bytes to the serialport for button "T1"', function (done) {
                     let sentCommandId = NaN;
@@ -532,11 +647,46 @@ describe('Fan class', function () {
                     }).toThrow("Device does not support startTimer()");
                 });
             });
+            describe('toggleOnOff()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.toggleOnOff('0/10/0010110101/0x5');
+                    }).toThrow("Device does not support toggleOnOff()");
+                });
+            });
+            describe('toggleFanDirection()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.toggleFanDirection('0/10/0010110101/0x5');
+                    }).toThrow("Device does not support toggleFanDirection()");
+                });
+            });
+            describe('setFanDirection()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.setFanDirection('0/10/0010110101/0x5');
+                    }).toThrow("Device does not support setFanDirection()");
+                });
+            });
             describe('toggleLightOnOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.toggleLightOnOff('0/10/0010110101/0x5');
                     }).toThrow("Device does not support toggleLightOnOff()");
+                });
+            });
+            describe('switchLightOn()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.switchLightOn('0/10/0010110101/0x5');
+                    }).toThrow("Device does not support switchLightOn()");
+                });
+            });
+            describe('switchLightOff()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.switchLightOff('0/10/0010110101/0x5');
+                    }).toThrow("Device does not support switchLightOff()");
                 });
             });
             describe('learn()', function () {
@@ -561,7 +711,7 @@ describe('Fan class', function () {
                 });
             });
         });
-        describe('address checking', function () {
+        describe('address checking:', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     fan.buttonPress('0x1/A', 'T1');
@@ -601,7 +751,7 @@ describe('Fan class', function () {
         beforeEach(function () {
             fan = new rfxcom.Fan(device, rfxcom.fan.WESTINGHOUSE_7226640);
         });
-        describe('commands', function () {
+        describe('commands:', function () {
             describe('buttonPress', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
@@ -680,6 +830,27 @@ describe('Fan class', function () {
                     }).toThrow("Device does not support startTimer()");
                 });
             });
+            describe('toggleOnOff()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.toggleOnOff('0x1');
+                    }).toThrow("Device does not support toggleOnOff()");
+                });
+            });
+            describe('toggleFanDirection()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.toggleFanDirection('0x1');
+                    }).toThrow("Device does not support toggleFanDirection()");
+                });
+            });
+            describe('setFanDirection()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.setFanDirection('0x1', 1);
+                    }).toThrow("Device does not support setFanDirection()");
+                });
+            });
             describe('toggleLightOnOff()', function () {
                 it('should send the correct bytes to the serialport', function (done) {
                     let sentCommandId = NaN;
@@ -688,6 +859,652 @@ describe('Fan class', function () {
                         done();
                     });
                     expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x04, 0x00, 0x00, 0x00, 0x01, 0x05, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+            });
+            describe('switchLightOn()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.switchLightOn('0x1');
+                    }).toThrow("Device does not support switchLightOn()");
+                });
+            });
+            describe('switchLightOff()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.switchLightOff('0x1');
+                    }).toThrow("Device does not support switchLightOff()");
+                });
+            });
+            describe('learn()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.learn('0x1');
+                    }).toThrow("Device does not support learn()");
+                });
+            });
+            describe('confirm()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.confirm('0x1');
+                    }).toThrow("Device does not support confirm()");
+                });
+            });
+            describe('eraseAll', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.eraseAll('0x1');
+                    }).toThrow("Device does not support eraseAll()");
+                });
+            });
+        });
+        describe('address checking:', function () {
+            it('should throw an exception with an invalid deviceId format', function () {
+                expect(function () {
+                    fan.switchOff('0x1/A');
+                }).toThrow("Invalid deviceId format");
+            });
+            it('should accept the highest address value', function (done) {
+                let sentCommandId = NaN;
+                fan.switchOff('0xf', function (err, response, cmdId) {
+                    sentCommandId = cmdId;
+                    done();
+                });
+                expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x04, 0x00, 0x00, 0x00, 0x0f, 0x04, 0x00]);
+                expect(sentCommandId).toEqual(0);
+            });
+            it('should accept the lowest address value', function (done) {
+                let sentCommandId = NaN;
+                fan.switchOff('0x0', function (err, response, cmdId) {
+                    sentCommandId = cmdId;
+                    done();
+                });
+                expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x04, 0x00, 0x00, 0x00, 0x00, 0x04, 0x00]);
+                expect(sentCommandId).toEqual(0);
+            });
+            it('should throw an exception with an invalid address 0x10', function () {
+                expect(function () {
+                    fan.switchOff('0x10');
+                }).toThrow("Address 0x10 outside valid range");
+            });
+            it('should throw an exception with an invalid address -1', function () {
+                expect(function () {
+                    fan.switchOff('-1');
+                }).toThrow("Address 0x-1 outside valid range");
+            });
+        });
+    });
+    describe('CASAFAN', function () {
+        beforeEach(function () {
+            fan = new rfxcom.Fan(device, rfxcom.fan.CASAFAN);
+        });
+        describe('commands:', function () {
+            describe('buttonPress', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.buttonPress('0x1', 'T2');
+                    }).toThrow("Device does not support buttonPress()");
+                });
+            });
+            describe('setSpeed', function () {
+                it('should throw an exception for speed <0', function () {
+                    expect(function () {
+                        fan.setSpeed('0x1', -1);
+                    }).toThrow("Invalid speed: value must be in range 0-3");
+                });
+                it('should send the correct bytes to the serialport for speed 0', function (done) {
+                    let sentCommandId = NaN;
+                    fan.setSpeed('0x1', 0, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x06, 0x00, 0x00, 0x00, 0x01, 0x04, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should send the correct bytes to the serialport for speed 2', function (done) {
+                    let sentCommandId = NaN;
+                    fan.setSpeed('0x1', 2, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x06, 0x00, 0x00, 0x00, 0x01, 0x02, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should send the correct bytes to the serialport for speed 3', function (done) {
+                    let sentCommandId = NaN;
+                    fan.setSpeed('0x1', 3, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x06, 0x00, 0x00, 0x00, 0x01, 0x01, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should throw an exception for speed >3', function () {
+                    expect(function () {
+                        fan.setSpeed('0x1', 4);
+                    }).toThrow("Invalid speed: value must be in range 0-3");
+                });
+            });
+            describe('decreaseSpeed()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.decreaseSpeed('0x1');
+                    }).toThrow("Device does not support decreaseSpeed()");
+                });
+            });
+            describe('increaseSpeed()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.increaseSpeed('0x1');
+                    }).toThrow("Device does not support increaseSpeed()");
+                });
+            });
+            describe('switchOff', function () {
+                it('should send the correct bytes to the serialport', function (done) {
+                    let sentCommandId = NaN;
+                    fan.switchOff('0x1', function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x06, 0x00, 0x00, 0x00, 0x01, 0x04, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+            });
+            describe('startTimer()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.startTimer('0x1');
+                    }).toThrow("Device does not support startTimer()");
+                });
+            });
+            describe('toggleOnOff()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.toggleOnOff('0x1');
+                    }).toThrow("Device does not support toggleOnOff()");
+                });
+            });
+            describe('toggleFanDirection()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.toggleFanDirection('0x1');
+                    }).toThrow("Device does not support toggleFanDirection()");
+                });
+            });
+            describe('setFanDirection()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.setFanDirection('0x1', 1);
+                    }).toThrow("Device does not support setFanDirection()");
+                });
+            });
+            describe('toggleLightOnOff()', function () {
+                it('should send the correct bytes to the serialport', function (done) {
+                    let sentCommandId = NaN;
+                    fan.toggleLightOnOff('0x1', function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x06, 0x00, 0x00, 0x00, 0x01, 0x05, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+            });
+            describe('switchLightOn()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.switchLightOn('0x1');
+                    }).toThrow("Device does not support switchLightOn()");
+                });
+            });
+            describe('switchLightOff()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.switchLightOff('0x1', 1);
+                    }).toThrow("Device does not support switchLightOff()");
+                });
+            });
+            describe('learn()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.learn('0x1');
+                    }).toThrow("Device does not support learn()");
+                });
+            });
+            describe('confirm()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.confirm('0x1');
+                    }).toThrow("Device does not support confirm()");
+                });
+            });
+            describe('eraseAll', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.eraseAll('0x1');
+                    }).toThrow("Device does not support eraseAll()");
+                });
+            });
+        });
+        describe('address checking:', function () {
+            it('should throw an exception with an invalid deviceId format', function () {
+                expect(function () {
+                    fan.switchOff('0x1/A');
+                }).toThrow("Invalid deviceId format");
+            });
+            it('should accept the highest address value', function (done) {
+                let sentCommandId = NaN;
+                fan.switchOff('0xf', function (err, response, cmdId) {
+                    sentCommandId = cmdId;
+                    done();
+                });
+                expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x06, 0x00, 0x00, 0x00, 0x0f, 0x04, 0x00]);
+                expect(sentCommandId).toEqual(0);
+            });
+            it('should accept the lowest address value', function (done) {
+                let sentCommandId = NaN;
+                fan.switchOff('0x0', function (err, response, cmdId) {
+                    sentCommandId = cmdId;
+                    done();
+                });
+                expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x06, 0x00, 0x00, 0x00, 0x00, 0x04, 0x00]);
+                expect(sentCommandId).toEqual(0);
+            });
+            it('should throw an exception with an invalid address 0x10', function () {
+                expect(function () {
+                    fan.switchOff('0x10');
+                }).toThrow("Address 0x10 outside valid range");
+            });
+            it('should throw an exception with an invalid address -1', function () {
+                expect(function () {
+                    fan.switchOff('-1');
+                }).toThrow("Address 0x-1 outside valid range");
+            });
+        });
+    });
+    describe('FT1211R', function () {
+        beforeEach(function () {
+            fan = new rfxcom.Fan(device, rfxcom.fan.FT1211R);
+        });
+        describe('commands:', function () {
+            describe('buttonPress', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.buttonPress('0x1', 'T2');
+                    }).toThrow("Device does not support buttonPress()");
+                });
+            });
+            describe('setSpeed', function () {
+                it('should throw an exception for speed <1', function () {
+                    expect(function () {
+                        fan.setSpeed('0x1', 0);
+                    }).toThrow("Invalid speed: value must be in range 1-5");
+                });
+                it('should send the correct bytes to the serialport for speed 1', function (done) {
+                    let sentCommandId = NaN;
+                    fan.setSpeed('0x1', 1, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x07, 0x00, 0x00, 0x00, 0x01, 0x03, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should send the correct bytes to the serialport for speed 3', function (done) {
+                    let sentCommandId = NaN;
+                    fan.setSpeed('0x1', 3, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x07, 0x00, 0x00, 0x00, 0x01, 0x05, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should send the correct bytes to the serialport for speed 5', function (done) {
+                    let sentCommandId = NaN;
+                    fan.setSpeed('0x1', 5, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x07, 0x00, 0x00, 0x00, 0x01, 0x07, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should throw an exception for speed >5', function () {
+                    expect(function () {
+                        fan.setSpeed('0x1', 6);
+                    }).toThrow("Invalid speed: value must be in range 1-5");
+                });
+            });
+            describe('decreaseSpeed()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.decreaseSpeed('0x1');
+                    }).toThrow("Device does not support decreaseSpeed()");
+                });
+            });
+            describe('increaseSpeed()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.increaseSpeed('0x1');
+                    }).toThrow("Device does not support increaseSpeed()");
+                });
+            });
+            describe('switchOff', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.switchOff('0x1');
+                    }).toThrow("Device does not support switchOff()");
+                });
+            });
+            describe('startTimer()', function () {
+                it('should send the correct bytes to the serialport for a 1 hour timeout', function (done) {
+                    let sentCommandId = NaN;
+                    fan.startTimer('0x1', 1, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x07, 0x00, 0x00, 0x00, 0x01, 0x09, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should send the correct bytes to the serialport for a 4 hour timeout', function (done) {
+                    let sentCommandId = NaN;
+                    fan.startTimer('0x1', 4, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x07, 0x00, 0x00, 0x00, 0x01, 0x0A, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should send the correct bytes to the serialport for an 8 hour timeout', function (done) {
+                    let sentCommandId = NaN;
+                    fan.startTimer('0x1', 8, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x07, 0x00, 0x00, 0x00, 0x01, 0x0B, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should throw an exception for an invalid timeout', function () {
+                    expect(function () {
+                        fan.startTimer('0x1', 99);
+                    }).toThrow("Invalid timer timeout: value must be 1, 4, or 8");
+                });
+            });
+            describe('toggleOnOff()', function () {
+                it('should send the correct bytes to the serialport', function (done) {
+                    let sentCommandId = NaN;
+                    fan.toggleOnOff('0x1', function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x07, 0x00, 0x00, 0x00, 0x01, 0x01, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+            });
+            describe('toggleFanDirection()', function () {
+                it('should send the correct bytes to the serialport', function (done) {
+                    let sentCommandId = NaN;
+                    fan.toggleFanDirection('0x1', function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x07, 0x00, 0x00, 0x00, 0x01, 0x08, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+            });
+            describe('setFanDirection()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.setFanDirection('0x1', 1);
+                    }).toThrow("Device does not support setFanDirection()");
+                });
+            });
+            describe('toggleLightOnOff()', function () {
+                it('should send the correct bytes to the serialport', function (done) {
+                    let sentCommandId = NaN;
+                    fan.toggleLightOnOff('0x1', function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x07, 0x00, 0x00, 0x00, 0x01, 0x02, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+            });
+            describe('switchLightOn()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.switchLightOn('0x1');
+                    }).toThrow("Device does not support switchLightOn()");
+                });
+            });
+            describe('switchLightOff()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.switchLightOff('0x1', 1);
+                    }).toThrow("Device does not support switchLightOff()");
+                });
+            });
+            describe('learn()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.learn('0x1');
+                    }).toThrow("Device does not support learn()");
+                });
+            });
+            describe('confirm()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.confirm('0x1');
+                    }).toThrow("Device does not support confirm()");
+                });
+            });
+            describe('eraseAll', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.eraseAll('0x1');
+                    }).toThrow("Device does not support eraseAll()");
+                });
+            });
+        });
+        describe('address checking:', function () {
+            it('should throw an exception with an invalid deviceId format', function () {
+                expect(function () {
+                    fan.toggleOnOff('0x1/A');
+                }).toThrow("Invalid deviceId format");
+            });
+            it('should accept the highest address value', function (done) {
+                let sentCommandId = NaN;
+                fan.toggleOnOff('0xffff', function (err, response, cmdId) {
+                    sentCommandId = cmdId;
+                    done();
+                });
+                expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x07, 0x00, 0x00, 0xff, 0xff, 0x01, 0x00]);
+                expect(sentCommandId).toEqual(0);
+            });
+            it('should accept the lowest address value', function (done) {
+                let sentCommandId = NaN;
+                fan.toggleOnOff('0x1', function (err, response, cmdId) {
+                    sentCommandId = cmdId;
+                    done();
+                });
+                expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x07, 0x00, 0x00, 0x00, 0x01, 0x01, 0x00]);
+                expect(sentCommandId).toEqual(0);
+            });
+            it('should throw an exception with an invalid address 0x10000', function () {
+                expect(function () {
+                    fan.toggleOnOff('0x10000');
+                }).toThrow("Address 0x10000 outside valid range");
+            });
+            it('should throw an exception with an invalid address 0x0', function () {
+                expect(function () {
+                    fan.toggleOnOff('0x0');
+                }).toThrow("Address 0x0 outside valid range");
+            });
+        });
+    });
+    describe('FALMEC', function () {
+        beforeEach(function () {
+            fan = new rfxcom.Fan(device, rfxcom.fan.FALMEC);
+        });
+        describe('commands:', function () {
+            describe('buttonPress', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.buttonPress('0x1', 'T2');
+                    }).toThrow("Device does not support buttonPress()");
+                });
+            });
+            describe('setSpeed', function () {
+                it('should throw an exception for speed <0', function () {
+                    expect(function () {
+                        fan.setSpeed('0x1', -1);
+                    }).toThrow("Invalid speed: value must be in range 0-4");
+                });
+                it('should send the correct bytes to the serialport for speed 0', function (done) {
+                    let sentCommandId = NaN;
+                    fan.setSpeed('0x1', 0, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x08, 0x00, 0x00, 0x00, 0x01, 0x01, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should send the correct bytes to the serialport for speed 2', function (done) {
+                    let sentCommandId = NaN;
+                    fan.setSpeed('0x1', 2, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x08, 0x00, 0x00, 0x00, 0x01, 0x03, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should send the correct bytes to the serialport for speed 4', function (done) {
+                    let sentCommandId = NaN;
+                    fan.setSpeed('0x1', 4, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x08, 0x00, 0x00, 0x00, 0x01, 0x05, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should throw an exception for speed >4', function () {
+                    expect(function () {
+                        fan.setSpeed('0x1', 5);
+                    }).toThrow("Invalid speed: value must be in range 0-4");
+                });
+            });
+            describe('decreaseSpeed()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.decreaseSpeed('0x1');
+                    }).toThrow("Device does not support decreaseSpeed()");
+                });
+            });
+            describe('increaseSpeed()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.increaseSpeed('0x1');
+                    }).toThrow("Device does not support increaseSpeed()");
+                });
+            });
+            describe('switchOff', function () {
+                it('should send the correct bytes to the serialport', function (done) {
+                    let sentCommandId = NaN;
+                    fan.switchOff('0x1', function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x08, 0x00, 0x00, 0x00, 0x01, 0x01, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+            });
+            describe('startTimer()', function () {
+                it('should send the correct bytes to the serialport for a 1 unit timeout', function (done) {
+                    let sentCommandId = NaN;
+                    fan.startTimer('0x1', 1, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x08, 0x00, 0x00, 0x00, 0x01, 0x06, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should send the correct bytes to the serialport for a 2 unit timeout', function (done) {
+                    let sentCommandId = NaN;
+                    fan.startTimer('0x1', 2, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x08, 0x00, 0x00, 0x00, 0x01, 0x07, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should send the correct bytes to the serialport for a 3 unit timeout', function (done) {
+                    let sentCommandId = NaN;
+                    fan.startTimer('0x1', 3, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x08, 0x00, 0x00, 0x00, 0x01, 0x08, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should send the correct bytes to the serialport for a 4 unit timeout', function (done) {
+                    let sentCommandId = NaN;
+                    fan.startTimer('0x1', 4, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x08, 0x00, 0x00, 0x00, 0x01, 0x09, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should throw an exception for an invalid timeout', function () {
+                    expect(function () {
+                        fan.startTimer('0x1', 99);
+                    }).toThrow("Invalid timer timeout: value must be in range 1-4");
+                });
+            });
+            describe('toggleOnOff()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.toggleOnOff('0x1', 1);
+                    }).toThrow("Device does not support toggleOnOff()");
+                });
+            });
+            describe('toggleFanDirection()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.toggleFanDirection('0x1', 1);
+                    }).toThrow("Device does not support toggleFanDirection()");
+                });
+            });
+            describe('setFanDirection()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.setFanDirection('0x1', 1);
+                    }).toThrow("Device does not support setFanDirection()");
+                });
+            });
+            describe('toggleLightOnOff()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.toggleLightOnOff('0x1', 1);
+                    }).toThrow("Device does not support toggleLightOnOff()");
+                });
+            });
+            describe('switchLightOn()', function () {
+                it('should send the correct bytes to the serialport', function (done) {
+                    let sentCommandId = NaN;
+                    fan.switchLightOn('0x1', function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x08, 0x00, 0x00, 0x00, 0x01, 0x0A, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+            });
+            describe('switchLightOff()', function () {
+                it('should send the correct bytes to the serialport', function (done) {
+                    let sentCommandId = NaN;
+                    fan.switchLightOff('0x1', function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x08, 0x00, 0x00, 0x00, 0x01, 0x0B, 0x00]);
                     expect(sentCommandId).toEqual(0);
                 });
             });
@@ -713,7 +1530,7 @@ describe('Fan class', function () {
                 });
             });
         });
-        describe('address checking', function () {
+        describe('address checking:', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     fan.switchOff('0x1/A');
@@ -721,20 +1538,20 @@ describe('Fan class', function () {
             });
             it('should accept the highest address value', function (done) {
                 let sentCommandId = NaN;
-                fan.switchOff('0xf', function (err, response, cmdId) {
+                fan.switchOff('0x0f', function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
-                expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x04, 0x00, 0x00, 0x00, 0x0f, 0x04, 0x00]);
+                expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x08, 0x00, 0x00, 0x00, 0x0f, 0x01, 0x00]);
                 expect(sentCommandId).toEqual(0);
             });
             it('should accept the lowest address value', function (done) {
                 let sentCommandId = NaN;
-                fan.switchOff('0x1', function (err, response, cmdId) {
+                fan.switchOff('0x0', function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
-                expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x04, 0x00, 0x00, 0x00, 0x01, 0x04, 0x00]);
+                expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x08, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00]);
                 expect(sentCommandId).toEqual(0);
             });
             it('should throw an exception with an invalid address 0x10', function () {
@@ -742,10 +1559,210 @@ describe('Fan class', function () {
                     fan.switchOff('0x10');
                 }).toThrow("Address 0x10 outside valid range");
             });
-            it('should throw an exception with an invalid address 0x0', function () {
+            it('should throw an exception with an invalid address -1', function () {
                 expect(function () {
-                    fan.switchOff('0x0');
-                }).toThrow("Address 0x0 outside valid range");
+                    fan.switchOff('-1');
+                }).toThrow("Address 0x-1 outside valid range");
+            });
+        });
+    });
+    describe('LUCCI_AIR_DCII', function () {
+        beforeEach(function () {
+            fan = new rfxcom.Fan(device, rfxcom.fan.LUCCI_AIR_DCII);
+        });
+        describe('commands:', function () {
+            describe('buttonPress', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.buttonPress('0x1', 'T2');
+                    }).toThrow("Device does not support buttonPress()");
+                });
+            });
+            describe('setSpeed', function () {
+                it('should throw an exception for speed <0', function () {
+                    expect(function () {
+                        fan.setSpeed('0x1', -1);
+                    }).toThrow("Invalid speed: value must be in range 0-6");
+                });
+                it('should send the correct bytes to the serialport for speed 0', function (done) {
+                    let sentCommandId = NaN;
+                    fan.setSpeed('0x1', 0, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x09, 0x00, 0x00, 0x00, 0x01, 0x01, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should send the correct bytes to the serialport for speed 2', function (done) {
+                    let sentCommandId = NaN;
+                    fan.setSpeed('0x1', 2, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x09, 0x00, 0x00, 0x00, 0x01, 0x03, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should send the correct bytes to the serialport for speed 4', function (done) {
+                    let sentCommandId = NaN;
+                    fan.setSpeed('0x1', 4, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x09, 0x00, 0x00, 0x00, 0x01, 0x05, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should send the correct bytes to the serialport for speed 6', function (done) {
+                    let sentCommandId = NaN;
+                    fan.setSpeed('0x1', 6, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x09, 0x00, 0x00, 0x00, 0x01, 0x07, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should throw an exception for speed >6', function () {
+                    expect(function () {
+                        fan.setSpeed('0x1', 7);
+                    }).toThrow("Invalid speed: value must be in range 0-6");
+                });
+            });
+            describe('decreaseSpeed()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.decreaseSpeed('0x1');
+                    }).toThrow("Device does not support decreaseSpeed()");
+                });
+            });
+            describe('increaseSpeed()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.increaseSpeed('0x1');
+                    }).toThrow("Device does not support increaseSpeed()");
+                });
+            });
+            describe('switchOff', function () {
+                it('should send the correct bytes to the serialport', function (done) {
+                    let sentCommandId = NaN;
+                    fan.switchOff('0x1', function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x09, 0x00, 0x00, 0x00, 0x01, 0x01, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+            });
+            describe('startTimer()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.startTimer('0x1', 1);
+                    }).toThrow("Device does not support startTimer()");
+                });
+            });
+            describe('toggleOnOff()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.toggleOnOff('0x1', 1);
+                    }).toThrow("Device does not support toggleOnOff()");
+                });
+            });
+            describe('toggleFanDirection()', function () {
+                it('should send the correct bytes to the serialport', function (done) {
+                    let sentCommandId = NaN;
+                    fan.toggleFanDirection('0x1', function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x09, 0x00, 0x00, 0x00, 0x01, 0x09, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+            });
+            describe('setFanDirection()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.setFanDirection('0x1', 1);
+                    }).toThrow("Device does not support setFanDirection()");
+                });
+            });
+            describe('toggleLightOnOff()', function () {
+                it('should send the correct bytes to the serialport', function (done) {
+                    let sentCommandId = NaN;
+                    fan.toggleLightOnOff('0x1', function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x09, 0x00, 0x00, 0x00, 0x01, 0x08, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+            });
+            describe('switchLightOn()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.switchLightOn('0x1', 1);
+                    }).toThrow("Device does not support switchLightOn()");
+                });
+            });
+            describe('switchLightOff()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.switchLightOff('0x1', 1);
+                    }).toThrow("Device does not support switchLightOff()");
+                });
+            });
+            describe('learn()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.learn('0x1');
+                    }).toThrow("Device does not support learn()");
+                });
+            });
+            describe('confirm()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.confirm('0x1');
+                    }).toThrow("Device does not support confirm()");
+                });
+            });
+            describe('eraseAll', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        fan.eraseAll('0x1');
+                    }).toThrow("Device does not support eraseAll()");
+                });
+            });
+        });
+        describe('address checking:', function () {
+            it('should throw an exception with an invalid deviceId format', function () {
+                expect(function () {
+                    fan.switchOff('0x1/A');
+                }).toThrow("Invalid deviceId format");
+            });
+            it('should accept the highest address value', function (done) {
+                let sentCommandId = NaN;
+                fan.switchOff('0x0f', function (err, response, cmdId) {
+                    sentCommandId = cmdId;
+                    done();
+                });
+                expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x09, 0x00, 0x00, 0x00, 0x0f, 0x01, 0x00]);
+                expect(sentCommandId).toEqual(0);
+            });
+            it('should accept the lowest address value', function (done) {
+                let sentCommandId = NaN;
+                fan.switchOff('0x0', function (err, response, cmdId) {
+                    sentCommandId = cmdId;
+                    done();
+                });
+                expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x09, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00]);
+                expect(sentCommandId).toEqual(0);
+            });
+            it('should throw an exception with an invalid address 0x10', function () {
+                expect(function () {
+                    fan.switchOff('0x10');
+                }).toThrow("Address 0x10 outside valid range");
+            });
+            it('should throw an exception with an invalid address -1', function () {
+                expect(function () {
+                    fan.switchOff('-1');
+                }).toThrow("Address 0x-1 outside valid range");
             });
         });
     });

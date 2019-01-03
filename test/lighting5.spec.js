@@ -23,6 +23,7 @@ describe('Lighting5 class', function () {
             port: fakeSerialPort
         });
         device.connected = true;
+        device.firmwareVersion = 1026;
     });
     afterEach(function () {
         device.acknowledge.forEach(acknowledge => {if (typeof acknowledge === "function") {acknowledge()}});
@@ -151,12 +152,12 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with an invalid mood value 6', function () {
                     expect(function () {
                         lighting5.setMood('0xF09AC8/1', 6);
-                    }).toThrow("Invalid mood value must be in range 1-5.");
+                    }).toThrow("Invalid mood: value must be in range 1-5.");
                 });
                 it('should throw an exception with an invalid mood value 0', function () {
                     expect(function () {
                         lighting5.setMood('0xF09AC8/1', 0);
-                    }).toThrow("Invalid mood value must be in range 1-5.");
+                    }).toThrow("Invalid mood: value must be in range 1-5.");
                 });
                 it('should throw an exception with a group address', function () {
                     expect(function () {
@@ -2311,9 +2312,10 @@ describe('Lighting5 class', function () {
             });
         });
     });
-    describe('LIVOLO_APPLIANCE', function () {
+    describe('LIVOLO_APPLIANCE (v1025 & earlier)', function () {
         beforeEach(function () {
             lighting5 = new rfxcom.Lighting5(device, rfxcom.lighting5.LIVOLO_APPLIANCE);
+            device.firmwareVersion = 1025;
         });
         describe('commands', function () {
             describe('switchOn()', function () {
@@ -2352,7 +2354,7 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.toggleOnOff('0x1234/0');
-                    }).toThrow("Group command must be On or Off");
+                    }).toThrow("Group command must be Off");
                 });
             });
             describe('setLevel()', function () {
@@ -2563,6 +2565,298 @@ describe('Lighting5 class', function () {
                     done();
                 });
                 expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x0A, 0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x1F, 0x00]);
+                expect(sentCommandId).toEqual(0);
+            });
+            it('should throw an exception with an invalid unit number 11', function () {
+                expect(function () {
+                    lighting5.toggleOnOff('0x7FFF/11');
+                }).toThrow("Invalid unit code 11");
+            });
+            it('should throw an exception with an invalid unit number -1', function () {
+                expect(function () {
+                    lighting5.toggleOnOff('0x7FFF/-1');
+                }).toThrow("Invalid unit code -1");
+            });
+            it('should throw an exception with an invalid address 0x8000', function () {
+                expect(function () {
+                    lighting5.toggleOnOff('0x8000/1');
+                }).toThrow("Address 0x8000 outside valid range");
+            });
+            it('should throw an exception with an invalid address 0x0000', function () {
+                expect(function () {
+                    lighting5.toggleOnOff('0x0/1');
+                }).toThrow("Address 0x0 outside valid range");
+            });
+        });
+    });
+    describe('LIVOLO_APPLIANCE (v1026 & later)', function () {
+        beforeEach(function () {
+            lighting5 = new rfxcom.Lighting5(device, rfxcom.lighting5.LIVOLO_APPLIANCE);
+        });
+        describe('commands', function () {
+            describe('switchOn()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        lighting5.switchOn('0x1234/1');
+                    }).toThrow("Device does not support switchOn()");
+                });
+            });
+            describe('switchOff()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        lighting5.switchOff('0x1234/1');
+                    }).toThrow("Device supports switchOff() only for group");
+                });
+                it('should handle a group address', function (done) {
+                    let sentCommandId = NaN;
+                    lighting5.switchOff('0x1234/0', function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x0A, 0x00, 0x00, 0x12, 0x34, 0x00, 0x00, 0x00, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+            });
+            describe('toggleOnOff()', function () {
+                it('should send the correct bytes to the serial port', function (done) {
+                    let sentCommandId = NaN;
+                    lighting5.toggleOnOff('0x1234/1', function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x0A, 0x00, 0x00, 0x12, 0x34, 0x01, 0x01, 0, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should throw an exception with a group address', function () {
+                    expect(function () {
+                        lighting5.toggleOnOff('0x1234/0');
+                    }).toThrow("Group command must be Off");
+                });
+            });
+            describe('setLevel()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        lighting5.setLevel('0x1234/1');
+                    }).toThrow("Device does not support setLevel()");
+                });
+            });
+            describe('increaseLevel()', function () {
+                it('should throw an exception with an invalid unit number', function () {
+                    expect(function () {
+                        lighting5.increaseLevel('0x1234/1');
+                    }).toThrow("Only units 7 & 9 support dimming");
+                });
+                it('should send the correct bytes to the serial port for unit 7', function (done) {
+                    let sentCommandId = NaN;
+                    lighting5.increaseLevel('0x1234/7', 1, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x0A, 0x00, 0x00, 0x12, 0x34, 0x07, 0x08, 0x00, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should send the correct bytes to the serial port for unit 9', function (done) {
+                    let sentCommandId = NaN;
+                    lighting5.increaseLevel('0x1234/9', 1, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x0A, 0x00, 0x00, 0x12, 0x34, 0x09, 0x0C, 0x00, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should send the correct bytes to the serial port, ignoring a room number', function (done) {
+                    let sentCommandId = NaN;
+                    lighting5.increaseLevel('0x1234/9', 1, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x0A, 0x00, 0x00, 0x12, 0x34, 0x09, 0x0C, 0x00, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+            });
+            describe('decreaseLevel()', function () {
+                it('should throw an exception with an invalid unit number', function () {
+                    expect(function () {
+                        lighting5.decreaseLevel('0x1234/1');
+                    }).toThrow("Only units 7 & 9 support dimming");
+                });
+                it('should send the correct bytes to the serial port for unit 7', function (done) {
+                    let sentCommandId = NaN;
+                    lighting5.decreaseLevel('0x1234/7', 1, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x0A, 0x00, 0x00, 0x12, 0x34, 0x07, 0x09, 0x00, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should send the correct bytes to the serial port for unit 9', function (done) {
+                    let sentCommandId = NaN;
+                    lighting5.decreaseLevel('0x1234/9', 1, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x0A, 0x00, 0x00, 0x12, 0x34, 0x09, 0x0D, 0x00, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should send the correct bytes to the serial port, ignoring a room number', function (done) {
+                    let sentCommandId = NaN;
+                    lighting5.decreaseLevel('0x1234/9', 1, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x0A, 0x00, 0x00, 0x12, 0x34, 0x09, 0x0D, 0x00, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+            });
+            describe('setMood()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        lighting5.setMood('0x1234/1');
+                    }).toThrow("Device does not support setMood()");
+                });
+            });
+            describe('program()', function () {
+                it('should send the correct bytes to the serial port', function (done) {
+                    let sentCommandId = NaN;
+                    lighting5.program('0x1234/1', function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x0A, 0x00, 0x00, 0x12, 0x34, 0x01, 0x13, 0x00, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+            });
+            describe('relayOpen()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        lighting5.relayOpen('0x1234/1');
+                    }).toThrow("Device does not support relayOpen()");
+                });
+            });
+            describe('relayClose()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        lighting5.relayClose('0x1234/1');
+                    }).toThrow("Device does not support relayClose()");
+                });
+            });
+            describe('relayStop()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        lighting5.relayStop('0x1234/1');
+                    }).toThrow("Device does not support relayStop()");
+                });
+            });
+            describe('increaseColour()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        lighting5.increaseColour('0x1234/1');
+                    }).toThrow("Device does not support increaseColour()");
+                });
+            });
+            describe('decreaseColour()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        lighting5.decreaseColour('0x1234/1');
+                    }).toThrow("Device does not support decreaseColour()");
+                });
+            });
+            describe('setColour()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        lighting5.setColour('0x1234/1');
+                    }).toThrow("Device does not support setColour()");
+                });
+            });
+            describe('setScene()', function () {
+                it('should send the correct bytes to the serial port for scene 1', function (done) {
+                    let sentCommandId = NaN;
+                    lighting5.setScene('0x1234/1', 1, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x0A, 0x00, 0x00, 0x12, 0x34, 0x01, 0x0F, 0x00, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should send the correct bytes to the serial port for scene 1 & ignore the room number', function (done) {
+                    let sentCommandId = NaN;
+                    lighting5.setScene('0x1234/1', 1, 1, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x0A, 0x00, 0x00, 0x12, 0x34, 0x01, 0x0F, 0x00, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should send the correct bytes to the serial port for scene 2', function (done) {
+                    let sentCommandId = NaN;
+                    lighting5.setScene('0x1234/1', 2, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x0A, 0x00, 0x00, 0x12, 0x34, 0x01, 0x10, 0x00, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should send the correct bytes to the serial port for scene 3', function (done) {
+                    let sentCommandId = NaN;
+                    lighting5.setScene('0x1234/1', 3, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x0A, 0x00, 0x00, 0x12, 0x34, 0x01, 0x11, 0x00, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should send the correct bytes to the serial port for scene 4', function (done) {
+                    let sentCommandId = NaN;
+                    lighting5.setScene('0x1234/1', 4, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x0A, 0x00, 0x00, 0x12, 0x34, 0x01, 0x12, 0x00, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should throw an exception with an invalid scene number', function () {
+                    expect(function () {
+                        lighting5.setScene('0x1234/1', 0, 1);
+                    }).toThrow("Invalid scene number: value must be in range  1-4");
+                });
+            });
+            describe('lock()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        lighting5.lock('0x1234/1');
+                    }).toThrow("Device does not support lock()");
+                });
+            });
+            describe('unlock()', function () {
+                it('should throw an unsupported command exception', function () {
+                    expect(function () {
+                        lighting5.lock('0x1234/1');
+                    }).toThrow("Device does not support lock()");
+                });
+            });
+        });
+        describe('address checking', function () {
+            it('should throw an exception with an invalid deviceId format', function () {
+                expect(function () {
+                    lighting5.toggleOnOff('0x3FFF');
+                }).toThrow("Invalid deviceId format");
+            });
+            it('should accept the highest address and unit code values', function (done) {
+                let sentCommandId = NaN;
+                lighting5.toggleOnOff('0x7FFF/10', function (err, response, cmdId) {
+                    sentCommandId = cmdId;
+                    done();
+                });
+                expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x0A, 0x00, 0x00, 0x7f, 0xff, 0x0A, 0x0e, 0x00, 0x00]);
+                expect(sentCommandId).toEqual(0);
+            });
+            it('should accept the lowest address and unit code values', function (done) {
+                let sentCommandId = NaN;
+                lighting5.toggleOnOff('0x1/1', function (err, response, cmdId) {
+                    sentCommandId = cmdId;
+                    done();
+                });
+                expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x0A, 0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x00, 0x00]);
                 expect(sentCommandId).toEqual(0);
             });
             it('should throw an exception with an invalid unit number 11', function () {
@@ -3327,105 +3621,105 @@ describe('Lighting5 class', function () {
             describe('toggleOnOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
-                        lighting5.toggleOnOff('0x12345/1');
+                        lighting5.toggleOnOff('0x12345/A');
                     }).toThrow("Device does not support toggleOnOff()");
                 });
             });
             describe('setLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
-                        lighting5.setLevel('0x12345/1');
+                        lighting5.setLevel('0x12345/A');
                     }).toThrow("Device does not support setLevel()");
                 });
             });
             describe('increaseLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
-                        lighting5.increaseLevel('0x12345/1');
+                        lighting5.increaseLevel('0x12345/A');
                     }).toThrow("Device does not support increaseLevel()");
                 });
             });
             describe('decreaseLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
-                        lighting5.decreaseLevel('0x12345/1');
+                        lighting5.decreaseLevel('0x12345/A');
                     }).toThrow("Device does not support decreaseLevel()");
                 });
             });
             describe('setMood()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
-                        lighting5.setMood('0x12345/1');
+                        lighting5.setMood('0x12345/A');
                     }).toThrow("Device does not support setMood()");
                 });
             });
             describe('program()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
-                        lighting5.program('0x12345/1');
+                        lighting5.program('0x12345/A');
                     }).toThrow("Device does not support program()");
                 });
             });
             describe('relayOpen()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
-                        lighting5.relayOpen('0x12345/1');
+                        lighting5.relayOpen('0x12345/A');
                     }).toThrow("Device does not support relayOpen()");
                 });
             });
             describe('relayClose()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
-                        lighting5.relayClose('0x12345/1');
+                        lighting5.relayClose('0x12345/A');
                     }).toThrow("Device does not support relayClose()");
                 });
             });
             describe('relayStop()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
-                        lighting5.relayStop('0x12345/1');
+                        lighting5.relayStop('0x12345/A');
                     }).toThrow("Device does not support relayStop()");
                 });
             });
             describe('increaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
-                        lighting5.increaseColour('0x12345/1');
+                        lighting5.increaseColour('0x12345/A');
                     }).toThrow("Device does not support increaseColour()");
                 });
             });
             describe('decreaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
-                        lighting5.decreaseColour('0x12345/1');
+                        lighting5.decreaseColour('0x12345/A');
                     }).toThrow("Device does not support decreaseColour()");
                 });
             });
             describe('setColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
-                        lighting5.setColour('0x12345/1');
+                        lighting5.setColour('0x12345/A');
                     }).toThrow("Device does not support setColour()");
                 });
             });
             describe('setScene()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
-                        lighting5.setScene('0x12345/1', 1, 1);
+                        lighting5.setScene('0x12345/A', 1, 1);
                     }).toThrow("Device does not support setScene()");
                 });
             });
             describe('lock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
-                        lighting5.lock('0x12345/1');
+                        lighting5.lock('0x12345/A');
                     }).toThrow("Device does not support lock()");
                 });
             });
             describe('unlock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
-                        lighting5.lock('0x12345/1');
+                        lighting5.lock('0x12345/A');
                     }).toThrow("Device does not support lock()");
                 });
             });
