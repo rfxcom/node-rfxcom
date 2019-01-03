@@ -8,7 +8,7 @@ To install
   npm install rfxcom
 </pre>
 
-Depends on serialport 4.* and queue ^4.0.0
+Depends on serialport ^7.1.1 and queue ^5.0.0
 
 To Use
 ------
@@ -52,7 +52,10 @@ Prototype transmitter objects are provided for almost all packet types (see the 
 packet types which can be transmitted but are *not* currently supported are:
 
 * 0x1C, Edisio (868 MHz devices only)
+* 0x1D, Honeywell ActivLink (868 MHz devices only)
 * 0x21, Security2
+* 0x61, ASYNC port configuration (RFXtrx433XL only)
+* 0x62, ASYNC port data (RFXtrx433XL only)
 * 0x72, FS20 (868 MHz devices only)
 * 0x7F, Raw transmit
 
@@ -277,7 +280,8 @@ temperature/humidity/barometric pressure sensor.
 
 "rain1"
 -------
-Emitted when data arrives from rainfall sensing devices
+Emitted when data arrives from rainfall sensing devices. See note below about the DeviceParameter API
+when using Davis rain sensors
 
 "wind1"
 -------
@@ -348,6 +352,10 @@ Emitted when data arrives from Byron or similar doorbell pushbutton
 ---------
 Emitted when a message arrives from a compatible type 1 blinds remote controller (only a few subtypes can be received)
 
+"funkbus"
+---------
+Emitted when a message arrives from a FunkBus 'Gira' or 'Insta' remote control
+
 "camera1"
 ---------
 Emitted when a message is received from an X10 Ninja Robocam camera mount remote control.
@@ -381,6 +389,40 @@ even if it is reconnected to the same USB port. For example, `/dev/ttyUSB0` may 
 UDEV rule can prevent this happening, it may be easier to use the equivalent alias device file in `/dev/serial/by-id/`
 when creating the RfxCom object. This should look something like `/dev/serial/by-id/usb_RFXCOM_RFXtrx433_12345678-if00-port0`.
 
+DeviceParameter API
+===================
+
+The DeviceParameter API allows one or more arbitrary `{name, value}` parameter pairs to be associated with the messages
+received from a specific device, specified by packet type, subtype, and id (or address). These parameters can then be
+retrieved by received data packet handlers as required.
+
+To set a parameter on the RfxCom object `rfxtrx`:
+
+    rfxtrx.setDeviceParameter(packetName, subtypeName, id, parameter, value)
+    
+To retrieve a parameter:
+
+    rfxtrx.getDeviceParameter(packetType, subtype, id, parameter, defaultValue)
+    
+The setter uses packet & subtype names, but the getter uses numbers, as these are more easily accessed by the packet data
+handlers. The `defaultValue` is returned if no matching parameter has been set.
+
+The Davis rainfall sensors (subtype RAIN8) may be fitted with either Metric or US Customary cartridges, which have
+different volumes. The message received from the sensor does not indicate which cartridge is fitted. To obtain correctly
+calibrated data, the RfxCom object has to be told which is fitted, for each Davis sensor it receives.
+
+To set up for a US Customary cartridge (0.01 inch):
+
+    rfxtrx.setDeviceParameter("rain1", "RAIN8", 0xb600, "cartridgeVolume", 0.01);
+    
+To set up for a metric cartridge (0.2mm):
+
+    rfxtrx.setDeviceParameter("rain1", "RAIN8", "0xb600", "cartridgeVolume", 0.2);
+    
+(The default setting for RAIN8 sensors is the metric cartridge)
+
+At the time of writing, no other devices make use of this API.
+
 Utility scripts
 ===============
 
@@ -395,7 +437,7 @@ the package has been installed globally.
 
     Scanning for RFXCOM devices...
     Devices found at:
-      /dev/cu.usbserial-A1R1A6A
+      /dev/tty.usbserial-A1R1A6A
         433.92MHz transceiver hardware version 1.3, firmware version 1017 Ext
         Enabled protocols:  AC,LIGHTING4,OREGON
         Disabled protocols: ARC,ATI,BLINDST0,BLINDST1,BLYSS,BYRONSX,FINEOFFSET,FS20,HIDEKI,HOMECONFORT,HOMEEASY,IMAGINTRONIX,KEELOQ,LACROSSE,LIGHTWAVERF,MEIANTECH,MERTIK,PROGUARD,RSL,RUBICSON,UNDECODED,VISONIC,X10

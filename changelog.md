@@ -1,3 +1,21 @@
+Version 2.0.0
+-------------
+
+Full support for Pro 1 & Pro 2 firmware
+
+- Add support for many additional packet subtypes
+- Add support for Funkbus packet type (TX & RX)
+- Enable changing receiver frequency, if supported by the firmware
+- Add definitions for new hardware types & versions
+- Status event includes received noise level, where available
+- Support new LIVOLO_APPLIANCE packet format if firmware version > 1025 (room number is ignored when using the new format)
+- Add DeviceParameter API, to support Davis rain gauges (subtype RAIN8)
+
+Change to use Serialport 7.1.1 & Queue 5.0.0
+
+Breaking change:
+- The cartelectronic packet type event data format has been totally changed, based on information from the manufacturer.
+
 Version 1.4.1
 -------------
 
