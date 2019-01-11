@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "queue": "^5.0.0",
-    "serialport": "^7.1.1"
+    "serialport": "^6.2.2"
   },
   "main": "rfxcom.js",
   "devDependencies": {
