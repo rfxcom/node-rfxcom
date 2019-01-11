@@ -115,10 +115,7 @@ rfxtrx.on("receiverstarted", () => {
             } else if (listProtocols) {
                 console.log("Enabled protocols:  " + enabledProtocols);
                 console.log("Disabled protocols: " + disabledProtocols);
-                process.nextTick(() => {
-                        rfxtrx.close();
-                        clearInterval(interval);
-                    });
+                process.nextTick(() => {rfxtrx.close()});
             } else if (saveProtocols) {
                 process.nextTick(sendSave);
                 currentState = STATE.SENDING_SAVE;
@@ -130,10 +127,7 @@ rfxtrx.on("receiverstarted", () => {
                 process.nextTick(sendSave);
                 currentState = STATE.SENDING_SAVE;
             } else {
-                process.nextTick(() => {
-                        rfxtrx.close();
-                        clearInterval(interval);
-                    });
+                process.nextTick(() => {rfxtrx.close()});
             }
             break;
 
@@ -169,10 +163,7 @@ rfxtrx.on("status", evt => {
 
         case STATE.WAIT_FOR_SAVE_RESPONSE:
             console.log("Saved to non-volatile memory");
-            process.nextTick(() => {
-                    rfxtrx.close();
-                    clearInterval(interval);
-                });
+            process.nextTick(() => {rfxtrx.close()});
             break;
 
         default:
@@ -211,6 +202,3 @@ const sendSave = function () {
 
 // Start the rfxtrx device to kick everything off
 rfxtrx.initialise();
-
-// The interval business is a work-around for serialport bug #1751. Nobody seems to know why this makes it work
-let interval = setInterval(() => {}, 10);
