@@ -1589,7 +1589,7 @@ describe("RfxCom", function() {
             });
             it("should extract the id of the device", function(done) {
                 device.on("security1", function(evt) {
-                    expect(evt.id).toBe("0xFFAA00");
+                    expect(evt.id).toBe("0xFF00");
                     done();
                 });
                 device.security1Handler([0x00, 0x00, 0xFF, 0xAA, 0x00, 0x02, 0x89], packetType);
