@@ -1,3 +1,13 @@
+Version 2.0.2
+-------------
+Change the way security1 device addreses are processed in the receive handler, to ensure they are compatible with the 
+transmitter.
+
+Version 2.0.1
+-------------
+
+Workarounds for newly-introduced serialport bugs
+
 Version 2.0.0
 -------------
 
