@@ -50,11 +50,11 @@ describe('Lighting4 class', function () {
                 }),
                 debugLight = new rfxcom.Lighting4(debugDevice, rfxcom.lighting4.PT2262);
             debugDevice.connected = true;
-            const utilLogSpy = spyOn(util, 'log');
+            const debugLogSpy = spyOn(debugDevice, 'debugLog');
             debugLight.sendData(0, null, function () {
                 done();
             });
-            expect(utilLogSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 09,13,00,00,00,00,00,01,5E,00');
+            expect(debugLogSpy).toHaveBeenCalledWith('Sent    : 09,13,00,00,00,00,00,01,5E,00');
             debugDevice.acknowledge[0]();
         });
         it('should send the correct bytes to the serialport (numeric data, hex string pulse width)', function (done) {

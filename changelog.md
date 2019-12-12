@@ -1,3 +1,22 @@
+Version 2.1.0
+-------------
+Support for RFX firmware 1040
+
+- Add support for newly added subtypes in multiple packet types
+- Add support for Edisio & HunterFan packet types
+- Add support for Weather & Solar packet types
+- Add fan receive handler
+
+Update to latest Serialport (>8.0.0) and Queue (>6.0.0)
+Debug log timestamps now include milliseconds
+Correct the errors in the code samples in Readme.MD
+
+Bug fixes:
+
+- Correct the handling of RSSI in weight packet receive handler
+- Correct the allowable address ranges in several places
+- Fix handling of device type number in FunkBus receive handler
+
 Version 2.0.2
 -------------
 Change the way security1 device addreses are processed in the receive handler, to ensure they are compatible with the 

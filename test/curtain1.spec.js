@@ -51,10 +51,10 @@ describe('Curtain1 class', function () {
                     debug: true
                 }),
                 curtain = new rfxcom.Curtain1(debugDevice, rfxcom.curtain1.HARRISON),
-                utilLogSpy = spyOn(util, 'log');
+                debugLogSpy = spyOn(debugDevice, 'debugLog');
             debugDevice.connected = true;
             curtain.open('a1', done);
-            expect(utilLogSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 07,18,00,00,41,01,00,00');
+            expect(debugLogSpy).toHaveBeenCalledWith('Sent    : 07,18,00,00,41,01,00,00');
             debugDevice.acknowledge[0]();
         });
         it('should throw an exception with an invalid format deviceId', function () {

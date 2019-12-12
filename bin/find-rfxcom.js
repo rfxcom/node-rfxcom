@@ -17,8 +17,8 @@ rfxcom.RfxCom.list(function (err, ports) {
     } else {
         ports.forEach(port => {
             let device = {};
-            device.rfxtrx = new rfxcom.RfxCom(port.comName);
-            device.message = "  " + port.comName + (port.pnpId !== undefined ? " (" + port.pnpId + ")" : "");
+            device.rfxtrx = new rfxcom.RfxCom(port.path);
+            device.message = "  " + port.path + (port.pnpId !== undefined ? " (" + port.pnpId + ")" : "");
             device.rfxtrx.on("status", evt => {
                 if (headerPrinted === false) {
                     console.log("Devices found at:");

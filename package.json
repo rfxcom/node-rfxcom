@@ -3,16 +3,17 @@
   "version": "2.0.2",
   "author": "Kevin McDermott <kevin@bigkevmcd.com>",
   "engines": {
-    "node": ">=4.8.0"
+    "node": ">=10.4.0"
   },
   "dependencies": {
-    "queue": "^5.0.0",
-    "serialport": "^6.2.2"
+    "date-format": "^3.0.0",
+    "queue": "^6.0.0",
+    "serialport": "^8.0.5"
   },
   "main": "rfxcom.js",
   "devDependencies": {
     "jasmine-node": "^1.16.2",
-    "jshint": "^2.9.7"
+    "jshint": "^2.10.3"
   },
   "scripts": {
     "test": "./node_modules/.bin/jasmine-node test",

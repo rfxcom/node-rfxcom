@@ -55,11 +55,11 @@ describe('FunkBus class', function () {
                     }),
                     debug = new rfxcom.FunkBus(debugDevice, rfxcom.funkbus.INSTA);
                 debugDevice.connected = true;
-                const utilLogSpy = spyOn(util, 'log');
+                const debugLogSpy = spyOn(debugDevice, 'debugLog');
                 debug.switchOn('0xF09A/B/1', function () {
                     done();
                 });
-                expect(utilLogSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 0B,1E,01,00,F0,9A,42,01,01,00,00,00');
+                expect(debugLogSpy).toHaveBeenCalledWith('Sent    : 0B,1E,01,00,F0,9A,42,01,01,00,00,00');
                 debugDevice.acknowledge[0]();
             });
             it('should accept an array address', function (done) {

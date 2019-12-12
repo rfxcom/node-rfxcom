@@ -8,7 +8,7 @@ To install
   npm install rfxcom
 </pre>
 
-Depends on serialport ^7.1.1 and queue ^5.0.0
+Depends on serialport ^8.0.5, date-format ^3.0.0, and queue ^5.0.0
 
 To Use
 ------
@@ -51,7 +51,6 @@ Sending Commands
 Prototype transmitter objects are provided for almost all packet types (see the RFXCOM manual for details). The only
 packet types which can be transmitted but are *not* currently supported are:
 
-* 0x1C, Edisio (868 MHz devices only)
 * 0x1D, Honeywell ActivLink (868 MHz devices only)
 * 0x21, Security2
 * 0x61, ASYNC port configuration (RFXtrx433XL only)
@@ -72,7 +71,7 @@ may contain.
 
 LightwaveRf
 -----------
-LightwaveRf devices use the specialised Lighting5 transmitter, which itself uses an RfxCom object.
+LightwaveRf devices use the Lighting5 transmitter:
 
 <pre>
 var rfxcom = require('rfxcom');
@@ -87,7 +86,7 @@ rfxtrx.initialise(function () {
 });
 </pre>
 
-I've tested it with both LightwaveRf lights, and the relay switch.
+It has been tested with both LightwaveRf lights, and the relay switch.
 
 LightwaveRf lights get their identity from the remote used to pair, if you don't
 have a remote, or if you want to specify the address manually, you can pair the
@@ -104,16 +103,17 @@ HomeEasy: the ones marketed in UK are of type 'AC', while those in the Netherlan
     var rfxtrx = new rfxcom.RfxCom("/dev/ttyUSB0", {debug: true}),
         lighting2 = new rfxcom.Lighting2(rfxtrx, rfxcom.lighting2.HOMEEASY_EU);
 
-    lighting2.switchOn("0xF09AC8AA/1");
-    lighting2.switchOff("0xF09AC8AA/1");
+    lighting2.switchOn("0x19AC8AA/1");
+    lighting2.switchOff("0x19AC8AA/1");
 </pre>
 
 Rfy (Somfy) Blinds
 ------------------
 There is a specialised Rfy transmitter object. This supports three subtypes: 'RFY', 'RFYEXT'
-and 'ASA', one of which must be supplied to the Rfy constructor. RFY support requires an RFXtrx433E. The 'RFY' and 'RFYEXT'
-subtypes can control venetian blinds, but the command modes differ between EU and US supplied blinds motors. The mode
-is specified by passing an options parameter to the constructor. The valid modes are `'EU'` and `'US'`: the default is `'EU'`.
+and 'ASA', one of which must be supplied to the Rfy constructor. RFY support requires an RFXtrx433E or RFXtrx433XL.
+The 'RFY' and 'RFYEXT' subtypes can control venetian blinds, but the command modes differ between EU and US
+supplied blinds motors. The mode is specified by passing an options parameter to the constructor.
+The valid modes are `'EU'` and `'US'`. The default is `'EU'`.
 You can change the mode subsequently by calling the setOption() method with a new options parameter.
 
 <pre>
@@ -126,27 +126,27 @@ You can change the mode subsequently by calling the setOption() method with a ne
                 if (!err) console.log('complete');
             });
     // The ID can be supplied as an array with address & unitcode elements (strings)
-    rfy.do(["0x10203", "1"], "down");
+    rfy.doCommand(["0x10203", "1"], "down");
     // The eraseAll() and listRemotes() commands DO NOT take an ID parameter, all the others do
     rfy.listRemotes();
     rfy.eraseAll(callback);
 </pre>
 
-Supported commands include standard operations such as up(), down(), and stop(), as well
+Supported commands include standard operations such as `up()`, `down()`, and `stop()`, as well
 as the programming commands:
-program(), erase(), eraseAll(), and listRemotes().
-All other commands can be accessed using the do() command - see the
-RfyCommands list in defines.js for the complete list of available commands.
+`program()`, `erase()`, `eraseAll()`, and `listRemotes()`.
+All other commands can be accessed using the `doCommand()` method - see the *Rfy* entry in DeviceCommands.md
+ for the complete list of available commands.
 
 To 'pair' the RFX as a new remote control with a Somfy blind motor,
 press and hold 'program' *on the existing Somfy remote controller* until the blind responds with a 'jog'
-motion. Then send a program() command to the RFXtrx433E, with the ID parameter set to an address/unit code
+motion. Then send a `program()` command to the RFXtrx433E, with the ID parameter set to an address/unit code
 combination of your choice - this needs to be unique within the RFXtrx433E's list, but is otherwise
 arbitrary. Limits for the address are 0x1 to 0xFFFFF; limits for the unitcode are 0x0 to 0x4 for RFY
 subtype devices, 0x0 to 0xf for RFYEXT devices, and 0x1 to 0x5 for ASA devices.
 
-To list all the remotes (of either RFY or ASA subtype) send a listRemotes() command; to erase a single
-entry from the list, send erase(ID) where ID is the address/unitcode of the entry to erase; or eraseAll()
+To list all the remotes (of either RFY or ASA subtype) send a `listRemotes()` command; to erase a single
+entry from the list, send `erase(ID)` where ID is the address/unitcode of the entry to erase; or `eraseAll()`
 to clear the list.
 
 Transmitter
@@ -211,7 +211,7 @@ simulated remote control:
 * idBytes: Address as an array of 3 bytes, e.g. [0x00, 0x01, 0x23]
 * unitCode: Unit code as a byte, e.g. 0x02
 
-This event is emitted approximately 10s after the `listRemotes()` command is given, as the only way to detect the end of
+This event is emitted approximately 12s after the `listRemotes()` command is given, as the only way to detect the end of
 the list is to wait for the response timeout - the RFXtrx433E does not send an 'end of list' packet.
 
 "status"
@@ -315,6 +315,14 @@ Emitted when a message is received from an RFXCOM rfxsensor device.
 ----------
 Emitted whan a message is received from an RFXCOM rfxmeter device.
 
+"weather"
+---------
+Emitted when a message is received from a remote multi-function weather station
+
+"solar"
+-------
+Emitted when a message is received from a remote insolation sensor
+
 RfxCom received data events - remote controls
 =============================================
 
@@ -352,9 +360,21 @@ Emitted when data arrives from Byron or similar doorbell pushbutton
 ---------
 Emitted when a message arrives from a compatible type 1 blinds remote controller (only a few subtypes can be received)
 
+"fan"
+-----
+Emitted when a message arrives from a supported type of fan remote control (not Hunter fans - see below)
+
+"hunterfan"
+-----------
+Emitted when a message arrives from a Hunter fan remote control
+
 "funkbus"
 ---------
 Emitted when a message arrives from a FunkBus 'Gira' or 'Insta' remote control
+
+"edisio"
+--------
+Emitted when a message arrives from an Edisio system remote control or wall switch
 
 "camera1"
 ---------
@@ -442,7 +462,7 @@ the package has been installed globally.
         Enabled protocols:  AC,LIGHTING4,OREGON
         Disabled protocols: ARC,ATI,BLINDST0,BLINDST1,BLYSS,BYRONSX,FINEOFFSET,FS20,HIDEKI,HOMECONFORT,HOMEEASY,IMAGINTRONIX,KEELOQ,LACROSSE,LIGHTWAVERF,MEIANTECH,MERTIK,PROGUARD,RSL,RUBICSON,UNDECODED,VISONIC,X10
 
-You will need to pass the device port - in this case `/dev/cu.usbserial-A1R1A6A` - to `rfxcom` to control the device.
+You will need to pass the device port - in this case `/dev/tty.usbserial-A1R1A6A` - to `rfxcom` to control the device.
 *set-protocols* also uses the device port to locate the RFXCOM device to program.
 
 `npm run set-protocols -- --list device_port` will print the same information as *find-rfxcom*, for the specified device.

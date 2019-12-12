@@ -68,9 +68,9 @@ describe('Lighting2 class', function () {
                 }),
                 debugLight = new rfxcom.Lighting2(debugDevice, rfxcom.lighting2.ANSLUT);
             debugDevice.connected = true;
-            const utilLogSpy = spyOn(util, 'log');
+            const debugLogSpy = spyOn(debugDevice, 'debugLog');
             debugLight.switchOn('0x03FFFFFF/1', done);
-            expect(utilLogSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 0B,11,02,00,03,FF,FF,FF,01,01,0F,00');
+            expect(debugLogSpy).toHaveBeenCalledWith('Sent    : 0B,11,02,00,03,FF,FF,FF,01,01,0F,00');
             debugDevice.acknowledge[0]();
         });
         it('should throw an exception with a badly formatted deviceId', function () {

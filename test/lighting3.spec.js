@@ -136,9 +136,9 @@ describe('Lighting3 class', function () {
                 }),
                 debugLight = new rfxcom.Lighting3(debugDevice, rfxcom.lighting3.KOPPLA);
             debugDevice.connected = true;
-            const utilLogSpy = spyOn(util, 'log');
+            const debugLogSpy = spyOn(debugDevice, 'debugLog');
             debugLight.switchOn(['16', '0'], done);
-            expect(utilLogSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 08,12,00,00,0F,FF,03,10,00');
+            expect(debugLogSpy).toHaveBeenCalledWith('Sent    : 08,12,00,00,0F,FF,03,10,00');
             debugDevice.acknowledge[0]();
         });
         it('should accept the highest system code & channel number', function (done) {

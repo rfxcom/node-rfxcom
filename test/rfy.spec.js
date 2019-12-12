@@ -43,10 +43,10 @@ describe('Rfy class', function () {
                         debug: true
                     }),
                     rfyd = new rfxcom.Rfy(debugDevice, rfxcom.rfy.RFY),
-                    utilLogSpy = spyOn(util, 'log');
+                    debugLogSpy = spyOn(debugDevice, 'debugLog');
                 debugDevice.connected = true;
                 rfyd.stop('0x010203/01', done);
-                expect(utilLogSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 0C,1A,00,00,01,02,03,01,00,00,00,00,00');
+                expect(debugLogSpy).toHaveBeenCalledWith('Sent    : 0C,1A,00,00,01,02,03,01,00,00,00,00,00');
                 debugDevice.acknowledge[0]();
             });
             it('should handle no callback', function () {
@@ -577,10 +577,11 @@ describe('Rfy class', function () {
                         debug: true
                     }),
                     rfyd = new rfxcom.Rfy(debugDevice, rfxcom.rfy.RFY),
-                    utilLogSpy = spyOn(util, 'log');
+                    debugLogSpy = spyOn(debugDevice, 'debugLog');
                 debugDevice.connected = true;
                 rfyd.stop('0x010203/01', done);
-                expect(utilLogSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 0C,1A,00,00,01,02,03,01,00,00,00,00,00');
+//                expect(debugLogSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 0C,1A,00,00,01,02,03,01,00,00,00,00,00');
+                expect(debugLogSpy).toHaveBeenCalledWith('Sent    : 0C,1A,00,00,01,02,03,01,00,00,00,00,00');
                 debugDevice.acknowledge[0]();
             });
             it('should handle no callback', function () {
@@ -1091,6 +1092,16 @@ describe('Rfy class', function () {
             });
         });
     });
+    describe("subtype GEOM (RFY_RESERVED", function() {
+        beforeEach(function () {
+            rfy = new rfxcom.Rfy(device, rfxcom.rfy.GEOM);
+        });
+        it('should throw an exception for any command', function () {
+            expect(function () {
+                rfy.stop('0x010203/02');
+            }).toThrow("RFY subtype GEOM no longer supported");
+        });
+    });
     describe("subtype ASA", function () {
         describe('stop()', function () {
             beforeEach(function () {
@@ -1111,10 +1122,11 @@ describe('Rfy class', function () {
                         debug: true
                     }),
                     rfyd = new rfxcom.Rfy(debugDevice, rfxcom.rfy.RFY),
-                    utilLogSpy = spyOn(util, 'log');
+                    debugLogSpy = spyOn(debugDevice, 'debugLog');
                 debugDevice.connected = true;
                 rfyd.stop('0x010203/01', done);
-                expect(utilLogSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 0C,1A,00,00,01,02,03,01,00,00,00,00,00');
+                expect(debugLogSpy).toHaveBeenCalledWith('Sent    : 0C,1A,00,00,01,02,03,01,00,00,00,00,00');
+//                expect(debugLogSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 0C,1A,00,00,01,02,03,01,00,00,00,00,00');
                 debugDevice.acknowledge[0]();
             });
             it('should handle no callback', function () {

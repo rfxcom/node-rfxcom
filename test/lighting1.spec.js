@@ -59,9 +59,9 @@ describe('Lighting1 class', function () {
                 }),
                 debug = new rfxcom.Lighting1(debugDevice, rfxcom.lighting1.ARC);
             debugDevice.connected = true;
-            const utilLogSpy = spyOn(util, 'log');
+            const debugLogSpy = spyOn(debugDevice, 'debugLog');
             debug.chime('C14', done);
-            expect(utilLogSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 07,10,01,00,43,0E,07,00');
+            expect(debugLogSpy).toHaveBeenCalledWith('Sent    : 07,10,01,00,43,0E,07,00');
             debugDevice.acknowledge[0]();
         });
     });
@@ -94,9 +94,10 @@ describe('Lighting1 class', function () {
                 }),
                 debug = new rfxcom.Lighting1(debugDevice, rfxcom.lighting1.OASE_FM);
             debugDevice.connected = true;
-            const utilLogSpy = spyOn(util, 'log');
+            const debugLogSpy = spyOn(debugDevice, 'debugLog');
             debug.program('C1', done);
-            expect(utilLogSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 07,10,0C,00,43,01,04,00');
+//            expect(debugLogSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 07,10,0C,00,43,01,04,00');
+            expect(debugLogSpy).toHaveBeenCalledWith('Sent    : 07,10,0C,00,43,01,04,00');
             debugDevice.acknowledge[0]();
         });
     });

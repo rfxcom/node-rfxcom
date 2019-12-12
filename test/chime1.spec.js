@@ -56,9 +56,9 @@ describe('Chime1 class', function () {
                 }),
                 debug = new rfxcom.Chime1(debugDevice, rfxcom.chime1.BYRON_SX);
             debugDevice.connected = true;
-            const utilLogSpy = spyOn(util, 'log');
+            const debugLogSpy = spyOn(debugDevice, 'debugLog');
             debug.chime('0x2a', done);
-            expect(utilLogSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 07,16,00,00,00,2A,05,00');
+            expect(debugLogSpy).toHaveBeenCalledWith('Sent    : 07,16,00,00,00,2A,05,00');
             debugDevice.acknowledge[0]();
         });
         it('should accept a valid tone number', function (done) {
@@ -125,17 +125,77 @@ describe('Chime1 class', function () {
         });
         it('should accept the highest allowed address', function (done) {
             let sentCommandId = NaN;
-            chime1.chime('0x3fffff', function (err, response, cmdId) {
+            chime1.chime('0x3ffff', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
             });
-            expect(fakeSerialPort).toHaveSent([0x07, 0x16, 0x02, 0x00, 0x3f, 0xFF, 0xFF, 0x00]);
+            expect(fakeSerialPort).toHaveSent([0x07, 0x16, 0x02, 0x00, 0x03, 0xFF, 0xFF, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
         it('should throw an error with an invalid device ID', function () {
             expect(function () {
-                chime1.chime('0x400000')
-            }).toThrow("Device ID 0x400000 outside valid range");
+                chime1.chime('0x40000')
+            }).toThrow("Device ID 0x40000 outside valid range");
+        });
+    });
+    describe('.chime', function () {
+        beforeEach(function () {
+            chime1 = new rfxcom.Chime1(device, rfxcom.chime1.BYRON_BY);
+        });
+        it('should send the correct bytes to the serialport', function (done) {
+            let sentCommandId = NaN;
+            chime1.chime('0x3ff', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x07, 0x16, 0x03, 0x00, 0x01, 0xFF, 0x85, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should accept a sound code of 0', function (done) {
+            let sentCommandId = NaN;
+            chime1.chime('0x3ff', 0, function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x07, 0x16, 0x03, 0x00, 0x01, 0xFF, 0x80, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should accept a sound code of 7', function (done) {
+            let sentCommandId = NaN;
+            chime1.chime('0x103ff', 7, function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x07, 0x16, 0x03, 0x00, 0x81, 0xFF, 0x87, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should throw an error with an invalid sound code', function () {
+            expect(function () {
+                chime1.chime('0x103ff', 9)
+            }).toThrow("Invalid tone: value must be in range 0-7");
+        });
+        it('should accept an address of 0x0', function (done) {
+            let sentCommandId = NaN;
+            chime1.chime('0x0', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x07, 0x16, 0x03, 0x00, 0x00, 0x00, 0x05, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should accept the highest allowed address', function (done) {
+            let sentCommandId = NaN;
+            chime1.chime('0x1ffff', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x07, 0x16, 0x03, 0x00, 0xFF, 0xFF, 0x85, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should throw an error with an invalid device ID', function () {
+            expect(function () {
+                chime1.chime('0x20000')
+            }).toThrow("Device ID 0x20000 outside valid range");
         });
     });
     describe('.chime', function () {
@@ -151,14 +211,70 @@ describe('Chime1 class', function () {
             expect(fakeSerialPort).toHaveSent([0x07, 0x16, 0x04, 0x00, 0x00, 0x03, 0xFF, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
+        it('should accept an address of 0x0', function (done) {
+            let sentCommandId = NaN;
+            chime1.chime('0x0', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x07, 0x16, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should accept the highest allowed address', function (done) {
+            let sentCommandId = NaN;
+            chime1.chime('0xffff', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x07, 0x16, 0x04, 0x00, 0x00, 0xFF, 0xFF, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should throw an error with an invalid address', function () {
+            expect(function () {
+                chime1.chime('0x1000000')
+            }).toThrow("Device ID 0x1000000 outside valid range");
+        });
+        it('should throw an error with an invalid device ID', function () {
+            expect(function () {
+                chime1.chime('0x400/1')
+            }).toThrow("Invalid device ID format");
+        });
+    });
+    describe('.chime', function () {
+        beforeEach(function () {
+            chime1 = new rfxcom.Chime1(device, rfxcom.chime1.ALFAWISE);
+        });
         it('should send the correct bytes to the serialport', function (done) {
+            let sentCommandId = NaN;
+            chime1.chime('0x3ff', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x07, 0x16, 0x05, 0x00, 0x00, 0x03, 0xFF, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should accept an address of 0x0', function (done) {
+            let sentCommandId = NaN;
+            chime1.chime('0x0', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x07, 0x16, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should accept the highest allowed address', function (done) {
             let sentCommandId = NaN;
             chime1.chime('0xffffff', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
             });
-            expect(fakeSerialPort).toHaveSent([0x07, 0x16, 0x04, 0x00, 0xFF, 0xFF, 0xFF, 0x00]);
+            expect(fakeSerialPort).toHaveSent([0x07, 0x16, 0x05, 0x00, 0xFF, 0xFF, 0xFF, 0x00]);
             expect(sentCommandId).toEqual(0);
+        });
+        it('should throw an error with an invalid address', function () {
+            expect(function () {
+                chime1.chime('0x1000000')
+            }).toThrow("Device ID 0x1000000 outside valid range");
         });
         it('should throw an error with an invalid device ID', function () {
             expect(function () {
