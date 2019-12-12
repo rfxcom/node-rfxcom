@@ -70,11 +70,11 @@ describe('Lighting5 class', function () {
                         }),
                         debug = new rfxcom.Lighting5(debugDevice, rfxcom.lighting5.LIGHTWAVERF);
                     debugDevice.connected = true;
-                    const utilLogSpy = spyOn(util, 'log');
+                    const debugLogSpy = spyOn(debugDevice, 'debugLog');
                     debug.switchOn('0xF09AC8/1', function () {
                         done();
                     });
-                    expect(utilLogSpy).toHaveBeenCalledWith('[rfxcom] on /dev/ttyUSB0 - Sent    : 0A,14,00,00,F0,9A,C8,01,01,1F,00');
+                    expect(debugLogSpy).toHaveBeenCalledWith('Sent    : 0A,14,00,00,F0,9A,C8,01,01,1F,00');
                     debugDevice.acknowledge[0]();
                 });
                 it('should throw an exception with a group address', function () {
@@ -2274,11 +2274,11 @@ describe('Lighting5 class', function () {
             });
             it('should accept the highest address and unit code values', function (done) {
                 let sentCommandId = NaN;
-                lighting5.switchOn('0x7FFFF/4', function (err, response, cmdId) {
+                lighting5.switchOn('0xFFFFF/4', function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });
-                expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x09, 0x00, 0x07, 0xff, 0xff, 0x04, 0x01, 0x1F, 0x00]);
+                expect(fakeSerialPort).toHaveSent([0x0A, 0x14, 0x09, 0x00, 0x0f, 0xff, 0xff, 0x04, 0x01, 0x1F, 0x00]);
                 expect(sentCommandId).toEqual(0);
             });
             it('should accept the lowest address and unit code values', function (done) {
@@ -2300,10 +2300,10 @@ describe('Lighting5 class', function () {
                     lighting5.switchOn('0x7FFF/-1');
                 }).toThrow("Invalid unit code -1");
             });
-            it('should throw an exception with an invalid address 0x80000', function () {
+            it('should throw an exception with an invalid address 0x100000', function () {
                 expect(function () {
-                    lighting5.switchOn('0x80000/4');
-                }).toThrow("Address 0x80000 outside valid range");
+                    lighting5.switchOn('0x100000/4');
+                }).toThrow("Address 0x100000 outside valid range");
             });
             it('should throw an exception with an invalid address 0x0', function () {
                 expect(function () {

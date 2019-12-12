@@ -296,7 +296,8 @@ describe("RfxCom", function() {
                 device.on("temperature1", function (evt, packetType) {
                     expect(packetType).toBe(0x50);
                     expect(this.packetNames[packetType]).toEqual("temperature1");
-                    expect(this.deviceNames[packetType][evt.subtype]).toEqual(["THC238", "THC268", "THN132", "THWR288", "THRN122", "THN122", "AW129", "AW131", "THN129"]);
+                    expect(this.deviceNames[packetType][evt.subtype]).toEqual(["THC238", "THC268", "THN132", "THWR288",
+                        "THRN122", "THN122", "AW129", "AW131", "THN129"]);
                     done();
                 });
                 device.open();
@@ -516,7 +517,6 @@ describe("RfxCom", function() {
                 device.parser.emit("data", [0x0A, 0x71, 0x00, 0x37, 0x08, 0xF8, 0x00, 0x8A, 0x64, 0x67, 0x70]);
             });
         });
-
         describe(".initialise function", function () {
             it("should emit a 'connectfailed' event if the serial port device file does not exist", function (done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -564,10 +564,12 @@ describe("RfxCom", function() {
                         resetSpy = spyOn(device, "resetRFX").andCallThrough(),
                         flushSpy = spyOn(device, "flush").andCallThrough(),
                         startRxSpy = spyOn(device, "startRFXReceiver").andCallFake(function () {
-                            device.statusMessageHandler([0x07, 0x02, 0x07, 0x43, 0x6F, 0x70, 0x79, 0x72, 0x69, 0x67, 0x68, 0x74, 0x20, 0x52, 0x46, 0x58, 0x43, 0x4F, 0x4D])
+                            device.statusMessageHandler([0x07, 0x02, 0x07, 0x43, 0x6F, 0x70, 0x79, 0x72, 0x69, 0x67, 0x68,
+                                0x74, 0x20, 0x52, 0x46, 0x58, 0x43, 0x4F, 0x4D])
                         }),
                         getStatusSpy = spyOn(device, "getRFXStatus").andCallFake(function () {
-                            device.statusMessageHandler([0x00, 0x01, 0x02, 0x53, 0x5E, 0x08, 0x02, 0x25, 0x00, 0x01, 0x01, 0x1C, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
+                            device.statusMessageHandler([0x00, 0x01, 0x02, 0x53, 0x5E, 0x08, 0x02, 0x25, 0x00, 0x01, 0x01,
+                                0x1C, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
                         }),
                         openSpy = spyOn(device, "open").andCallFake(function () {
                             device.connected = true;
@@ -587,7 +589,6 @@ describe("RfxCom", function() {
                 });
             });
         });
-
         describe(".bytesToUint48", function() {
             it("should convert a sequence of 6 bytes to a longint", function() {
                 expect(rfxcom.RfxCom.bytesToUint48([0xF1, 0x27, 0xba, 0x67, 0x28, 0x97])).toBe(265152933341335);
@@ -1298,7 +1299,1204 @@ describe("RfxCom", function() {
                 });
                 device.chimeHandler([0x01, 0x05, 0x11, 0x5F, 0x54, 0x40], packetType);
             });
+            it("should handle BYRON_BY devices", function(done) {
+                device.on("chime1", function(evt) {
+                    expect(evt.subtype).toBe(3);
+                    expect(evt.id).toBe("0x012345");
+                    expect(evt.command).toBe("");
+                    expect(evt.commandNumber).toBe(5);
+                    expect(evt.seqnbr).toBe(6);
+                    expect(evt.rssi).toBe(4);
+                    done();
+                });
+                device.chimeHandler([0x03, 0x06, 0x23, 0x45, 0x85, 0x40], packetType);
+            });
 
+        });
+
+        describe(".fanHandler", function () {
+            let device = {};
+            let packetType = 0x17;
+            beforeEach(function () {
+                device = new rfxcom.RfxCom("/dev/ttyUSB0");
+            });
+            it("should handle SIEMENS_SF01 with an invalid command 0", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0x1234");
+                    expect(evt.command).toBeUndefined();
+                    expect(evt.commandNumber).toBe(0);
+                    expect(evt.seqnbr).toBe(0);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x00, 0x00, 0x00, 0x12, 0x34, 0x00, 0x80], packetType);
+            });
+            it("should handle SIEMENS_SF01 timer command", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0x1234");
+                    expect(evt.command).toBe("Timer");
+                    expect(evt.commandNumber).toBe(1);
+                    expect(evt.seqnbr).toBe(0);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x00, 0x00, 0x00, 0x12, 0x34, 0x01, 0x80], packetType);
+            });
+            it("should handle SIEMENS_SF01 - command", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0x1234");
+                    expect(evt.command).toBe("-");
+                    expect(evt.commandNumber).toBe(2);
+                    expect(evt.seqnbr).toBe(1);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x00, 0x01, 0x00, 0x12, 0x34, 0x02, 0x80], packetType);
+            });
+            it("should handle SIEMENS_SF01 learn command", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0x1234");
+                    expect(evt.command).toBe("Learn");
+                    expect(evt.commandNumber).toBe(3);
+                    expect(evt.seqnbr).toBe(2);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x00, 0x02, 0x00, 0x12, 0x34, 0x03, 0x80], packetType);
+            });
+            it("should handle SIEMENS_SF01 + command", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0x1234");
+                    expect(evt.command).toBe("+");
+                    expect(evt.commandNumber).toBe(4);
+                    expect(evt.seqnbr).toBe(3);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x00, 0x03, 0x00, 0x12, 0x34, 0x04, 0x80], packetType);
+            });
+            it("should handle SIEMENS_SF01 confirm command", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0x1234");
+                    expect(evt.command).toBe("Confirm");
+                    expect(evt.commandNumber).toBe(5);
+                    expect(evt.seqnbr).toBe(4);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x00, 0x04, 0x00, 0x12, 0x34, 0x05, 0x80], packetType);
+            });
+            it("should handle SIEMENS_SF01 light command", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0x1234");
+                    expect(evt.command).toBe("Light");
+                    expect(evt.commandNumber).toBe(6);
+                    expect(evt.seqnbr).toBe(5);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x00, 0x05, 0x00, 0x12, 0x34, 0x06, 0x80], packetType);
+            });
+            it("should handle ITHO_CVE_RFT with an invalid command 0", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(1);
+                    expect(evt.id).toBe("0x123456");
+                    expect(evt.command).toBeUndefined();
+                    expect(evt.commandNumber).toBe(0);
+                    expect(evt.seqnbr).toBe(0);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x01, 0x00, 0x12, 0x34, 0x56, 0x00, 0x80], packetType);
+            });
+            it("should handle ITHO_CVE_RFT with command 1", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(1);
+                    expect(evt.id).toBe("0x123456");
+                    expect(evt.command).toBe("1");
+                    expect(evt.commandNumber).toBe(1);
+                    expect(evt.seqnbr).toBe(1);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x01, 0x01, 0x12, 0x34, 0x56, 0x01, 0x80], packetType);
+            });
+            it("should handle ITHO_CVE_RFT with command 2", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(1);
+                    expect(evt.id).toBe("0x123456");
+                    expect(evt.command).toBe("2");
+                    expect(evt.commandNumber).toBe(2);
+                    expect(evt.seqnbr).toBe(2);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x01, 0x02, 0x12, 0x34, 0x56, 0x02, 0x80], packetType);
+            });
+            it("should handle ITHO_CVE_RFT with command 3", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(1);
+                    expect(evt.id).toBe("0x123456");
+                    expect(evt.command).toBe("3");
+                    expect(evt.commandNumber).toBe(3);
+                    expect(evt.seqnbr).toBe(3);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x01, 0x03, 0x12, 0x34, 0x56, 0x03, 0x80], packetType);
+            });
+            it("should handle ITHO_CVE_RFT with command Timer", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(1);
+                    expect(evt.id).toBe("0x123456");
+                    expect(evt.command).toBe("Timer");
+                    expect(evt.commandNumber).toBe(4);
+                    expect(evt.seqnbr).toBe(4);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x01, 0x04, 0x12, 0x34, 0x56, 0x04, 0x80], packetType);
+            });
+            it("should handle ITHO_CVE_RFT with command Not at Home", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(1);
+                    expect(evt.id).toBe("0x123456");
+                    expect(evt.command).toBe("Not at Home");
+                    expect(evt.commandNumber).toBe(5);
+                    expect(evt.seqnbr).toBe(5);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x01, 0x05, 0x12, 0x34, 0x56, 0x05, 0x80], packetType);
+            });
+            it("should handle ITHO_CVE_RFT with command Learn", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(1);
+                    expect(evt.id).toBe("0x123456");
+                    expect(evt.command).toBe("Learn");
+                    expect(evt.commandNumber).toBe(6);
+                    expect(evt.seqnbr).toBe(6);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x01, 0x06, 0x12, 0x34, 0x56, 0x06, 0x80], packetType);
+            });
+            it("should handle ITHO_CVE_RFT with command Erase all remotes", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(1);
+                    expect(evt.id).toBe("0x123456");
+                    expect(evt.command).toBe("Erase all remotes");
+                    expect(evt.commandNumber).toBe(7);
+                    expect(evt.seqnbr).toBe(7);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x01, 0x07, 0x12, 0x34, 0x56, 0x07, 0x80], packetType);
+            });
+            it("should handle LUCCI_AIR with an invalid command 0", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(2);
+                    expect(evt.id).toBe("0x01");
+                    expect(evt.command).toBeUndefined();
+                    expect(evt.commandNumber).toBe(0);
+                    expect(evt.seqnbr).toBe(0);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x02, 0x00, 0x00, 0x00, 0x01, 0x00, 0x80], packetType);
+            });
+            it("should handle LUCCI_AIR with command Hi", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(2);
+                    expect(evt.id).toBe("0x01");
+                    expect(evt.command).toBe("Hi");
+                    expect(evt.commandNumber).toBe(1);
+                    expect(evt.seqnbr).toBe(1);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x02, 0x01, 0x00, 0x00, 0x01, 0x01, 0x80], packetType);
+            });
+            it("should handle LUCCI_AIR with command Med", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(2);
+                    expect(evt.id).toBe("0x01");
+                    expect(evt.command).toBe("Med");
+                    expect(evt.commandNumber).toBe(2);
+                    expect(evt.seqnbr).toBe(2);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x02, 0x02, 0x00, 0x00, 0x01, 0x02, 0x80], packetType);
+            });
+            it("should handle LUCCI_AIR with command Low", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(2);
+                    expect(evt.id).toBe("0x01");
+                    expect(evt.command).toBe("Low");
+                    expect(evt.commandNumber).toBe(3);
+                    expect(evt.seqnbr).toBe(3);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x02, 0x03, 0x00, 0x00, 0x01, 0x03, 0x80], packetType);
+            });
+            it("should handle LUCCI_AIR with command Off", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(2);
+                    expect(evt.id).toBe("0x01");
+                    expect(evt.command).toBe("Off");
+                    expect(evt.commandNumber).toBe(4);
+                    expect(evt.seqnbr).toBe(4);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x02, 0x04, 0x00, 0x00, 0x01, 0x04, 0x80], packetType);
+            });
+            it("should handle LUCCI_AIR with command Light", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(2);
+                    expect(evt.id).toBe("0x01");
+                    expect(evt.command).toBe("Light");
+                    expect(evt.commandNumber).toBe(5);
+                    expect(evt.seqnbr).toBe(5);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x02, 0x05, 0x00, 0x00, 0x01, 0x05, 0x80], packetType);
+            });
+            it("should handle SEAV_TXS4 with an invalid command 0", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(3);
+                    expect(evt.id).toBe("1/10/0100000001/0x1f");
+                    expect(evt.command).toBeUndefined();
+                    expect(evt.commandNumber).toBe(0);
+                    expect(evt.seqnbr).toBe(0);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x03, 0x00, 0xc0, 0x20, 0x3f, 0x00, 0x80], packetType);
+            });
+            it("should handle SEAV_TXS4 with command T1", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(3);
+                    expect(evt.id).toBe("1/01/0000000001/0x1f");
+                    expect(evt.command).toBe("T1");
+                    expect(evt.commandNumber).toBe(1);
+                    expect(evt.seqnbr).toBe(1);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x03, 0x01, 0xa0, 0x00, 0x3f, 0x01, 0x80], packetType);
+            });
+            it("should handle SEAV_TXS4 with command T2", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(3);
+                    expect(evt.id).toBe("1/01/1000000001/0x1f");
+                    expect(evt.command).toBe("T2");
+                    expect(evt.commandNumber).toBe(2);
+                    expect(evt.seqnbr).toBe(2);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x03, 0x02, 0xa0, 0x40, 0x3f, 0x02, 0x80], packetType);
+            });
+            it("should handle SEAV_TXS4 with command T3", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(3);
+                    expect(evt.id).toBe("0/00/0000000000/0x1f");
+                    expect(evt.command).toBe("T3");
+                    expect(evt.commandNumber).toBe(3);
+                    expect(evt.seqnbr).toBe(3);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x03, 0x03, 0x00, 0x00, 0x1f, 0x03, 0x80], packetType);
+            });
+            it("should handle SEAV_TXS4 with command T4", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(3);
+                    expect(evt.id).toBe("1/11/1111111110/0x1f");
+                    expect(evt.command).toBe("T4");
+                    expect(evt.commandNumber).toBe(4);
+                    expect(evt.seqnbr).toBe(4);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x03, 0x04, 0xe7, 0x7f, 0xdf, 0x04, 0x80], packetType);
+            });
+            it("should handle WESTINGHOUSE_7226640 with an invalid command 0", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(4);
+                    expect(evt.id).toBe("0x01");
+                    expect(evt.command).toBeUndefined();
+                    expect(evt.commandNumber).toBe(0);
+                    expect(evt.seqnbr).toBe(0);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x04, 0x00, 0x00, 0x00, 0x01, 0x00, 0x80], packetType);
+            });
+            it("should handle WESTINGHOUSE_7226640 with command Hi", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(4);
+                    expect(evt.id).toBe("0x01");
+                    expect(evt.command).toBe("Hi");
+                    expect(evt.commandNumber).toBe(1);
+                    expect(evt.seqnbr).toBe(1);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x04, 0x01, 0x00, 0x00, 0x01, 0x01, 0x80], packetType);
+            });
+            it("should handle WESTINGHOUSE_7226640 with command Med", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(4);
+                    expect(evt.id).toBe("0x01");
+                    expect(evt.command).toBe("Med");
+                    expect(evt.commandNumber).toBe(2);
+                    expect(evt.seqnbr).toBe(2);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x04, 0x02, 0x00, 0x00, 0x01, 0x02, 0x80], packetType);
+            });
+            it("should handle WESTINGHOUSE_7226640 with command Low", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(4);
+                    expect(evt.id).toBe("0x01");
+                    expect(evt.command).toBe("Low");
+                    expect(evt.commandNumber).toBe(3);
+                    expect(evt.seqnbr).toBe(3);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x04, 0x03, 0x00, 0x00, 0x01, 0x03, 0x80], packetType);
+            });
+            it("should handle WESTINGHOUSE_7226640 with command Off", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(4);
+                    expect(evt.id).toBe("0x01");
+                    expect(evt.command).toBe("Off");
+                    expect(evt.commandNumber).toBe(4);
+                    expect(evt.seqnbr).toBe(4);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x04, 0x04, 0x00, 0x00, 0x01, 0x04, 0x80], packetType);
+            });
+            it("should handle WESTINGHOUSE_7226640 with command Light", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(4);
+                    expect(evt.id).toBe("0x01");
+                    expect(evt.command).toBe("Light");
+                    expect(evt.commandNumber).toBe(5);
+                    expect(evt.seqnbr).toBe(5);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x04, 0x05, 0x00, 0x00, 0x01, 0x05, 0x80], packetType);
+            });
+            it("should handle LUCCI_AIR_DC with an invalid command 0", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(5);
+                    expect(evt.id).toBe("0x01");
+                    expect(evt.command).toBeUndefined();
+                    expect(evt.commandNumber).toBe(0);
+                    expect(evt.seqnbr).toBe(0);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x05, 0x00, 0x00, 0x00, 0x01, 0x00, 0x80], packetType);
+            });
+            it("should handle LUCCI_AIR_DC command Power", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(5);
+                    expect(evt.id).toBe("0x01");
+                    expect(evt.command).toBe("Power");
+                    expect(evt.commandNumber).toBe(1);
+                    expect(evt.seqnbr).toBe(1);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x05, 0x01, 0x00, 0x00, 0x01, 0x01, 0x80], packetType);
+            });
+            it("should handle LUCCI_AIR_DC with command +", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(5);
+                    expect(evt.id).toBe("0x01");
+                    expect(evt.command).toBe("+");
+                    expect(evt.commandNumber).toBe(2);
+                    expect(evt.seqnbr).toBe(2);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x05, 0x02, 0x00, 0x00, 0x01, 0x02, 0x80], packetType);
+            });
+            it("should handle LUCCI_AIR_DC with command -", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(5);
+                    expect(evt.id).toBe("0x01");
+                    expect(evt.command).toBe("-");
+                    expect(evt.commandNumber).toBe(3);
+                    expect(evt.seqnbr).toBe(3);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x05, 0x03, 0x00, 0x00, 0x01, 0x03, 0x80], packetType);
+            });
+            it("should handle LUCCI_AIR_DC with command Light", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(5);
+                    expect(evt.id).toBe("0x01");
+                    expect(evt.command).toBe("Light");
+                    expect(evt.commandNumber).toBe(4);
+                    expect(evt.seqnbr).toBe(4);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x05, 0x04, 0x00, 0x00, 0x01, 0x04, 0x80], packetType);
+            });
+            it("should handle LUCCI_AIR_DC with command Reverse", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(5);
+                    expect(evt.id).toBe("0x01");
+                    expect(evt.command).toBe("Reverse");
+                    expect(evt.commandNumber).toBe(5);
+                    expect(evt.seqnbr).toBe(5);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x05, 0x05, 0x00, 0x00, 0x01, 0x05, 0x80], packetType);
+            });
+            it("should handle LUCCI_AIR_DC with command Natural flow", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(5);
+                    expect(evt.id).toBe("0x01");
+                    expect(evt.command).toBe("Natural flow");
+                    expect(evt.commandNumber).toBe(6);
+                    expect(evt.seqnbr).toBe(6);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x05, 0x06, 0x00, 0x00, 0x01, 0x06, 0x80], packetType);
+            });
+            it("should handle LUCCI_AIR_DC with command Pair", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(5);
+                    expect(evt.id).toBe("0x01");
+                    expect(evt.command).toBe("Pair");
+                    expect(evt.commandNumber).toBe(7);
+                    expect(evt.seqnbr).toBe(7);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x05, 0x07, 0x00, 0x00, 0x01, 0x07, 0x80], packetType);
+            });
+            it("should handle CASAFAN with an invalid command 0", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(6);
+                    expect(evt.id).toBe("0x01");
+                    expect(evt.command).toBeUndefined();
+                    expect(evt.commandNumber).toBe(0);
+                    expect(evt.seqnbr).toBe(0);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x06, 0x00, 0x00, 0x00, 0x01, 0x00, 0x80], packetType);
+            });
+            it("should handle CASAFAN with command Hi", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(6);
+                    expect(evt.id).toBe("0x01");
+                    expect(evt.command).toBe("Hi");
+                    expect(evt.commandNumber).toBe(1);
+                    expect(evt.seqnbr).toBe(1);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x06, 0x01, 0x00, 0x00, 0x01, 0x01, 0x80], packetType);
+            });
+            it("should handle CASAFAN with command Med", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(6);
+                    expect(evt.id).toBe("0x01");
+                    expect(evt.command).toBe("Med");
+                    expect(evt.commandNumber).toBe(2);
+                    expect(evt.seqnbr).toBe(2);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x06, 0x02, 0x00, 0x00, 0x01, 0x02, 0x80], packetType);
+            });
+            it("should handle CASAFAN with command Low", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(6);
+                    expect(evt.id).toBe("0x01");
+                    expect(evt.command).toBe("Low");
+                    expect(evt.commandNumber).toBe(3);
+                    expect(evt.seqnbr).toBe(3);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x06, 0x03, 0x00, 0x00, 0x01, 0x03, 0x80], packetType);
+            });
+            it("should handle CASAFAN with command Off", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(6);
+                    expect(evt.id).toBe("0x01");
+                    expect(evt.command).toBe("Off");
+                    expect(evt.commandNumber).toBe(4);
+                    expect(evt.seqnbr).toBe(4);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x06, 0x04, 0x00, 0x00, 0x01, 0x04, 0x80], packetType);
+            });
+            it("should handle CASAFAN with command Light", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(6);
+                    expect(evt.id).toBe("0x01");
+                    expect(evt.command).toBe("Light");
+                    expect(evt.commandNumber).toBe(5);
+                    expect(evt.seqnbr).toBe(5);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x06, 0x05, 0x00, 0x00, 0x01, 0x05, 0x80], packetType);
+            });
+            it("should handle FT1211R with an invalid command 0", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(7);
+                    expect(evt.id).toBe("0x1234");
+                    expect(evt.command).toBeUndefined();
+                    expect(evt.commandNumber).toBe(0);
+                    expect(evt.seqnbr).toBe(0);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x07, 0x00, 0x00, 0x12, 0x34, 0x00, 0x80], packetType);
+            });
+            it("should handle FT1211R with command Power", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(7);
+                    expect(evt.id).toBe("0x1234");
+                    expect(evt.command).toBe("Power");
+                    expect(evt.commandNumber).toBe(1);
+                    expect(evt.seqnbr).toBe(1);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x07, 0x01, 0x00, 0x12, 0x34, 0x01, 0x80], packetType);
+            });
+            it("should handle FT1211R with command Light", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(7);
+                    expect(evt.id).toBe("0x1234");
+                    expect(evt.command).toBe("Light");
+                    expect(evt.commandNumber).toBe(2);
+                    expect(evt.seqnbr).toBe(2);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x07, 0x02, 0x00, 0x12, 0x34, 0x02, 0x80], packetType);
+            });
+            it("should handle FT1211R with command 1", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(7);
+                    expect(evt.id).toBe("0x1234");
+                    expect(evt.command).toBe("1");
+                    expect(evt.commandNumber).toBe(3);
+                    expect(evt.seqnbr).toBe(3);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x07, 0x03, 0x00, 0x12, 0x34, 0x03, 0x80], packetType);
+            });
+            it("should handle FT1211R with command 2", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(7);
+                    expect(evt.id).toBe("0x1234");
+                    expect(evt.command).toBe("2");
+                    expect(evt.commandNumber).toBe(4);
+                    expect(evt.seqnbr).toBe(4);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x07, 0x04, 0x00, 0x12, 0x34, 0x04, 0x80], packetType);
+            });
+            it("should handle FT1211R with command 3", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(7);
+                    expect(evt.id).toBe("0x1234");
+                    expect(evt.command).toBe("3");
+                    expect(evt.commandNumber).toBe(5);
+                    expect(evt.seqnbr).toBe(5);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x07, 0x05, 0x00, 0x12, 0x34, 0x05, 0x80], packetType);
+            });
+            it("should handle FT1211R with command 4", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(7);
+                    expect(evt.id).toBe("0x1234");
+                    expect(evt.command).toBe("4");
+                    expect(evt.commandNumber).toBe(6);
+                    expect(evt.seqnbr).toBe(6);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x07, 0x06, 0x00, 0x12, 0x34, 0x06, 0x80], packetType);
+            });
+            it("should handle FT1211R with command 5", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(7);
+                    expect(evt.id).toBe("0x1234");
+                    expect(evt.command).toBe("5");
+                    expect(evt.commandNumber).toBe(7);
+                    expect(evt.seqnbr).toBe(7);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x07, 0x07, 0x00, 0x12, 0x34, 0x07, 0x80], packetType);
+            });
+            it("should handle FT1211R with command F/R", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(7);
+                    expect(evt.id).toBe("0x1234");
+                    expect(evt.command).toBe("F/R");
+                    expect(evt.commandNumber).toBe(8);
+                    expect(evt.seqnbr).toBe(8);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x07, 0x08, 0x00, 0x12, 0x34, 0x08, 0x80], packetType);
+            });
+            it("should handle FT1211R with command 1H", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(7);
+                    expect(evt.id).toBe("0x1234");
+                    expect(evt.command).toBe("1H");
+                    expect(evt.commandNumber).toBe(9);
+                    expect(evt.seqnbr).toBe(9);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x07, 0x09, 0x00, 0x12, 0x34, 0x09, 0x80], packetType);
+            });
+            it("should handle FT1211R with command 4H", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(7);
+                    expect(evt.id).toBe("0x1234");
+                    expect(evt.command).toBe("4H");
+                    expect(evt.commandNumber).toBe(10);
+                    expect(evt.seqnbr).toBe(10);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x07, 0x0a, 0x00, 0x12, 0x34, 0x0a, 0x80], packetType);
+            });
+            it("should handle FT1211R with command 8H", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(7);
+                    expect(evt.id).toBe("0x1234");
+                    expect(evt.command).toBe("8H");
+                    expect(evt.commandNumber).toBe(11);
+                    expect(evt.seqnbr).toBe(11);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x07, 0x0b, 0x00, 0x12, 0x34, 0x0b, 0x80], packetType);
+            });
+            it("should handle FALMEC with an invalid command 0", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(8);
+                    expect(evt.id).toBe("0x0F");
+                    expect(evt.command).toBeUndefined();
+                    expect(evt.commandNumber).toBe(0);
+                    expect(evt.seqnbr).toBe(0);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x08, 0x00, 0x00, 0x12, 0x0f, 0x00, 0x80], packetType);
+            });
+            it("should handle FALMEC with command Power Off", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(8);
+                    expect(evt.id).toBe("0x0F");
+                    expect(evt.command).toBe("Power Off");
+                    expect(evt.commandNumber).toBe(1);
+                    expect(evt.seqnbr).toBe(1);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x08, 0x01, 0x00, 0x12, 0x0f, 0x01, 0x80], packetType);
+            });
+            it("should handle FALMEC with command Speed 1", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(8);
+                    expect(evt.id).toBe("0x0F");
+                    expect(evt.command).toBe("Speed 1");
+                    expect(evt.commandNumber).toBe(2);
+                    expect(evt.seqnbr).toBe(2);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x08, 0x02, 0x00, 0x12, 0x0f, 0x02, 0x80], packetType);
+            });
+            it("should handle FALMEC with command Speed 2", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(8);
+                    expect(evt.id).toBe("0x0F");
+                    expect(evt.command).toBe("Speed 2");
+                    expect(evt.commandNumber).toBe(3);
+                    expect(evt.seqnbr).toBe(3);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x08, 0x03, 0x00, 0x12, 0x0f, 0x03, 0x80], packetType);
+            });
+            it("should handle FALMEC with command Speed 3", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(8);
+                    expect(evt.id).toBe("0x0F");
+                    expect(evt.command).toBe("Speed 3");
+                    expect(evt.commandNumber).toBe(4);
+                    expect(evt.seqnbr).toBe(4);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x08, 0x04, 0x00, 0x12, 0x0f, 0x04, 0x80], packetType);
+            });
+            it("should handle FALMEC with command Speed 4", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(8);
+                    expect(evt.id).toBe("0x0F");
+                    expect(evt.command).toBe("Speed 4");
+                    expect(evt.commandNumber).toBe(5);
+                    expect(evt.seqnbr).toBe(5);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x08, 0x05, 0x00, 0x12, 0x0f, 0x05, 0x80], packetType);
+            });
+            it("should handle FALMEC with command Timer 1", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(8);
+                    expect(evt.id).toBe("0x0F");
+                    expect(evt.command).toBe("Timer 1");
+                    expect(evt.commandNumber).toBe(6);
+                    expect(evt.seqnbr).toBe(6);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x08, 0x06, 0x00, 0x12, 0x0f, 0x06, 0x80], packetType);
+            });
+            it("should handle FALMEC with command Timer 2", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(8);
+                    expect(evt.id).toBe("0x0F");
+                    expect(evt.command).toBe("Timer 2");
+                    expect(evt.commandNumber).toBe(7);
+                    expect(evt.seqnbr).toBe(7);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x08, 0x07, 0x00, 0x12, 0x0f, 0x07, 0x80], packetType);
+            });
+            it("should handle FALMEC with command Timer 3", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(8);
+                    expect(evt.id).toBe("0x0F");
+                    expect(evt.command).toBe("Timer 3");
+                    expect(evt.commandNumber).toBe(8);
+                    expect(evt.seqnbr).toBe(8);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x08, 0x08, 0x00, 0x12, 0x0f, 0x08, 0x80], packetType);
+            });
+            it("should handle FALMEC with command Timer 4", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(8);
+                    expect(evt.id).toBe("0x0F");
+                    expect(evt.command).toBe("Timer 4");
+                    expect(evt.commandNumber).toBe(9);
+                    expect(evt.seqnbr).toBe(9);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x08, 0x09, 0x00, 0x12, 0x0f, 0x09, 0x80], packetType);
+            });
+            it("should handle FALMEC with command Light On", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(8);
+                    expect(evt.id).toBe("0x0F");
+                    expect(evt.command).toBe("Light On");
+                    expect(evt.commandNumber).toBe(10);
+                    expect(evt.seqnbr).toBe(10);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x08, 0x0a, 0x00, 0x12, 0x0f, 0x0a, 0x80], packetType);
+            });
+            it("should handle FALMEC with command Light Off", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(8);
+                    expect(evt.id).toBe("0x0F");
+                    expect(evt.command).toBe("Light Off");
+                    expect(evt.commandNumber).toBe(11);
+                    expect(evt.seqnbr).toBe(11);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x08, 0x0b, 0x00, 0x12, 0x0f, 0x0b, 0x80], packetType);
+            });
+            it("should handle LUCCI_AIR_DCII with an invalid command 0", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(9);
+                    expect(evt.id).toBe("0x0F");
+                    expect(evt.command).toBeUndefined();
+                    expect(evt.commandNumber).toBe(0);
+                    expect(evt.seqnbr).toBe(0);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x09, 0x00, 0x00, 0x12, 0x0f, 0x00, 0x80], packetType);
+            });
+            it("should handle LUCCI_AIR_DCII with command Off", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(9);
+                    expect(evt.id).toBe("0x0F");
+                    expect(evt.command).toBe("Off");
+                    expect(evt.commandNumber).toBe(1);
+                    expect(evt.seqnbr).toBe(1);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x09, 0x01, 0x47, 0x12, 0x0f, 0x01, 0x80], packetType);
+            });
+            it("should handle LUCCI_AIR_DCII with command 1", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(9);
+                    expect(evt.id).toBe("0x0F");
+                    expect(evt.command).toBe("1");
+                    expect(evt.commandNumber).toBe(2);
+                    expect(evt.seqnbr).toBe(2);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x09, 0x02, 0x47, 0x12, 0x0f, 0x02, 0x80], packetType);
+            });
+            it("should handle LUCCI_AIR_DCII with command 2", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(9);
+                    expect(evt.id).toBe("0x0F");
+                    expect(evt.command).toBe("2");
+                    expect(evt.commandNumber).toBe(3);
+                    expect(evt.seqnbr).toBe(3);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x09, 0x03, 0x00, 0x12, 0x0f, 0x03, 0x80], packetType);
+            });
+            it("should handle LUCCI_AIR_DCII with command 3", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(9);
+                    expect(evt.id).toBe("0x0F");
+                    expect(evt.command).toBe("3");
+                    expect(evt.commandNumber).toBe(4);
+                    expect(evt.seqnbr).toBe(4);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x09, 0x04, 0x00, 0x12, 0x0f, 0x04, 0x80], packetType);
+            });
+            it("should handle LUCCI_AIR_DCII with command 4", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(9);
+                    expect(evt.id).toBe("0x0F");
+                    expect(evt.command).toBe("4");
+                    expect(evt.commandNumber).toBe(5);
+                    expect(evt.seqnbr).toBe(5);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x09, 0x05, 0x00, 0x12, 0x0f, 0x05, 0x80], packetType);
+            });
+            it("should handle LUCCI_AIR_DCII with command 5", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(9);
+                    expect(evt.id).toBe("0x0F");
+                    expect(evt.command).toBe("5");
+                    expect(evt.commandNumber).toBe(6);
+                    expect(evt.seqnbr).toBe(6);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x09, 0x06, 0x00, 0x12, 0x0f, 0x06, 0x80], packetType);
+            });
+            it("should handle LUCCI_AIR_DCII with command 6", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(9);
+                    expect(evt.id).toBe("0x0F");
+                    expect(evt.command).toBe("6");
+                    expect(evt.commandNumber).toBe(7);
+                    expect(evt.seqnbr).toBe(7);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x09, 0x07, 0x00, 0x12, 0x0f, 0x07, 0x80], packetType);
+            });
+            it("should handle LUCCI_AIR_DCII with command Light", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(9);
+                    expect(evt.id).toBe("0x0F");
+                    expect(evt.command).toBe("Light");
+                    expect(evt.commandNumber).toBe(8);
+                    expect(evt.seqnbr).toBe(8);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x09, 0x08, 0x00, 0x12, 0x0f, 0x08, 0x80], packetType);
+            });
+            it("should handle LUCCI_AIR_DCII with command Reverse", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(9);
+                    expect(evt.id).toBe("0x0F");
+                    expect(evt.command).toBe("Reverse");
+                    expect(evt.commandNumber).toBe(9);
+                    expect(evt.seqnbr).toBe(9);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x09, 0x09, 0x00, 0x12, 0x0f, 0x09, 0x80], packetType);
+            });
+            it("should handle ITHO_CVE_ECO_RFT with an invalid command 0", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(10);
+                    expect(evt.id).toBe("0x123456");
+                    expect(evt.command).toBeUndefined();
+                    expect(evt.commandNumber).toBe(0);
+                    expect(evt.seqnbr).toBe(0);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x0a, 0x00, 0x12, 0x34, 0x56, 0x00, 0x80], packetType);
+            });
+            it("should handle ITHO_CVE_ECO_RFT with command Low", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(10);
+                    expect(evt.id).toBe("0x123456");
+                    expect(evt.command).toBe("Low");
+                    expect(evt.commandNumber).toBe(1);
+                    expect(evt.seqnbr).toBe(1);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x0a, 0x01, 0x12, 0x34, 0x56, 0x01, 0x80], packetType);
+            });
+            it("should handle ITHO_CVE_ECO_RFT with command Medium", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(10);
+                    expect(evt.id).toBe("0x123456");
+                    expect(evt.command).toBe("Medium");
+                    expect(evt.commandNumber).toBe(2);
+                    expect(evt.seqnbr).toBe(2);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x0a, 0x02, 0x12, 0x34, 0x56, 0x02, 0x80], packetType);
+            });
+            it("should handle ITHO_CVE_ECO_RFT with command High", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(10);
+                    expect(evt.id).toBe("0x123456");
+                    expect(evt.command).toBe("High");
+                    expect(evt.commandNumber).toBe(3);
+                    expect(evt.seqnbr).toBe(3);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x0a, 0x03, 0x12, 0x34, 0x56, 0x03, 0x80], packetType);
+            });
+            it("should handle ITHO_CVE_ECO_RFT with command Timer 1", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(10);
+                    expect(evt.id).toBe("0x123456");
+                    expect(evt.command).toBe("Timer 1");
+                    expect(evt.commandNumber).toBe(4);
+                    expect(evt.seqnbr).toBe(4);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x0a, 0x04, 0x12, 0x34, 0x56, 0x04, 0x80], packetType);
+            });
+            it("should handle ITHO_CVE_ECO_RFT with command Timer 2", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(10);
+                    expect(evt.id).toBe("0x123456");
+                    expect(evt.command).toBe("Timer 2");
+                    expect(evt.commandNumber).toBe(5);
+                    expect(evt.seqnbr).toBe(5);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x0a, 0x05, 0x12, 0x34, 0x56, 0x05, 0x80], packetType);
+            });
+            it("should handle ITHO_CVE_ECO_RFT with command Timer 3", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(10);
+                    expect(evt.id).toBe("0x123456");
+                    expect(evt.command).toBe("Timer 3");
+                    expect(evt.commandNumber).toBe(6);
+                    expect(evt.seqnbr).toBe(6);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x0a, 0x06, 0x12, 0x34, 0x56, 0x06, 0x80], packetType);
+            });
+            it("should handle ITHO_CVE_ECO_RFT with command Standby", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(10);
+                    expect(evt.id).toBe("0x123456");
+                    expect(evt.command).toBe("Standby");
+                    expect(evt.commandNumber).toBe(7);
+                    expect(evt.seqnbr).toBe(7);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x0a, 0x07, 0x12, 0x34, 0x56, 0x07, 0x80], packetType);
+            });
+            it("should handle ITHO_CVE_ECO_RFT with command Full", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(10);
+                    expect(evt.id).toBe("0x123456");
+                    expect(evt.command).toBe("Full");
+                    expect(evt.commandNumber).toBe(8);
+                    expect(evt.seqnbr).toBe(8);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x0a, 0x08, 0x12, 0x34, 0x56, 0x08, 0x80], packetType);
+            });
+            it("should handle ITHO_CVE_ECO_RFT with command Join", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(10);
+                    expect(evt.id).toBe("0x123456");
+                    expect(evt.command).toBe("Join");
+                    expect(evt.commandNumber).toBe(9);
+                    expect(evt.seqnbr).toBe(9);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x0a, 0x09, 0x12, 0x34, 0x56, 0x09, 0x80], packetType);
+            });
+            it("should handle ITHO_CVE_ECO_RFT with command Leave", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(10);
+                    expect(evt.id).toBe("0x123456");
+                    expect(evt.command).toBe("Leave");
+                    expect(evt.commandNumber).toBe(10);
+                    expect(evt.seqnbr).toBe(10);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x0a, 0x0a, 0x12, 0x34, 0x56, 0x0a, 0x80], packetType);
+            });
+
+            it("should handle NOVY with an invalid command 0", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(11);
+                    expect(evt.id).toBe("0x09");
+                    expect(evt.command).toBeUndefined();
+                    expect(evt.commandNumber).toBe(0);
+                    expect(evt.seqnbr).toBe(0);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x0b, 0x00, 0x12, 0x34, 0x09, 0x00, 0x80], packetType);
+            });
+            it("should handle NOVY with command Power", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(11);
+                    expect(evt.id).toBe("0x09");
+                    expect(evt.command).toBe("Power");
+                    expect(evt.commandNumber).toBe(1);
+                    expect(evt.seqnbr).toBe(1);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x0b, 0x01, 0x12, 0x34, 0x09, 0x01, 0x80], packetType);
+            });
+            it("should handle NOVY with command +", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(11);
+                    expect(evt.id).toBe("0x09");
+                    expect(evt.command).toBe("+");
+                    expect(evt.commandNumber).toBe(2);
+                    expect(evt.seqnbr).toBe(2);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x0b, 0x02, 0x12, 0x34, 0x09, 0x02, 0x80], packetType);
+            });
+            it("should handle NOVY with command -", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(11);
+                    expect(evt.id).toBe("0x09");
+                    expect(evt.command).toBe("-");
+                    expect(evt.commandNumber).toBe(3);
+                    expect(evt.seqnbr).toBe(3);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x0b, 0x03, 0x12, 0x34, 0x09, 0x03, 0x80], packetType);
+            });
+            it("should handle NOVY with command Light", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(11);
+                    expect(evt.id).toBe("0x09");
+                    expect(evt.command).toBe("Light");
+                    expect(evt.commandNumber).toBe(4);
+                    expect(evt.seqnbr).toBe(4);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x0b, 0x04, 0x12, 0x34, 0x09, 0x04, 0x80], packetType);
+            });
+            it("should handle NOVY with command Learn", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(11);
+                    expect(evt.id).toBe("0x09");
+                    expect(evt.command).toBe("Learn");
+                    expect(evt.commandNumber).toBe(5);
+                    expect(evt.seqnbr).toBe(5);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x0b, 0x05, 0x12, 0x34, 0x09, 0x05, 0x80], packetType);
+            });
+            it("should handle NOVY with command Reset Filter", function(done) {
+                device.on("fan", function(evt) {
+                    expect(evt.subtype).toBe(11);
+                    expect(evt.id).toBe("0x09");
+                    expect(evt.command).toBe("Reset Filter");
+                    expect(evt.commandNumber).toBe(6);
+                    expect(evt.seqnbr).toBe(6);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.fanHandler([0x0b, 0x06, 0x12, 0x34, 0x09, 0x06, 0x80], packetType);
+            });
         });
 
         describe(".blinds1Handler", function () {
@@ -1517,6 +2715,296 @@ describe("RfxCom", function() {
             });
         });
 
+        describe(".edisioHandler", function () {
+            let device = {};
+            let packetType = 0x1c;
+            beforeEach(function () {
+                device = new rfxcom.RfxCom("/dev/ttyUSB0");
+            });
+            it("should handle an Off command", function (done) {
+                device.on("edisio", function (evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0x12345678");
+                    expect(evt.unitCode).toBe(9);
+                    expect(evt.command).toBe("Off");
+                    expect(evt.commandNumber).toBe(0);
+                    expect(evt.seqnbr).toBe(64);
+                    expect(evt.level).toBe(1);
+                    expect(evt.colour).toEqual({R: 2, G: 3, B: 4});
+                    expect(evt.maxRepeat).toBe(5);
+                    expect(evt.repeatCount).toBe(1);
+                    expect(evt.batteryVoltage).toBe(8.9);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.edisioHandler([0x00, 0x40, 0x12, 0x34, 0x56, 0x78, 0x09, 0x00, 0x01,
+                    0x02, 0x03, 0x04, 0x05, 0x01, 0x59, 0x08], packetType);
+            });
+            it("should handle an On command", function (done) {
+                device.on("edisio", function (evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0x12345678");
+                    expect(evt.unitCode).toBe(9);
+                    expect(evt.command).toBe("On");
+                    expect(evt.commandNumber).toBe(1);
+                    expect(evt.seqnbr).toBe(65);
+                    expect(evt.level).toBe(1);
+                    expect(evt.colour).toEqual({R: 2, G: 3, B: 4});
+                    expect(evt.maxRepeat).toBe(5);
+                    expect(evt.repeatCount).toBe(1);
+                    expect(evt.batteryVoltage).toBe(8.9);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.edisioHandler([0x00, 0x41, 0x12, 0x34, 0x56, 0x78, 0x09, 0x01, 0x01,
+                    0x02, 0x03, 0x04, 0x05, 0x01, 0x59, 0x08], packetType);
+            });
+            it("should handle a Toggle command", function (done) {
+                device.on("edisio", function (evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0x12345678");
+                    expect(evt.unitCode).toBe(9);
+                    expect(evt.command).toBe("Toggle");
+                    expect(evt.commandNumber).toBe(2);
+                    expect(evt.seqnbr).toBe(66);
+                    expect(evt.level).toBe(1);
+                    expect(evt.colour).toEqual({R: 2, G: 3, B: 4});
+                    expect(evt.maxRepeat).toBe(5);
+                    expect(evt.repeatCount).toBe(1);
+                    expect(evt.batteryVoltage).toBe(8.9);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.edisioHandler([0x00, 0x42, 0x12, 0x34, 0x56, 0x78, 0x09, 0x02, 0x01,
+                    0x02, 0x03, 0x04, 0x05, 0x01, 0x59, 0x08], packetType);
+            });
+            it("should handle a Set level command", function (done) {
+                device.on("edisio", function (evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0x12345678");
+                    expect(evt.unitCode).toBe(9);
+                    expect(evt.command).toBe("Set level");
+                    expect(evt.commandNumber).toBe(3);
+                    expect(evt.seqnbr).toBe(67);
+                    expect(evt.level).toBe(82);
+                    expect(evt.colour).toEqual({R: 2, G: 3, B: 4});
+                    expect(evt.maxRepeat).toBe(5);
+                    expect(evt.repeatCount).toBe(1);
+                    expect(evt.batteryVoltage).toBe(8.9);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.edisioHandler([0x00, 0x43, 0x12, 0x34, 0x56, 0x78, 0x09, 0x03, 0x52,
+                    0x02, 0x03, 0x04, 0x05, 0x01, 0x59, 0x08], packetType);
+            });
+            it("should handle a Dim command", function (done) {
+                device.on("edisio", function (evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0x12345678");
+                    expect(evt.unitCode).toBe(9);
+                    expect(evt.command).toBe("Dim");
+                    expect(evt.commandNumber).toBe(5);
+                    expect(evt.seqnbr).toBe(69);
+                    expect(evt.level).toBe(1);
+                    expect(evt.colour).toEqual({R: 2, G: 3, B: 4});
+                    expect(evt.maxRepeat).toBe(5);
+                    expect(evt.repeatCount).toBe(1);
+                    expect(evt.batteryVoltage).toBe(8.9);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.edisioHandler([0x00, 0x45, 0x12, 0x34, 0x56, 0x78, 0x09, 0x05, 0x01,
+                    0x02, 0x03, 0x04, 0x05, 0x01, 0x59, 0x08], packetType);
+            });
+            it("should handle a Toggle dim command", function (done) {
+                device.on("edisio", function (evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0x12345678");
+                    expect(evt.unitCode).toBe(9);
+                    expect(evt.command).toBe("Toggle dim");
+                    expect(evt.commandNumber).toBe(6);
+                    expect(evt.seqnbr).toBe(70);
+                    expect(evt.level).toBe(1);
+                    expect(evt.colour).toEqual({R: 2, G: 3, B: 4});
+                    expect(evt.maxRepeat).toBe(5);
+                    expect(evt.repeatCount).toBe(1);
+                    expect(evt.batteryVoltage).toBe(8.9);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.edisioHandler([0x00, 0x46, 0x12, 0x34, 0x56, 0x78, 0x09, 0x06, 0x01,
+                    0x02, 0x03, 0x04, 0x05, 0x01, 0x59, 0x08], packetType);
+            });
+            it("should handle a Stop dim command", function (done) {
+                device.on("edisio", function (evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0x12345678");
+                    expect(evt.unitCode).toBe(9);
+                    expect(evt.command).toBe("Stop dim");
+                    expect(evt.commandNumber).toBe(7);
+                    expect(evt.seqnbr).toBe(71);
+                    expect(evt.level).toBe(1);
+                    expect(evt.colour).toEqual({R: 2, G: 3, B: 4});
+                    expect(evt.maxRepeat).toBe(5);
+                    expect(evt.repeatCount).toBe(1);
+                    expect(evt.batteryVoltage).toBe(8.9);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.edisioHandler([0x00, 0x47, 0x12, 0x34, 0x56, 0x78, 0x09, 0x07, 0x01,
+                    0x02, 0x03, 0x04, 0x05, 0x01, 0x59, 0x08], packetType);
+            });
+            it("should handle an RGB command", function (done) {
+                device.on("edisio", function (evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0x12345678");
+                    expect(evt.unitCode).toBe(9);
+                    expect(evt.command).toBe("RGB");
+                    expect(evt.commandNumber).toBe(8);
+                    expect(evt.seqnbr).toBe(72);
+                    expect(evt.level).toBe(1);
+                    expect(evt.colour).toEqual({R: 2, G: 3, B: 4});
+                    expect(evt.maxRepeat).toBe(5);
+                    expect(evt.repeatCount).toBe(1);
+                    expect(evt.batteryVoltage).toBe(8.9);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.edisioHandler([0x00, 0x48, 0x12, 0x34, 0x56, 0x78, 0x09, 0x08, 0x01,
+                    0x02, 0x03, 0x04, 0x05, 0x01, 0x59, 0x08], packetType);
+            });
+            it("should handle a Learn command", function (done) {
+                device.on("edisio", function (evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0x12345678");
+                    expect(evt.unitCode).toBe(9);
+                    expect(evt.command).toBe("Learn");
+                    expect(evt.commandNumber).toBe(9);
+                    expect(evt.seqnbr).toBe(73);
+                    expect(evt.level).toBe(1);
+                    expect(evt.colour).toEqual({R: 2, G: 3, B: 4});
+                    expect(evt.maxRepeat).toBe(5);
+                    expect(evt.repeatCount).toBe(1);
+                    expect(evt.batteryVoltage).toBe(8.9);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.edisioHandler([0x00, 0x49, 0x12, 0x34, 0x56, 0x78, 0x09, 0x09, 0x01,
+                    0x02, 0x03, 0x04, 0x05, 0x01, 0x59, 0x08], packetType);
+            });
+            it("should handle a Shutter Open command", function (done) {
+                device.on("edisio", function (evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0x12345678");
+                    expect(evt.unitCode).toBe(9);
+                    expect(evt.command).toBe("Shutter Open");
+                    expect(evt.commandNumber).toBe(10);
+                    expect(evt.seqnbr).toBe(74);
+                    expect(evt.level).toBe(1);
+                    expect(evt.colour).toEqual({R: 2, G: 3, B: 4});
+                    expect(evt.maxRepeat).toBe(5);
+                    expect(evt.repeatCount).toBe(1);
+                    expect(evt.batteryVoltage).toBe(8.9);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.edisioHandler([0x00, 0x4a, 0x12, 0x34, 0x56, 0x78, 0x09, 0x0a, 0x01,
+                    0x02, 0x03, 0x04, 0x05, 0x01, 0x59, 0x08], packetType);
+            });
+            it("should handle a Shutter Stop command", function (done) {
+                device.on("edisio", function (evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0x12345678");
+                    expect(evt.unitCode).toBe(9);
+                    expect(evt.command).toBe("Shutter Stop");
+                    expect(evt.commandNumber).toBe(11);
+                    expect(evt.seqnbr).toBe(75);
+                    expect(evt.level).toBe(1);
+                    expect(evt.colour).toEqual({R: 2, G: 3, B: 4});
+                    expect(evt.maxRepeat).toBe(5);
+                    expect(evt.repeatCount).toBe(1);
+                    expect(evt.batteryVoltage).toBe(8.9);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.edisioHandler([0x00, 0x4b, 0x12, 0x34, 0x56, 0x78, 0x09, 0x0b, 0x01,
+                    0x02, 0x03, 0x04, 0x05, 0x01, 0x59, 0x08], packetType);
+            });
+            it("should handle a Shutter Close command", function (done) {
+                device.on("edisio", function (evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0x12345678");
+                    expect(evt.unitCode).toBe(9);
+                    expect(evt.command).toBe("Shutter Close");
+                    expect(evt.commandNumber).toBe(12);
+                    expect(evt.seqnbr).toBe(76);
+                    expect(evt.level).toBe(1);
+                    expect(evt.colour).toEqual({R: 2, G: 3, B: 4});
+                    expect(evt.maxRepeat).toBe(5);
+                    expect(evt.repeatCount).toBe(1);
+                    expect(evt.batteryVoltage).toBe(8.9);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.edisioHandler([0x00, 0x4c, 0x12, 0x34, 0x56, 0x78, 0x09, 0x0c, 0x01,
+                    0x02, 0x03, 0x04, 0x05, 0x01, 0x59, 0x08], packetType);
+            });
+            it("should handle a Contact Normal message", function (done) {
+                device.on("edisio", function (evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0x12345678");
+                    expect(evt.unitCode).toBe(9);
+                    expect(evt.command).toBe("Contact Normal");
+                    expect(evt.commandNumber).toBe(13);
+                    expect(evt.seqnbr).toBe(77);
+                    expect(evt.level).toBe(1);
+                    expect(evt.colour).toEqual({R: 2, G: 3, B: 4});
+                    expect(evt.maxRepeat).toBe(5);
+                    expect(evt.repeatCount).toBe(1);
+                    expect(evt.batteryVoltage).toBe(8.9);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.edisioHandler([0x00, 0x4d, 0x12, 0x34, 0x56, 0x78, 0x09, 0x0d, 0x01,
+                    0x02, 0x03, 0x04, 0x05, 0x01, 0x59, 0x08], packetType);
+            });
+            it("should handle a Contact Alert message", function (done) {
+                device.on("edisio", function (evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0x12345678");
+                    expect(evt.unitCode).toBe(9);
+                    expect(evt.command).toBe("Contact Alert");
+                    expect(evt.commandNumber).toBe(14);
+                    expect(evt.seqnbr).toBe(78);
+                    expect(evt.level).toBe(1);
+                    expect(evt.colour).toEqual({R: 2, G: 3, B: 4});
+                    expect(evt.maxRepeat).toBe(5);
+                    expect(evt.repeatCount).toBe(1);
+                    expect(evt.batteryVoltage).toBe(8.9);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.edisioHandler([0x00, 0x4e, 0x12, 0x34, 0x56, 0x78, 0x09, 0x0e, 0x01,
+                    0x02, 0x03, 0x04, 0x05, 0x01, 0x59, 0x08], packetType);
+            });
+            it("should handle extra bytes", function (done) {
+                device.on("edisio", function (evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0x12345678");
+                    expect(evt.unitCode).toBe(9);
+                    expect(evt.command).toBe("Off");
+                    expect(evt.commandNumber).toBe(0);
+                    expect(evt.seqnbr).toBe(64);
+                    expect(evt.extraBytes).toEqual([0xab, 0xcd, 0xef]);
+                    expect(evt.batteryVoltage).toBe(8.9);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.edisioHandler([0x00, 0x40, 0x12, 0x34, 0x56, 0x78, 0x09, 0x00, 0x00,
+                    0x00, 0x00, 0x00, 0x05, 0x01, 0x59, 0x08, 0xab, 0xcd, 0xef], packetType);
+            });
+        });
+
         describe(".funkbusHandler", function () {
             let device = {};
             let packetType = 0x1e;
@@ -1532,6 +3020,7 @@ describe("RfxCom", function() {
                     expect(evt.command).toBe("Up");
                     expect(evt.commandNumber).toBe(1);
                     expect(evt.seqnbr).toBe(64);
+                    expect(evt.rssi).toBe(8);
                     done();
                 });
                 device.funkbusHandler([0x00, 0x40, 0x12, 0x34, 0x42, 0x01, 0x01, 0x00, 0x00, 0x80], packetType);
@@ -1546,6 +3035,7 @@ describe("RfxCom", function() {
                     expect(evt.channelNumber).toBeUndefined();
                     expect(evt.commandNumber).toBe(4);
                     expect(evt.seqnbr).toBe(64);
+                    expect(evt.rssi).toBe(8);
                     done();
                 });
                 device.funkbusHandler([0x00, 0x40, 0x12, 0x34, 0x42, 0x03, 0x04, 0x00, 0x00, 0x80], packetType);
@@ -1560,6 +3050,7 @@ describe("RfxCom", function() {
                     expect(evt.sceneNumber).toBeUndefined();
                     expect(evt.channelNumber).toBe(6);
                     expect(evt.seqnbr).toBe(65);
+                    expect(evt.rssi).toBe(8);
                     done();
                 });
                 device.funkbusHandler([0x01, 0x41, 0x12, 0x34, 0x42, 0x06, 0x00, 0x00, 0x00, 0x80], packetType);
@@ -1576,11 +3067,93 @@ describe("RfxCom", function() {
                     expect(evt.seqnbr).toBe(64);
                     expect(evt.commandTime).toBe(35);
                     expect(evt.deviceTypeNumber).toBe(2);
+                    expect(evt.rssi).toBe(8);
                     done();
                 });
-                device.funkbusHandler([0x00, 0x40, 0x12, 0x34, 0x42, 0x03, 0x01, 0x23, 0x20, 0x80], packetType);
+                device.funkbusHandler([0x00, 0x40, 0x12, 0x34, 0x42, 0x03, 0x01, 0x23, 0x02, 0x80], packetType);
             });
         });
+
+        describe(".hunterfanHandler", function () {
+            let device = {};
+            let packetType = 0x1f;
+            beforeEach(function () {
+                device = new rfxcom.RfxCom("/dev/ttyUSB0");
+            });
+            it("should handle an Off command", function (done) {
+                device.on("hunterfan", function (evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0x123456789ABC");
+                    expect(evt.command).toBe("Off");
+                    expect(evt.commandNumber).toBe(1);
+                    expect(evt.seqnbr).toBe(64);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.hunterfanHandler([0x00, 0x40, 0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc, 0x01, 0x80], packetType);
+            });
+            it("should handle a Light command", function (done) {
+                device.on("hunterfan", function (evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0x123456789ABC");
+                    expect(evt.command).toBe("Light");
+                    expect(evt.commandNumber).toBe(2);
+                    expect(evt.seqnbr).toBe(64);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.hunterfanHandler([0x00, 0x40, 0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc, 0x02, 0x80], packetType);
+            });
+            it("should handle a Speed 1 command", function (done) {
+                device.on("hunterfan", function (evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0x123456789ABC");
+                    expect(evt.command).toBe("Speed 1");
+                    expect(evt.commandNumber).toBe(3);
+                    expect(evt.seqnbr).toBe(64);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.hunterfanHandler([0x00, 0x40, 0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc, 0x03, 0x80], packetType);
+            });
+            it("should handle a Speed 2 command", function (done) {
+                device.on("hunterfan", function (evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0x123456789ABC");
+                    expect(evt.command).toBe("Speed 2");
+                    expect(evt.commandNumber).toBe(4);
+                    expect(evt.seqnbr).toBe(64);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.hunterfanHandler([0x00, 0x40, 0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc, 0x04, 0x80], packetType);
+            });
+            it("should handle a Speed 3 command", function (done) {
+                device.on("hunterfan", function (evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0x123456789ABC");
+                    expect(evt.command).toBe("Speed 3");
+                    expect(evt.commandNumber).toBe(5);
+                    expect(evt.seqnbr).toBe(64);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.hunterfanHandler([0x00, 0x40, 0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc, 0x05, 0x80], packetType);
+            });
+            it("should handle a Program command", function (done) {
+                device.on("hunterfan", function (evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0x123456789ABC");
+                    expect(evt.command).toBe("Program");
+                    expect(evt.commandNumber).toBe(6);
+                    expect(evt.seqnbr).toBe(64);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.hunterfanHandler([0x00, 0x40, 0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc, 0x06, 0x80], packetType);
+            });
+        });
+
         describe(".security1Handler", function () {
             let device = {};
             let packetType = 0x20;
@@ -2612,7 +4185,7 @@ describe("RfxCom", function() {
                     expect(evt.rssi).toBe(9);
                     done();
                 });
-                device.weightHandler([0x01, 0xF5, 0x00, 0x07, 0x03, 0x40, 0x39], packetType);
+                device.weightHandler([0x01, 0xF5, 0x00, 0x07, 0x03, 0x40, 0x93], packetType);
             });
         });
 
@@ -2758,6 +4331,71 @@ describe("RfxCom", function() {
             });
         });
 
+        describe(".weatherHandler", function() {
+            let device = {};
+            let packetType = 0x76;
+            beforeEach(function() {
+                device = new rfxcom.RfxCom("/dev/ttyUSB0");
+            });
+            it("should emit a weather message when called for subtype 1", function(done) {
+                device.on("weather", function(evt) {
+                    expect(evt.subtype).toBe(0x01);
+                    expect(evt.seqnbr).toBe(0xF5);
+                    expect(evt.id).toBe("0x0007");
+                    expect(evt.batteryLevel).toBe(3);
+                    expect(evt.rssi).toBe(9);
+                    expect(evt.averageSpeed).toBe(6.7);
+                    expect(evt.gustSpeed).toBe(11.4);
+                    expect(evt.temperature).toBe(-2.3);
+                    expect(evt.rainfallIncrement).toBe(124.8);
+                    done();
+                });
+                device.weatherHandler([0x01, 0xF5, 0x00, 0x07,
+                    0x01, 0x0e, 0x00, 0x43, 0x00, 0x72, 0x80, 0x17, 0x00, 0x00, 0x3a, 0x01, 0x00, 0x00,
+                    0x00, 0x01, 0xa0, 0x1f, 0x00, 0xda, 0x03, 0xfd, 0x00, 0x00, 0x00, 0x93], packetType);
+            });
+            it("should emit a weather message when called for subtype 2", function(done) {
+                device.on("weather", function(evt) {
+                    expect(evt.subtype).toBe(0x02);
+                    expect(evt.seqnbr).toBe(0xF5);
+                    expect(evt.id).toBe("0x0007");
+                    expect(evt.batteryLevel).toBe(3);
+                    expect(evt.rssi).toBe(9);
+                    expect(evt.direction).toBe(270.0);
+                    expect(evt.averageSpeed).toBe(6.7);
+                    expect(evt.gustSpeed).toBe(11.4);
+                    expect(evt.temperature).toBe(-2.3);
+                    expect(evt.humidity).toBe(58.0);
+                    expect(evt.humidityStatus).toBe(1);
+                    expect(evt.rainfallIncrement).toBe(105.664);
+                    expect(evt.uv).toBe(3.1);
+                    expect(evt.insolation).toBe(218.0);
+                    done();
+                });
+                device.weatherHandler([0x02, 0xF5, 0x00, 0x07,
+                    0x01, 0x0e, 0x00, 0x43, 0x00, 0x72, 0x80, 0x17, 0x00, 0x00, 0x3a, 0x01, 0x00, 0x00,
+                    0x00, 0x01, 0xa0, 0x1f, 0x00, 0xda, 0x03, 0xfd, 0x00, 0x00, 0x00, 0x93], packetType);
+            });
+        });
 
+        describe(".solarHandler", function() {
+            let device = {};
+            let packetType = 0x77;
+            beforeEach(function() {
+                device = new rfxcom.RfxCom("/dev/ttyUSB0");
+            });
+            it("should emit a weather message when called for subtype 1", function(done) {
+                device.on("solar", function(evt) {
+                    expect(evt.subtype).toBe(0x02);
+                    expect(evt.seqnbr).toBe(0x21);
+                    expect(evt.id).toBe("0x0707");
+                    expect(evt.batteryLevel).toBe(3);
+                    expect(evt.rssi).toBe(9);
+                    expect(evt.insolation).toBe(218.0);
+                    done();
+                });
+                device.solarHandler([0x02, 0x21, 0x07, 0x07, 0x55, 0x28, 0x00, 0x00, 0x93], packetType);
+            });
+        });
     });
 });

@@ -29,7 +29,7 @@ Devices:
     BLINDS_T12
     BLINDS_T13
     BLINDS_T14
-    BLINDS_T15 (not yet implemented in the RFXCOM firmware)
+    BLINDS_T15
     BLINDS_T16
 
 Commands:
@@ -45,6 +45,7 @@ Commands:
     Blinds1.up()
     Blinds1.venetianIncreaseAngle()
     Blinds1.venetianDecreaseAngle()
+    Blinds1.toggleLightOnOff()
 
 Camera1
 -------
@@ -67,11 +68,12 @@ Chime1
 ---------
 
 Devices:
-
     BYRON_SX
     BYRON_MP001
     SELECT_PLUS
+    BYRON_BY
     ENVIVO
+    ALFAWISE
     
 Commands:
 
@@ -91,6 +93,31 @@ Commands:
     Curtain1.stop()
     Curtain1.program()
 
+Edisio
+------
+
+Devices:
+
+    EDISIO_CONTROLLER
+    
+Commands:
+
+    Edisio.sitchOff()
+    Edisio.switchOn()
+    Edisio.toggleOnOff()
+    Edisio.setLevel()
+    Edisio.increaseLevel()
+    Edisio.decreaseLevel()
+    Edisio.toggleDimming()
+    Edisio.stopDimming()
+    Edisio.setColour()
+    Edisio.program()
+    Edisio.open()
+    Edisio.stop()
+    Edisio.close()
+    Edisio.sendContactNormal()
+    Edisio.sendContactAlert()
+    
 Fan
 ----
 
@@ -106,6 +133,8 @@ Devices:
     FT1211R
     FALMEC
     LUCCI_AIR_DCII
+    ITHO_CVE_ECO_RFT
+    NOVY
     
 Commands:
 
@@ -121,9 +150,11 @@ Commands:
     Fan.toggleLightOnOff()
     Fan.switchLightOn()
     Fan.switchLightOff()
-    Fan.learn()
+    Fan.program()
     Fan.confirm()
     Fan.eraseAll()
+    Fan.standby()
+    Fan.resetFilter()
     
 The Fan button names (subtype SEAV_TXS4 only) are *T1*, *T2*, *T3*, and *T4*
     
@@ -157,7 +188,21 @@ Commands:
 
     HomeConfort.switchOn()
     HomeConfort.switchOff()
- 
+
+HunterFan
+---------
+
+Devices:
+
+    HUNTER_FAN
+    
+Commands:
+
+    HunterFan.switchOff()
+    HunterFan.toggleLightOnOff()
+    HunterFan.setSpeed()
+    HunterFan.program()    
+     
 Lighting1
 ---------
 
@@ -344,7 +389,7 @@ Commands:
     Rfy.listRemotes()
     Rfy.program()
     
-    Rfy.do()
+    Rfy.doCommand()
 
 Security1
 ---------
