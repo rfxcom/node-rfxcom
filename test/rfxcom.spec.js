@@ -2633,7 +2633,7 @@ describe("RfxCom", function() {
                     expect(evt.rssi).toBe(8);
                     done();
                 });
-                device.blinds1Handler([0x03, 0x05, 0x00, 0x12, 0x34, 0x0f, 0x00, 0x80], packetType);
+                device.blinds1Handler([0x03, 0x05, 0x00, 0x12, 0x34, 0x10, 0x00, 0x80], packetType);
             });
             it("should handle BLINDS_T4 devices", function(done) {
                 device.on("blinds1", function(evt) {
@@ -2647,6 +2647,19 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.blinds1Handler([0x04, 0x05, 0x00, 0x12, 0x34, 0x00, 0x00, 0x80], packetType);
+            });
+            it("should handle BLINDS_T6 devices", function(done) {
+                device.on("blinds1", function(evt) {
+                    expect(evt.subtype).toBe(6);
+                    expect(evt.id).toBe("0x5638010");
+                    expect(evt.unitCode).toBe(3);
+                    expect(evt.command).toBe("Close");
+                    expect(evt.commandNumber).toBe(1);
+                    expect(evt.seqnbr).toBe(4);
+                    expect(evt.rssi).toBe(7);
+                    done();
+                });
+                device.blinds1Handler([0x06, 0x04, 0x56, 0x38, 0x01, 0x03, 0x01, 0x78], packetType);
             });
             it("should handle BLINDS_T4 devices delete limits event", function(done) {
                 device.on("blinds1", function(evt) {
