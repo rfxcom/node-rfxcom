@@ -1017,10 +1017,51 @@ describe('Fan class', function () {
                 });
             });
             describe('setSpeed', function () {
-                it('should throw an unsupported command exception', function () {
+                it('should throw an exception for speed 0', function () {
                     expect(function () {
-                        fan.setSpeed('0x1', 1);
-                    }).toThrow("Device does not support setSpeed()");
+                        fan.setSpeed('0x1', 0);
+                    }).toThrow("Invalid speed: value must be in range 1-6");
+                });
+                it('should send the correct bytes to the serialport for speed 1', function (done) {
+                    let sentCommandId = NaN;
+                    fan.setSpeed('0x1', 1, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x05, 0x00, 0x00, 0x00, 0x01, 0x08, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should send the correct bytes to the serialport for speed 2', function (done) {
+                    let sentCommandId = NaN;
+                    fan.setSpeed('0x1', 2, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x05, 0x00, 0x00, 0x00, 0x01, 0x09, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should send the correct bytes to the serialport for speed 4', function (done) {
+                    let sentCommandId = NaN;
+                    fan.setSpeed('0x1', 4, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x05, 0x00, 0x00, 0x00, 0x01, 0x0b, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should send the correct bytes to the serialport for speed 6', function (done) {
+                    let sentCommandId = NaN;
+                    fan.setSpeed('0x1', 6, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x17, 0x05, 0x00, 0x00, 0x00, 0x01, 0x0d, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should throw an exception for speed >6', function () {
+                    expect(function () {
+                        fan.setSpeed('0x1', 7);
+                    }).toThrow("Invalid speed: value must be in range 1-6");
                 });
             });
             describe('decreaseSpeed()', function () {

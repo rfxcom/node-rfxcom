@@ -338,17 +338,25 @@ describe('Thermostat3 class', function () {
                 });
             });
             describe('runUp()', function () {
-                it('should throw an unsupported command error', function () {
-                    expect(function () {
-                        thermostat.runUp('0x1234');
-                    }).toThrow("Device does not support runUp()");
+                it('should send the correct bytes to the serialport', function (done) {
+                    let sentCommandId = NaN;
+                    thermostat.runUp('0x1234', function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x42, 0x02, 0x00, 0x00, 0x12, 0x34, 0x04, 0x00]);
+                    expect(sentCommandId).toEqual(0);
                 });
             });
             describe('runDown()', function () {
-                it('should throw an unsupported command error', function () {
-                    expect(function () {
-                        thermostat.runDown('0x1234');
-                    }).toThrow("Device does not support runDown()");
+                it('should send the correct bytes to the serialport', function (done) {
+                    let sentCommandId = NaN;
+                    thermostat.runDown('0x1234', function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x42, 0x02, 0x00, 0x00, 0x12, 0x34, 0x05, 0x00]);
+                    expect(sentCommandId).toEqual(0);
                 });
             });
             describe('stop()', function () {

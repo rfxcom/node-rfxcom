@@ -1,3 +1,13 @@
+Version 2.2.0
+-------------
+Support for RFX firmware 1043
+
+- Add support BLINDS_T17 (Gaposa) & BLINDS_T18 (Cherubini)
+- Add Lucci Air DC speed control command (speed 1 to 6)
+- Add Mertik G6R-H4TD (DRU) run-up and run-down commands
+
+Fix various bugs in handling BLINDS addresses (ID & unitCode)
+
 Version 2.1.0
 -------------
 Support for RFX firmware 1040

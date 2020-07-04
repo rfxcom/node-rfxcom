@@ -31,6 +31,8 @@ Devices:
     BLINDS_T14
     BLINDS_T15
     BLINDS_T16
+    BLINDS_T17
+    BLINDS_T18
 
 Commands:
 
