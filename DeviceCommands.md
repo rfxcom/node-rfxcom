@@ -418,8 +418,10 @@ Commands:
     Security1.armSystemHome()
     Security1.armSystemHomeWithDelay()
     Security1.disarmSystem()
-    Security1.switchOnLight()
-    Security1.switchOffLight()
+    Security1.switchLightOn()
+    Security1.switchLightOff()
+    Security1.switchOnLight() -- DEPRECATED!
+    Security1.switchOffLight() -- DEPRECATED!
 
 Thermostat1
 ---------
