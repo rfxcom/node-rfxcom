@@ -337,6 +337,57 @@ describe('Security1 class', function () {
                     expect(sentCommandId).toEqual(0);
                 });
             });
+            describe('switchLightOn', function () {
+                it('should send the correct bytes to the serialport for channel 1', function (done) {
+                    let sentCommandId = NaN;
+                    security.switchLightOn('0x1234', 1, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x20, 0x02, 0x00, 0x12, 0x00, 0x34, 0x11, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should send the correct bytes to the serialport for channel 2', function (done) {
+                    let sentCommandId = NaN;
+                    security.switchLightOn('0x1234', 2, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x20, 0x02, 0x00, 0x12, 0x00, 0x34, 0x13, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should throw an exception for channel 3', function () {
+                    expect(function () {
+                        security.switchLightOn('0x1234', 3);
+                    }).toThrow("Invalid channel: value must be in range 1-2");
+                });
+            });
+            describe('switchLightOff', function () {
+                it('should send the correct bytes to the serialport for channel 1', function (done) {
+                    let sentCommandId = NaN;
+                    security.switchLightOff('0x1234', 1, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x20, 0x02, 0x00, 0x12, 0x00, 0x34, 0x10, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should send the correct bytes to the serialport for channel 2', function (done) {
+                    let sentCommandId = NaN;
+                    security.switchLightOff('0x1234', 2, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
+                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x20, 0x02, 0x00, 0x12, 0x00, 0x34, 0x12, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should throw an exception for channel 3', function () {
+                    expect(function () {
+                        security.switchLightOff('0x1234', 3);
+                    }).toThrow("Invalid channel: value must be in range 1-2");
+                });
+            });
+            //DEPRECATED FUNCTION!!
             describe('switchOnLight', function () {
                 it('should send the correct bytes to the serialport for channel 1', function (done) {
                     let sentCommandId = NaN;
@@ -361,30 +412,31 @@ describe('Security1 class', function () {
                         security.switchOnLight('0x1234', 3);
                     }).toThrow("Invalid channel: value must be in range 1-2");
                 });
-                describe('switchOffLight', function () {
-                    it('should send the correct bytes to the serialport for channel 1', function (done) {
-                        let sentCommandId = NaN;
-                        security.switchOffLight('0x1234', 1, function (err, response, cmdId) {
-                            sentCommandId = cmdId;
-                            done();
-                        });
-                        expect(fakeSerialPort).toHaveSent([0x08, 0x20, 0x02, 0x00, 0x12, 0x00, 0x34, 0x10, 0x00]);
-                        expect(sentCommandId).toEqual(0);
+            });
+            //DEPRECATED FUNCTION!!
+            describe('switchOffLight', function () {
+                it('should send the correct bytes to the serialport for channel 1', function (done) {
+                    let sentCommandId = NaN;
+                    security.switchOffLight('0x1234', 1, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
                     });
-                    it('should send the correct bytes to the serialport for channel 2', function (done) {
-                        let sentCommandId = NaN;
-                        security.switchOffLight('0x1234', 2, function (err, response, cmdId) {
-                            sentCommandId = cmdId;
-                            done();
-                        });
-                        expect(fakeSerialPort).toHaveSent([0x08, 0x20, 0x02, 0x00, 0x12, 0x00, 0x34, 0x12, 0x00]);
-                        expect(sentCommandId).toEqual(0);
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x20, 0x02, 0x00, 0x12, 0x00, 0x34, 0x10, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should send the correct bytes to the serialport for channel 2', function (done) {
+                    let sentCommandId = NaN;
+                    security.switchOffLight('0x1234', 2, function (err, response, cmdId) {
+                        sentCommandId = cmdId;
+                        done();
                     });
-                    it('should throw an exception for channel 3', function () {
-                        expect(function () {
-                            security.switchOffLight('0x1234', 3);
-                        }).toThrow("Invalid channel: value must be in range 1-2");
-                    });
+                    expect(fakeSerialPort).toHaveSent([0x08, 0x20, 0x02, 0x00, 0x12, 0x00, 0x34, 0x12, 0x00]);
+                    expect(sentCommandId).toEqual(0);
+                });
+                it('should throw an exception for channel 3', function () {
+                    expect(function () {
+                        security.switchOffLight('0x1234', 3);
+                    }).toThrow("Invalid channel: value must be in range 1-2");
                 });
             });
         });

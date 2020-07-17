@@ -1,3 +1,8 @@
+Version 2.3.0
+-------------
+Add functions switchLightOn() & switchLightOff() to security1, to replace the
+now deprecated switchOnLight() & switchOffLight()
+
 Version 2.2.0
 -------------
 Support for RFX firmware 1043

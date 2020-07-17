@@ -8,7 +8,13 @@ To install
   npm install rfxcom
 </pre>
 
-Depends on serialport ^8.0.5, date-format ^3.0.0, and queue ^5.0.0
+Depends on serialport ^9.0.0, date-format ^3.0.0, and queue ^6.0.0
+
+Note
+----
+
+Functions `Security1.switchOnLight()` & `Security1.switchOffLight()` are now deprecated; use the replacements
+`Security1.switchLightOn()` & `Security1.switchLightOff()` instead. The function parameters are unchanged.
 
 To Use
 ------
