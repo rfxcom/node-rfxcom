@@ -1,3 +1,9 @@
+Version 2.3.1
+-------------
+Now use call-throughs rather than synonyms to implement switchOnLight() & switchOffLight(),
+as a work-around for a NodeJS v10 compiler bug.
+Revert to serialport ^8.0.8
+
 Version 2.3.0
 -------------
 Add functions switchLightOn() & switchLightOff() to security1, to replace the

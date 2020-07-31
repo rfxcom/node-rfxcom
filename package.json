@@ -1,6 +1,6 @@
 {
   "name": "rfxcom",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "author": "Kevin McDermott <kevin@bigkevmcd.com>",
   "engines": {
     "node": ">=10.4.0"
@@ -8,7 +8,7 @@
   "dependencies": {
     "date-format": "^3.0.0",
     "queue": "^6.0.0",
-    "serialport": "^9.0.0"
+    "serialport": "^8.0.8"
   },
   "main": "rfxcom.js",
   "devDependencies": {
@@ -32,6 +32,8 @@
   "license": "MIT",
   "keywords": [
     "rfxcom",
+    "domotic",
+    "home automation",
     "RFXtrx433"
   ],
   "bugs": {
