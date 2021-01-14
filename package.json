@@ -7,8 +7,8 @@
   },
   "dependencies": {
     "date-format": "^3.0.0",
-    "queue": "^6.0.0",
-    "serialport": "^8.0.8"
+    "queue": "^6.0.2",
+    "serialport": "^9.0.4"
   },
   "main": "rfxcom.js",
   "devDependencies": {
