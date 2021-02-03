@@ -40,6 +40,7 @@ Commands:
     Blinds1.close()
     Blinds1.stop()
     Blinds1.confirm()
+    Blinds1.intermediatePosition()
     Blinds1.setLimit()
     Blinds1.setLowerLimit()
     Blinds1.reverse()

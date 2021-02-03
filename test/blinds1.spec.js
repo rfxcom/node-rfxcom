@@ -91,6 +91,11 @@ describe('Blinds1 class', function () {
             expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x00, 0x00, 0x00, 0x12, 0x34, 0x05, 0x03, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
+        it('should throw an error for an intermediatePosition() command', function () {
+            expect(function () {
+                blinds1.intermediatePosition('0x1234/5', 0)
+            }).toThrow("Device does not support intermediatePosition()");
+        });
         it('should send the correct bytes for a setLimit() command to the serialport', function (done) {
             let sentCommandId = NaN;
             blinds1.setLimit('0x1234/5', function (err, response, cmdId) {
@@ -222,6 +227,11 @@ describe('Blinds1 class', function () {
             });
             expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x01, 0x00, 0x00, 0x12, 0x34, 0x05, 0x03, 0x00]);
             expect(sentCommandId).toEqual(0);
+        });
+        it('should throw an error for an intermediatePosition() command', function () {
+            expect(function () {
+                blinds1.intermediatePosition('0x1234/5')
+            }).toThrow("Device does not support intermediatePosition()");
         });
         it('should send the correct bytes for a setLimit() command to the serialport', function (done) {
             let sentCommandId = NaN;
@@ -364,6 +374,11 @@ describe('Blinds1 class', function () {
             expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x02, 0x00, 0x00, 0x12, 0x34, 0x00, 0x03, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
+        it('should throw an error for an intermediatePosition() command', function () {
+            expect(function () {
+                blinds1.intermediatePosition('0x1234/5')
+            }).toThrow("Device does not support intermediatePosition()");
+        });
         it('should throw an error for setLimit() command', function () {
             expect(function () {
                 blinds1.setLimit('0x1234/5')
@@ -473,6 +488,11 @@ describe('Blinds1 class', function () {
             });
             expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x03, 0x00, 0x00, 0x12, 0x34, 0x04, 0x03, 0x00]);
             expect(sentCommandId).toEqual(0);
+        });
+        it('should throw an error for an intermediatePosition() command', function () {
+            expect(function () {
+                blinds1.intermediatePosition('0x1234/5')
+            }).toThrow("Device does not support intermediatePosition()");
         });
         it('should throw an error for setLimit() command', function () {
             expect(function () {
@@ -620,6 +640,11 @@ describe('Blinds1 class', function () {
             expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x04, 0x00, 0x00, 0x12, 0x34, 0x00, 0x03, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
+        it('should throw an error for an intermediatePosition() command', function () {
+            expect(function () {
+                blinds1.intermediatePosition('0x1234/5')
+            }).toThrow("Device does not support intermediatePosition()");
+        });
         it('should send the correct bytes for a setLimit() command to the serialport', function (done) {
             let sentCommandId = NaN;
             blinds1.setLimit('0x1234/5', function (err, response, cmdId) {
@@ -742,6 +767,11 @@ describe('Blinds1 class', function () {
                 blinds1.confirm('0x1234/5')
             }).toThrow("Device does not support confirm()");
         });
+        it('should throw an error for an intermediatePosition() command', function () {
+            expect(function () {
+                blinds1.intermediatePosition('0x1234/5')
+            }).toThrow("Device does not support intermediatePosition()");
+        });
         it('should throw an error for setLimit() command', function () {
             expect(function () {
                 blinds1.setLimit('0x1234/5')
@@ -853,6 +883,24 @@ describe('Blinds1 class', function () {
                 done();
             });
             expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x06, 0x00, 0x00, 0x01, 0x23, 0x45, 0x03, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should send the correct bytes for an intermediatePosition() command to the serialport', function (done) {
+            let sentCommandId = NaN;
+            blinds1.intermediatePosition('0x1234/5', 1, function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x06, 0x00, 0x00, 0x01, 0x23, 0x45, 0x04, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should handle an intermediatePosition() command with no position parameter', function (done) {
+            let sentCommandId = NaN;
+            blinds1.intermediatePosition('0x1234/5', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x06, 0x00, 0x00, 0x01, 0x23, 0x45, 0x04, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
         it('should throw an error for setLimit() command', function () {
@@ -992,6 +1040,11 @@ describe('Blinds1 class', function () {
             expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x07, 0x00, 0x00, 0x01, 0x23, 0x45, 0x03, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
+        it('should throw an error for an intermediatePosition() command', function () {
+            expect(function () {
+                blinds1.intermediatePosition('0x1234/5')
+            }).toThrow("Device does not support intermediatePosition()");
+        });
         it('should throw an error for setLimit() command', function () {
             expect(function () {
                 blinds1.setLimit('0x1234/5')
@@ -1115,6 +1168,11 @@ describe('Blinds1 class', function () {
             expect(function () {
                 blinds1.confirm('0x123/5')
             }).toThrow("Device does not support confirm()");
+        });
+        it('should throw an error for an intermediatePosition() command', function () {
+            expect(function () {
+                blinds1.intermediatePosition('0x123/5')
+            }).toThrow("Device does not support intermediatePosition()");
         });
         it('should throw an error for a setLimit() command', function () {
             expect(function () {
@@ -1256,6 +1314,52 @@ describe('Blinds1 class', function () {
             });
             expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x09, 0x00, 0x00, 0x12, 0x34, 0x55, 0x03, 0x00]);
             expect(sentCommandId).toEqual(0);
+        });
+        it('should send the correct bytes for an intermediatePosition() command to the serialport', function (done) {
+            let sentCommandId = NaN;
+            blinds1.intermediatePosition('0x12345/5', 1, function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x09, 0x00, 0x00, 0x12, 0x34, 0x55, 0x07, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should handle an intermediatePosition() command with a string position parameter', function (done) {
+            let sentCommandId = NaN;
+            blinds1.intermediatePosition('0x12345/5', "2", function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x09, 0x00, 0x00, 0x12, 0x34, 0x55, 0x08, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should handle an intermediatePosition() command with a non-integer position parameter', function (done) {
+            let sentCommandId = NaN;
+            blinds1.intermediatePosition('0x12345/5', 3.1, function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x09, 0x00, 0x00, 0x12, 0x34, 0x55, 0x09, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should handle an intermediatePosition() command with no position parameter', function (done) {
+            let sentCommandId = NaN;
+            blinds1.intermediatePosition('0x12345/5', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x09, 0x00, 0x00, 0x12, 0x34, 0x55, 0x08, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should throw an error for an intermediatePosition() command with an invalid position parameter', function () {
+            expect(function () {
+                blinds1.intermediatePosition('0x12345/5', 0)
+            }).toThrow("Invalid position: value must be in range 1-3");
+        });
+        it('should throw an error for an intermediatePosition() command with an invalid position parameter', function () {
+            expect(function () {
+                blinds1.intermediatePosition('0x12345/5', "Wombat")
+            }).toThrow("Invalid position: value must be in range 1-3");
         });
         it('should send the correct bytes for a setLimit() command to the serialport', function (done) {
             let sentCommandId = NaN;
@@ -1406,6 +1510,11 @@ describe('Blinds1 class', function () {
             expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x0a, 0x00, 0x00, 0x12, 0x34, 0x00, 0x03, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
+        it('should throw an error for an intermediatePosition() command', function () {
+            expect(function () {
+                blinds1.intermediatePosition('0x1234/5')
+            }).toThrow("Device does not support intermediatePosition()");
+        });
         it('should throw an error for setLimit() command', function () {
             expect(function () {
                 blinds1.setLimit('0x1234/5')
@@ -1532,6 +1641,11 @@ describe('Blinds1 class', function () {
             expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x0b, 0x00, 0x00, 0x12, 0x34, 0x00, 0x03, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
+        it('should throw an error for an intermediatePosition() command', function () {
+            expect(function () {
+                blinds1.intermediatePosition('0x1234/5')
+            }).toThrow("Device does not support intermediatePosition()");
+        });
         it('should throw an error for setLimit() command', function () {
             expect(function () {
                 blinds1.setLimit('0x1234/5')
@@ -1636,6 +1750,11 @@ describe('Blinds1 class', function () {
             });
             expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x0c, 0x00, 0x00, 0x12, 0x34, 0x04, 0x03, 0x00]);
             expect(sentCommandId).toEqual(0);
+        });
+        it('should throw an error for an intermediatePosition() command', function () {
+            expect(function () {
+                blinds1.intermediatePosition('0x1234/5')
+            }).toThrow("Device does not support intermediatePosition()");
         });
         it('should throw an error for a setLimit() command', function () {
             expect(function () {
@@ -1769,6 +1888,11 @@ describe('Blinds1 class', function () {
             });
             expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x0d, 0x00, 0x00, 0x12, 0x34, 0x05, 0x02, 0x00]);
             expect(sentCommandId).toEqual(0);
+        });
+        it('should throw an error for an intermediatePosition() command', function () {
+            expect(function () {
+                blinds1.intermediatePosition('0x1234/5')
+            }).toThrow("Device does not support intermediatePosition()");
         });
         it('should throw an error for a setLimit() command', function () {
             expect(function () {
@@ -1930,6 +2054,11 @@ describe('Blinds1 class', function () {
             expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x0e, 0x00, 0x00, 0x12, 0x34, 0x04, 0x03, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
+        it('should throw an error for an intermediatePosition() command', function () {
+            expect(function () {
+                blinds1.intermediatePosition('0x1234/5')
+            }).toThrow("Device does not support intermediatePosition()");
+        });
         it('should throw an error for setLimit() command', function () {
             expect(function () {
                 blinds1.setLimit('0x1234/5')
@@ -2066,6 +2195,11 @@ describe('Blinds1 class', function () {
             });
             expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x0f, 0x00, 0x00, 0x12, 0x34, 0x04, 0x03, 0x00]);
             expect(sentCommandId).toEqual(0);
+        });
+        it('should throw an error for an intermediatePosition() command', function () {
+            expect(function () {
+                blinds1.intermediatePosition('0x1234/5')
+            }).toThrow("Device does not support intermediatePosition()");
         });
         it('should throw an error for a setLimit() command', function () {
             expect(function () {
@@ -2204,6 +2338,11 @@ describe('Blinds1 class', function () {
             expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x10, 0x00, 0x00, 0x12, 0x34, 0x05, 0x03, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
+        it('should throw an error for an intermediatePosition() command', function () {
+            expect(function () {
+                blinds1.intermediatePosition('0x1234/5')
+            }).toThrow("Device does not support intermediatePosition()");
+        });
         it('should throw an error for a setLimit() command', function () {
             expect(function () {
                 blinds1.setLimit('0x1234/5')
@@ -2314,6 +2453,24 @@ describe('Blinds1 class', function () {
             expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x11, 0x00, 0x12, 0x34, 0x56, 0x05, 0x03, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
+        it('should send the correct bytes for an intermediatePosition() command to the serialport', function (done) {
+            let sentCommandId = NaN;
+            blinds1.intermediatePosition('0x123456/5', 1, function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x11, 0x00, 0x12, 0x34, 0x56, 0x05, 0x05, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should handle an intermediatePosition() command with no position parameter', function (done) {
+            let sentCommandId = NaN;
+            blinds1.intermediatePosition('0x123456/5', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x11, 0x00, 0x12, 0x34, 0x56, 0x05, 0x05, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
         it('should throw an error for a setLimit() command', function () {
             expect(function () {
                 blinds1.setLimit('0x123456/5')
@@ -2417,6 +2574,24 @@ describe('Blinds1 class', function () {
                 done();
             });
             expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x12, 0x00, 0x10, 0x34, 0x56, 0x00, 0x03, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should send the correct bytes for an intermediatePosition() command to the serialport', function (done) {
+            let sentCommandId = NaN;
+            blinds1.intermediatePosition('0x103456', 1, function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x12, 0x00, 0x10, 0x34, 0x56, 0x00, 0x04, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should handle an intermediatePosition() command with no position parameter', function (done) {
+            let sentCommandId = NaN;
+            blinds1.intermediatePosition('0x103456', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x12, 0x00, 0x10, 0x34, 0x56, 0x00, 0x04, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
         it('should throw an error for a setLimit() command', function () {
