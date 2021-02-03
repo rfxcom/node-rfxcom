@@ -1,3 +1,8 @@
+Version 2.4.0
+-------------
+Add Blinds1.intermediatePosition() function
+Silence warnings about missing AsyncConfig & AsyncData classes from NodeJS
+
 Version 2.3.1
 -------------
 Now use call-throughs rather than synonyms to implement switchOnLight() & switchOffLight(),
