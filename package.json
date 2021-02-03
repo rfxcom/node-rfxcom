@@ -1,6 +1,6 @@
 {
   "name": "rfxcom",
-  "version": "2.3.1",
+  "version": "2.4.0",
   "author": "Kevin McDermott <kevin@bigkevmcd.com>",
   "engines": {
     "node": ">=10.4.0"
