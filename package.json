@@ -1,6 +1,6 @@
 {
   "name": "rfxcom",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "author": "Kevin McDermott <kevin@bigkevmcd.com>",
   "engines": {
     "node": ">=10.4.0"
@@ -10,7 +10,6 @@
     "queue": "^6.0.2",
     "serialport": "^9.0.4"
   },
-  "main": "rfxcom.js",
   "devDependencies": {
     "jasmine-node": "^1.16.2",
     "jshint": "^2.11.1"
