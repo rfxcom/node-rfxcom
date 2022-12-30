@@ -134,7 +134,7 @@ describe("RfxCom", function() {
                 device.open();
                 device.parser.emit("data", [0x0b, 0x15, 0x00, 0x00, 0xF0, 0x9A, 0x42, 0x00, 0x03, 0x00, 0x00, 0x00]);
             });
-            it("should emit a chime1 event when it receives message type 0x16", function (done) {
+            it("should emit a chime1 event when it receives message type 0x16 (old style)", function (done) {
                 const fakeSerialPort = new FakeSerialPort(),
                     device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
@@ -143,10 +143,30 @@ describe("RfxCom", function() {
                     expect(packetType).toBe(0x16);
                     expect(this.packetNames[packetType]).toEqual("chime1");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["Byron SX"]);
+                    expect(evt.id).toBe("0xFF")
+                    expect(evt.commandNumber).toBe(13)
+                    expect(evt.command).toBe("Tubular 3 notes")
+                    expect(evt.rssi).toBe(3)
                     done();
                 });
                 device.open();
                 device.parser.emit("data", [0x07, 0x16, 0x00, 0x00, 0x00, 0xff, 0x0d, 0x30]);
+            });
+            it("should emit a chime1 event when it receives message type 0x16 (new style)", function (done) {
+                const fakeSerialPort = new FakeSerialPort(),
+                    device = new rfxcom.RfxCom("/", {
+                        port: fakeSerialPort
+                    });
+                device.on("chime1", function (evt, packetType) {
+                    expect(packetType).toBe(0x16);
+                    expect(this.packetNames[packetType]).toEqual("chime1");
+                    expect(this.deviceNames[packetType][evt.subtype]).toEqual(["Byron DBY"]);
+                    expect(evt.id).toBe("0x0100FF0D")
+                    expect(evt.rssi).toBe(6)
+                    done();
+                });
+                device.open();
+                device.parser.emit("data", [0x08, 0x16, 0x07, 0x00, 0x00, 0xff, 0x0d, 0x01, 0x60]);
             });
             it("should emit a blinds1 event when it receives message type 0x19", function (done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -1251,7 +1271,7 @@ describe("RfxCom", function() {
             beforeEach(function() {
                 device = new rfxcom.RfxCom("/dev/ttyUSB0");
             });
-            it("should emit a chime1 message when called", function(done) {
+            it("should emit a chime1 message when called (old style)", function(done) {
                 device.on("chime1", function(evt) {
                     expect(evt.subtype).toBe(0);
                     expect(evt.id).toBe("0x9A");
@@ -1263,7 +1283,19 @@ describe("RfxCom", function() {
                 });
                 device.chimeHandler([0x00, 0x01, 0x00, 0x9A, 0x03, 0x10], packetType);
             });
-            it("should handle long ID devices", function(done) {
+            it("should emit a chime1 message when called (new style)", function(done) {
+                device.on("chime1", function(evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0x9A");
+                    expect(evt.command).toBe("Big Ben");
+                    expect(evt.commandNumber).toBe(3);
+                    expect(evt.seqnbr).toBe(1);
+                    expect(evt.rssi).toBe(1);
+                    done();
+                });
+                device.chimeHandler([0x00, 0x01, 0x00, 0x9A, 0x03, 0x00, 0x10], packetType);
+            });
+            it("should handle long ID devices (old style)", function(done) {
                 device.on("chime1", function(evt) {
                     expect(evt.subtype).toBe(2);
                     expect(evt.id).toBe("0x03FFFF");
@@ -1275,7 +1307,19 @@ describe("RfxCom", function() {
                 });
                 device.chimeHandler([0x02, 0x02, 0x03, 0xFF, 0xFF, 0x20], packetType);
             });
-            it("should handle long ID devices", function(done) {
+            it("should handle long ID devices (new style)", function(done) {
+                device.on("chime1", function(evt) {
+                    expect(evt.subtype).toBe(2);
+                    expect(evt.id).toBe("0x03FFFF");
+                    expect(evt.command).toBeUndefined();
+                    expect(evt.commandNumber).toBeUndefined();
+                    expect(evt.seqnbr).toBe(2);
+                    expect(evt.rssi).toBe(2);
+                    done();
+                });
+                device.chimeHandler([0x02, 0x02, 0x03, 0xFF, 0xFF, 0x00, 0x20], packetType);
+            });
+            it("should handle long ID devices (old style)", function(done) {
                 device.on("chime1", function(evt) {
                     expect(evt.subtype).toBe(4);
                     expect(evt.id).toBe("0xFFFFFF");
@@ -1287,7 +1331,19 @@ describe("RfxCom", function() {
                 });
                 device.chimeHandler([0x04, 0x04, 0xFF, 0xFF, 0xFF, 0x80], packetType);
             });
-            it("should handle BYRON_MP001 devices", function(done) {
+            it("should handle long ID devices (new style)", function(done) {
+                device.on("chime1", function(evt) {
+                    expect(evt.subtype).toBe(4);
+                    expect(evt.id).toBe("0xFFFFFF");
+                    expect(evt.command).toBeUndefined();
+                    expect(evt.commandNumber).toBeUndefined();
+                    expect(evt.seqnbr).toBe(4);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.chimeHandler([0x04, 0x04, 0xFF, 0xFF, 0xFF, 0x00, 0x80], packetType);
+            });
+            it("should handle BYRON_MP001 devices (old style)", function(done) {
                 device.on("chime1", function(evt) {
                     expect(evt.subtype).toBe(1);
                     expect(evt.id).toBe("101000");
@@ -1299,7 +1355,19 @@ describe("RfxCom", function() {
                 });
                 device.chimeHandler([0x01, 0x05, 0x11, 0x5F, 0x54, 0x40], packetType);
             });
-            it("should handle BYRON_BY devices", function(done) {
+            it("should handle BYRON_MP001 devices (new style)", function(done) {
+                device.on("chime1", function(evt) {
+                    expect(evt.subtype).toBe(1);
+                    expect(evt.id).toBe("101000");
+                    expect(evt.command).toBeUndefined();
+                    expect(evt.commandNumber).toBeUndefined();
+                    expect(evt.seqnbr).toBe(5);
+                    expect(evt.rssi).toBe(4);
+                    done();
+                });
+                device.chimeHandler([0x01, 0x05, 0x11, 0x5F, 0x54, 0x00, 0x40], packetType);
+            });
+            it("should handle BYRON_BY devices (old style)", function(done) {
                 device.on("chime1", function(evt) {
                     expect(evt.subtype).toBe(3);
                     expect(evt.id).toBe("0x012345");
@@ -1310,6 +1378,30 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.chimeHandler([0x03, 0x06, 0x23, 0x45, 0x85, 0x40], packetType);
+            });
+            it("should handle BYRON_BY devices (new style)", function(done) {
+                device.on("chime1", function(evt) {
+                    expect(evt.subtype).toBe(3);
+                    expect(evt.id).toBe("0x012345");
+                    expect(evt.command).toBe("");
+                    expect(evt.commandNumber).toBe(5);
+                    expect(evt.seqnbr).toBe(6);
+                    expect(evt.rssi).toBe(4);
+                    done();
+                });
+                device.chimeHandler([0x03, 0x06, 0x23, 0x45, 0x85, 0x00, 0x40], packetType);
+            });
+            it("should handle very long ID devices (new style only)", function(done) {
+                device.on("chime1", function(evt) {
+                    expect(evt.subtype).toBe(6);
+                    expect(evt.id).toBe("0x03FFFFFF");
+                    expect(evt.command).toBeUndefined();
+                    expect(evt.commandNumber).toBeUndefined();
+                    expect(evt.seqnbr).toBe(52);
+                    expect(evt.rssi).toBe(7);
+                    done();
+                });
+                device.chimeHandler([0x06, 0x34, 0xFF, 0xFF, 0xFF, 0x03, 0x70], packetType);
             });
 
         });

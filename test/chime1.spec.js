@@ -27,7 +27,7 @@ describe('Chime1 class', function () {
             }).toThrow("Must provide a subtype.");
         });
     });
-    describe('.chime', function () {
+    describe('BYRON_SX', function () {
         beforeEach(function () {
             chime1 = new rfxcom.Chime1(device, rfxcom.chime1.BYRON_SX);
         });
@@ -86,7 +86,7 @@ describe('Chime1 class', function () {
             }).toThrow("Invalid device ID format");
         });
     });
-    describe('.chime', function () {
+    describe('BYRON_MP001', function () {
         beforeEach(function () {
             chime1 = new rfxcom.Chime1(device, rfxcom.chime1.BYRON_MP001);
         });
@@ -110,7 +110,7 @@ describe('Chime1 class', function () {
             }).toThrow("Invalid device ID format");
         });
     });
-    describe('.chime', function () {
+    describe('SELECT_PLUS', function () {
         beforeEach(function () {
             chime1 = new rfxcom.Chime1(device, rfxcom.chime1.SELECT_PLUS);
         });
@@ -138,7 +138,7 @@ describe('Chime1 class', function () {
             }).toThrow("Device ID 0x40000 outside valid range");
         });
     });
-    describe('.chime', function () {
+    describe('BYRON_BY', function () {
         beforeEach(function () {
             chime1 = new rfxcom.Chime1(device, rfxcom.chime1.BYRON_BY);
         });
@@ -198,7 +198,7 @@ describe('Chime1 class', function () {
             }).toThrow("Device ID 0x20000 outside valid range");
         });
     });
-    describe('.chime', function () {
+    describe('ENVIVO', function () {
         beforeEach(function () {
             chime1 = new rfxcom.Chime1(device, rfxcom.chime1.ENVIVO);
         });
@@ -240,7 +240,7 @@ describe('Chime1 class', function () {
             }).toThrow("Invalid device ID format");
         });
     });
-    describe('.chime', function () {
+    describe('ALFAWISE', function () {
         beforeEach(function () {
             chime1 = new rfxcom.Chime1(device, rfxcom.chime1.ALFAWISE);
         });
@@ -282,4 +282,89 @@ describe('Chime1 class', function () {
             }).toThrow("Invalid device ID format");
         });
     });
+    describe('QH_A19', function () {
+        beforeEach(function () {
+            chime1 = new rfxcom.Chime1(device, rfxcom.chime1.QH_A19);
+        });
+        it('should send the correct bytes to the serialport', function (done) {
+            let sentCommandId = NaN;
+            chime1.chime('0x1234567', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x08, 0x16, 0x06, 0x00, 0x23, 0x45, 0x67, 0x01, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should accept an address of 0x0', function (done) {
+            let sentCommandId = NaN;
+            chime1.chime('0x0', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x08, 0x16, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should accept the highest allowed address', function (done) {
+            let sentCommandId = NaN;
+            chime1.chime('0x3ffffff', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x08, 0x16, 0x06, 0x00, 0xFF, 0xFF, 0xFF, 0x03, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should throw an error with an invalid address', function () {
+            expect(function () {
+                chime1.chime('0x4000000')
+            }).toThrow("Device ID 0x4000000 outside valid range");
+        });
+        it('should throw an error with an invalid device ID', function () {
+            expect(function () {
+                chime1.chime('0x400/1')
+            }).toThrow("Invalid device ID format");
+        });
+    });
+    describe('BYRON_DBY', function () {
+        beforeEach(function () {
+            chime1 = new rfxcom.Chime1(device, rfxcom.chime1.BYRON_DBY);
+        });
+        it('should send the correct bytes to the serialport', function (done) {
+            let sentCommandId = NaN;
+            chime1.chime('0x1234567', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x08, 0x16, 0x07, 0x00, 0x23, 0x45, 0x67, 0x01, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should accept an address of 0x0', function (done) {
+            let sentCommandId = NaN;
+            chime1.chime('0x0', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x08, 0x16, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should accept the highest allowed address', function (done) {
+            let sentCommandId = NaN;
+            chime1.chime('0xffffffff', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x08, 0x16, 0x07, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should throw an error with an invalid address', function () {
+            expect(function () {
+                chime1.chime('0x100000000')
+            }).toThrow("Device ID 0x100000000 outside valid range");
+        });
+        it('should throw an error with an invalid device ID', function () {
+            expect(function () {
+                chime1.chime('0x400/1')
+            }).toThrow("Invalid device ID format");
+        });
+    });
+
 });
