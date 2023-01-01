@@ -2740,19 +2740,6 @@ describe("RfxCom", function() {
                 });
                 device.blinds1Handler([0x04, 0x05, 0x00, 0x12, 0x34, 0x00, 0x00, 0x80], packetType);
             });
-            it("should handle BLINDS_T6 devices", function(done) {
-                device.on("blinds1", function(evt) {
-                    expect(evt.subtype).toBe(6);
-                    expect(evt.id).toBe("0x5638010");
-                    expect(evt.unitCode).toBe(3);
-                    expect(evt.command).toBe("Close");
-                    expect(evt.commandNumber).toBe(1);
-                    expect(evt.seqnbr).toBe(4);
-                    expect(evt.rssi).toBe(7);
-                    done();
-                });
-                device.blinds1Handler([0x06, 0x04, 0x56, 0x38, 0x01, 0x03, 0x01, 0x78], packetType);
-            });
             it("should handle BLINDS_T4 devices delete limits event", function(done) {
                 device.on("blinds1", function(evt) {
                     expect(evt.subtype).toBe(4);
@@ -2792,6 +2779,19 @@ describe("RfxCom", function() {
                 });
                 device.blinds1Handler([0x04, 0x05, 0x00, 0x12, 0x34, 0x00, 0x05, 0x80], packetType);
             });
+            it("should handle BLINDS_T6 devices", function(done) {
+                device.on("blinds1", function(evt) {
+                    expect(evt.subtype).toBe(6);
+                    expect(evt.id).toBe("0x5638010");
+                    expect(evt.unitCode).toBe(3);
+                    expect(evt.command).toBe("Close");
+                    expect(evt.commandNumber).toBe(1);
+                    expect(evt.seqnbr).toBe(4);
+                    expect(evt.rssi).toBe(7);
+                    done();
+                });
+                device.blinds1Handler([0x06, 0x04, 0x56, 0x38, 0x01, 0x03, 0x01, 0x78], packetType);
+            });
             it("should handle BLINDS_T10 devices reverse event", function(done) {
                 device.on("blinds1", function(evt) {
                     expect(evt.subtype).toBe(10);
@@ -2809,14 +2809,14 @@ describe("RfxCom", function() {
                 device.on("blinds1", function(evt) {
                     expect(evt.subtype).toBe(11);
                     expect(evt.id).toBe("0x001234");
-                    expect(evt.unitCode).toBe(1);
+                    expect(evt.unitCode).toBe(3);
                     expect(evt.command).toBe("Open");
                     expect(evt.commandNumber).toBe(0);
                     expect(evt.seqnbr).toBe(5);
                     expect(evt.rssi).toBe(8);
                     done();
                 });
-                device.blinds1Handler([0x0b, 0x05, 0x00, 0x12, 0x34, 0x00, 0x00, 0x80], packetType);
+                device.blinds1Handler([0x0b, 0x05, 0x00, 0x12, 0x34, 0x03, 0x00, 0x80], packetType);
             });
         });
 

@@ -1593,7 +1593,7 @@ describe('Blinds1 class', function () {
                 sentCommandId = cmdId;
                 done();
             });
-            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x0b, 0x00, 0x00, 0x12, 0x34, 0x00, 0x00, 0x00]);
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x0b, 0x00, 0x00, 0x12, 0x34, 0x05, 0x00, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
         it('should accept an array deviceId', function (done) {
@@ -1602,16 +1602,7 @@ describe('Blinds1 class', function () {
                 sentCommandId = cmdId;
                 done();
             });
-            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x0b, 0x00, 0x00, 0x12, 0x34, 0x00, 0x01, 0x00]);
-            expect(sentCommandId).toEqual(0);
-        });
-        it('should accept a deviceId with no unit code', function (done) {
-            let sentCommandId = NaN;
-            blinds1.close(['0x1234'], function (err, response, cmdId) {
-                sentCommandId = cmdId;
-                done();
-            });
-            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x0b, 0x00, 0x00, 0x12, 0x34, 0x00, 0x01, 0x00]);
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x0b, 0x00, 0x00, 0x12, 0x34, 0x05, 0x01, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a close() command to the serialport', function (done) {
@@ -1620,7 +1611,7 @@ describe('Blinds1 class', function () {
                 sentCommandId = cmdId;
                 done();
             });
-            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x0b, 0x00, 0x00, 0x12, 0x34, 0x00, 0x01, 0x00]);
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x0b, 0x00, 0x00, 0x12, 0x34, 0x05, 0x01, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a stop() command to the serialport', function (done) {
@@ -1629,7 +1620,7 @@ describe('Blinds1 class', function () {
                 sentCommandId = cmdId;
                 done();
             });
-            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x0b, 0x00, 0x00, 0x12, 0x34, 0x00, 0x02, 0x00]);
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x0b, 0x00, 0x00, 0x12, 0x34, 0x05, 0x02, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
         it('should send the correct bytes for a confirm() command to the serialport', function (done) {
@@ -1638,7 +1629,7 @@ describe('Blinds1 class', function () {
                 sentCommandId = cmdId;
                 done();
             });
-            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x0b, 0x00, 0x00, 0x12, 0x34, 0x00, 0x03, 0x00]);
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x0b, 0x00, 0x00, 0x12, 0x34, 0x05, 0x03, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
         it('should throw an error for an intermediatePosition() command', function () {
@@ -1661,6 +1652,11 @@ describe('Blinds1 class', function () {
                 blinds1.up('0x1234/5')
             }).toThrow("Device does not support up()");
         });
+        it('should throw an error for a missing unit code', function () {
+            expect(function () {
+                blinds1.open('0x1')
+            }).toThrow("Invalid deviceId format");
+        });
         it('should throw an error for address < 1', function () {
             expect(function () {
                 blinds1.open('0x0/5')
@@ -1676,13 +1672,36 @@ describe('Blinds1 class', function () {
                 blinds1.reverse('0x1234/5')
             }).toThrow("Device does not support reverse()");
         });
+        it('should accept unit code = 0', function (done) {
+            let sentCommandId = NaN;
+            blinds1.open('0x1234/0', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x0b, 0x00, 0x00, 0x12, 0x34, 0x00, 0x00, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should accept unit code = 6', function (done) {
+            let sentCommandId = NaN;
+            blinds1.open('0x1234/6', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x0b, 0x00, 0x00, 0x12, 0x34, 0x06, 0x00, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should throw an error for unit code > 6', function () {
+            expect(function () {
+                blinds1.open('0x1234/7')
+            }).toThrow("Invalid unit code 7");
+        });
         it('should accept address = 0x1', function (done) {
             let sentCommandId = NaN;
             blinds1.open('0x1/5', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
             });
-            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x0b, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00]);
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x0b, 0x00, 0x00, 0x00, 0x01, 0x05, 0x00, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
         it('should accept address = 0xffffff', function (done) {
@@ -1691,7 +1710,7 @@ describe('Blinds1 class', function () {
                 sentCommandId = cmdId;
                 done();
             });
-            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x0b, 0x00, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00]);
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x0b, 0x00, 0xff, 0xff, 0xff, 0x05, 0x00, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
         it('should throw an error for address > 0xffffffff', function () {
@@ -2402,7 +2421,6 @@ describe('Blinds1 class', function () {
         });
     });
 
-
     // BLINDS_T17 test
     describe('.BLINDS_T17', function () {
         beforeEach(function () {
@@ -2646,6 +2664,301 @@ describe('Blinds1 class', function () {
             expect(function () {
                 blinds1.open('0x104000')
             }).toThrow("Address 0x104000 outside valid range");
+        });
+    });
+
+    // BLINDS_T19 test
+    describe('.BLINDS_T19', function () {
+        beforeEach(function () {
+            blinds1 = new rfxcom.Blinds1(device, rfxcom.blinds1.BLINDS_T19);
+        });
+        it('should send the correct bytes for a close() command to the serialport', function (done) {
+            let sentCommandId = NaN;
+            blinds1.close('0x1234/5', 'CW', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x13, 0x00, 0x00, 0x12, 0x34, 0x05, 0x00, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should accept an array deviceId', function (done) {
+            let sentCommandId = NaN;
+            blinds1.close(['0x1234', '5'], 'CW', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x13, 0x00, 0x00, 0x12, 0x34, 0x05, 0x00, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should throw an error for an stop() command', function () {
+            expect(function () {
+                blinds1.stop('0x1234/5')
+            }).toThrow("Device does not support stop()");
+        });
+        it('should send the correct bytes for a confirm() command to the serialport', function (done) {
+            let sentCommandId = NaN;
+            blinds1.confirm('0x1234/5', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x13, 0x00, 0x00, 0x12, 0x34, 0x05, 0x05, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should send the correct bytes for a intermediatePosition("45") command to the serialport', function (done) {
+            let sentCommandId = NaN;
+            blinds1.intermediatePosition('0x1234/5', '45', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x13, 0x00, 0x00, 0x12, 0x34, 0x05, 0x02, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should send the correct bytes for a intermediatePosition(90) command to the serialport', function (done) {
+            let sentCommandId = NaN;
+            blinds1.intermediatePosition('0x1234/5', 90, function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x13, 0x00, 0x00, 0x12, 0x34, 0x05, 0x03, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should send the correct bytes for a intermediatePosition(135) command to the serialport', function (done) {
+            let sentCommandId = NaN;
+            blinds1.intermediatePosition('0x1234/5', 135, function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x13, 0x00, 0x00, 0x12, 0x34, 0x05, 0x04, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should throw an error for an intermediatePosition() command with an invalid position', function () {
+            expect(function () {
+                blinds1.intermediatePosition('0x1234/5', '-1')
+            }).toThrow("Invalid position: value must be 45, 90, or 135");
+        });
+        it('should throw an error for an setLimit() command', function () {
+            expect(function () {
+                blinds1.setLimit('0x1234/5')
+            }).toThrow("Device does not support setLimit()");
+        });
+        it('should throw an error for open() command', function () {
+            expect(function () {
+                blinds1.open('0x1234/5')
+            }).toThrow("Device does not support open()");
+        });
+        it('should throw an error for open() command', function () {
+            expect(function () {
+                blinds1.down('0x1234/5')
+            }).toThrow("Device does not support down()");
+        });
+        it('should throw an error for up() command', function () {
+            expect(function () {
+                blinds1.up('0x1234/5')
+            }).toThrow("Device does not support up()");
+        });
+        it('should throw an error for setLowerLimit() command', function () {
+            expect(function () {
+                blinds1.setLowerLimit('0x1234/5')
+            }).toThrow("Device does not support setLowerLimit()");
+        });
+        it('should throw an error for reverse() command', function () {
+            expect(function () {
+                blinds1.reverse('0x1234/5')
+            }).toThrow("Device does not support reverse()");
+        });
+        it('should throw an error for address < 1', function () {
+            expect(function () {
+                blinds1.close('0x0/5', 'CW')
+            }).toThrow("Address 0x0 outside valid range");
+        });
+        it('should accept address = 0x1', function (done) {
+            let sentCommandId = NaN;
+            blinds1.close('0x1/5', 'CW', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x13, 0x00, 0x00, 0x00, 0x01, 0x05, 0x00, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should accept address = 0xffff', function (done) {
+            let sentCommandId = NaN;
+            blinds1.close('0xffff/5', 'CW', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x13, 0x00, 0x00, 0xff, 0xff, 0x05, 0x00, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should throw an error for address > 0xffff', function () {
+            expect(function () {
+                blinds1.close('0x10000/5', 'CW')
+            }).toThrow("Address 0x10000 outside valid range");
+        });
+        it('should accept unitcode = 0x0', function (done) {
+            let sentCommandId = NaN;
+            blinds1.close('0x1234/0', 'CW', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x13, 0x00, 0x00, 0x12, 0x34, 0x00, 0x00, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should accept unitcode = 0xf', function (done) {
+            let sentCommandId = NaN;
+            blinds1.close('0x1234/0xf', 'CW', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x13, 0x00, 0x00, 0x12, 0x34, 0x0f, 0x00, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should throw an error for unit code > 0xf', function () {
+            expect(function () {
+                blinds1.close('0x1234/0x10', 'CW')
+            }).toThrow("Invalid unit code 0x10");
+        });
+    });
+
+    // BLINDS_T20 test
+    describe('.BLINDS_T20', function () {
+        beforeEach(function () {
+            blinds1 = new rfxcom.Blinds1(device, rfxcom.blinds1.BLINDS_T20);
+        });
+        it('should send the correct bytes for an open() command to the serialport', function (done) {
+            let sentCommandId = NaN;
+            blinds1.open('0x1234/5', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x14, 0x00, 0x00, 0x12, 0x34, 0x05, 0x00, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should accept an array deviceId', function (done) {
+            let sentCommandId = NaN;
+            blinds1.close(['0x1234', '5'], function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x14, 0x00, 0x00, 0x12, 0x34, 0x05, 0x01, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should send the correct bytes for a close() command to the serialport', function (done) {
+            let sentCommandId = NaN;
+            blinds1.close('0x1234/5', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x14, 0x00, 0x00, 0x12, 0x34, 0x05, 0x01, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should send the correct bytes for a stop() command to the serialport', function (done) {
+            let sentCommandId = NaN;
+            blinds1.stop('0x1234/5', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x14, 0x00, 0x00, 0x12, 0x34, 0x05, 0x02, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should send the correct bytes for a confirm() command to the serialport', function (done) {
+            let sentCommandId = NaN;
+            blinds1.confirm('0x1234/5', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x14, 0x00, 0x00, 0x12, 0x34, 0x05, 0x03, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should throw an error for an intermediatePosition() command', function () {
+            expect(function () {
+                blinds1.intermediatePosition('0x1234/5')
+            }).toThrow("Device does not support intermediatePosition()");
+        });
+        it('should throw an error for setLimit() command', function () {
+            expect(function () {
+                blinds1.setLimit('0x1234/5')
+            }).toThrow("Device does not support setLimit()");
+        });
+        it('should throw an error for down() command', function () {
+            expect(function () {
+                blinds1.down('0x1234/5')
+            }).toThrow("Device does not support down()");
+        });
+        it('should throw an error for up() command', function () {
+            expect(function () {
+                blinds1.up('0x1234/5')
+            }).toThrow("Device does not support up()");
+        });
+        it('should throw an error for setLowerLimit() command', function () {
+            expect(function () {
+                blinds1.setLowerLimit('0x1234/5')
+            }).toThrow("Device does not support setLowerLimit()");
+        });
+        it('should throw an error for reverse() command', function () {
+            expect(function () {
+                blinds1.reverse('0x1234/5')
+            }).toThrow("Device does not support reverse()");
+        });
+        it('should throw an error for address < 1', function () {
+            expect(function () {
+                blinds1.open('0x0/5')
+            }).toThrow("Address 0x0 outside valid range");
+        });
+        it('should accept address = 0x1', function (done) {
+            let sentCommandId = NaN;
+            blinds1.open('0x1/5', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x14, 0x00, 0x00, 0x00, 0x01, 0x05, 0x00, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should accept address = 0xffff', function (done) {
+            let sentCommandId = NaN;
+            blinds1.open('0xffff/5', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x14, 0x00, 0x00, 0xff, 0xff, 0x05, 0x00, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should throw an error for address > 0xffff', function () {
+            expect(function () {
+                blinds1.open('0x10000/5')
+            }).toThrow("Address 0x10000 outside valid range");
+        });
+        it('should accept unit code = 1', function (done) {
+            let sentCommandId = NaN;
+            blinds1.open('0x1234/1', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x14, 0x00, 0x00, 0x12, 0x34, 0x01, 0x00, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should accept unit code = 9', function (done) {
+            let sentCommandId = NaN;
+            blinds1.open('0x1234/9', function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                done();
+            });
+            expect(fakeSerialPort).toHaveSent([0x09, 0x19, 0x14, 0x00, 0x00, 0x12, 0x34, 0x09, 0x00, 0x00]);
+            expect(sentCommandId).toEqual(0);
+        });
+        it('should throw an error for unit code 0', function () {
+            expect(function () {
+                blinds1.open('0x1234/0')
+            }).toThrow("Subtype doesn't support group commands");
+        });
+        it('should throw an error for unit code > 9', function () {
+            expect(function () {
+                blinds1.open('0x1234/10')
+            }).toThrow("Invalid unit code 10");
+        });
+        it('should throw an error when no unit codeis supplied', function () {
+            expect(function () {
+                blinds1.open('0x1234')
+            }).toThrow("Invalid deviceId format");
         });
     });
 });
