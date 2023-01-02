@@ -4436,6 +4436,27 @@ describe("RfxCom", function() {
             });
         });
 
+        describe(".waterlevelHandler", function() {
+            let device = {};
+            let packetType = 0x73;
+            beforeEach(function() {
+                device = new rfxcom.RfxCom("/dev/ttyUSB0");
+            });
+            it("should emit a waterlevel message when called", function(done) {
+                device.on("waterlevel", function(evt) {
+                    expect(evt.subtype).toBe(0x00);
+                    expect(evt.seqnbr).toBe(42);
+                    expect(evt.id).toBe("0x1234");
+                    expect(evt.level).toBe(500); // (cm)
+                    expect(evt.temperature).toBe(35.1);
+                    expect(evt.rssi).toBe(7);
+                    expect(evt.batteryLevel).toBe(3);
+                    done();
+                });
+                device.waterlevelHandler([0x00, 0x2A, 0x12, 0x34, 0x00, 0x01, 0xF4, 0x01, 0x5f,0x00, 0x00, 0x73], packetType);
+            });
+        });
+
         describe(".weatherHandler", function() {
             let device = {};
             let packetType = 0x76;
