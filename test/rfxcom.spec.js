@@ -161,7 +161,7 @@ describe("RfxCom", function() {
                     expect(packetType).toBe(0x16);
                     expect(this.packetNames[packetType]).toEqual("chime1");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["Byron DBY"]);
-                    expect(evt.id).toBe("0x0100FF0D")
+                    expect(evt.id).toBe("0x00FF0D01")
                     expect(evt.rssi).toBe(6)
                     done();
                 });
@@ -1415,7 +1415,7 @@ describe("RfxCom", function() {
                     expect(evt.rssi).toBe(7);
                     done();
                 });
-                device.chimeHandler([0x06, 0x34, 0xFF, 0xFF, 0xFF, 0x03, 0x70], packetType);
+                device.chimeHandler([0x06, 0x34, 0x03, 0xFF, 0xFF, 0xFF, 0x70], packetType);
             });
 
         });

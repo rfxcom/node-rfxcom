@@ -288,11 +288,11 @@ describe('Chime1 class', function () {
         });
         it('should send the correct bytes to the serialport', function (done) {
             let sentCommandId = NaN;
-            chime1.chime('0x1234567', function (err, response, cmdId) {
+            chime1.chime('0x12345603', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
             });
-            expect(fakeSerialPort).toHaveSent([0x08, 0x16, 0x06, 0x00, 0x23, 0x45, 0x67, 0x01, 0x00]);
+            expect(fakeSerialPort).toHaveSent([0x08, 0x16, 0x06, 0x00, 0x12, 0x34, 0x56, 0x03, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
         it('should accept an address of 0x0', function (done) {
@@ -306,7 +306,7 @@ describe('Chime1 class', function () {
         });
         it('should accept the highest allowed address', function (done) {
             let sentCommandId = NaN;
-            chime1.chime('0x3ffffff', function (err, response, cmdId) {
+            chime1.chime('0xffffff03', function (err, response, cmdId) {
                 sentCommandId = cmdId;
                 done();
             });
@@ -315,8 +315,13 @@ describe('Chime1 class', function () {
         });
         it('should throw an error with an invalid address', function () {
             expect(function () {
-                chime1.chime('0x4000000')
-            }).toThrow("Device ID 0x4000000 outside valid range");
+                chime1.chime('0xffffff04')
+            }).toThrow("Device ID 0xffffff04 outside valid range");
+        });
+        it('should throw an error with an invalid address', function () {
+            expect(function () {
+                chime1.chime('0x00000004')
+            }).toThrow("Device ID 0x4 outside valid range");
         });
         it('should throw an error with an invalid device ID', function () {
             expect(function () {
@@ -334,7 +339,7 @@ describe('Chime1 class', function () {
                 sentCommandId = cmdId;
                 done();
             });
-            expect(fakeSerialPort).toHaveSent([0x08, 0x16, 0x07, 0x00, 0x23, 0x45, 0x67, 0x01, 0x00]);
+            expect(fakeSerialPort).toHaveSent([0x08, 0x16, 0x07, 0x00, 0x01, 0x23, 0x45, 0x67, 0x00]);
             expect(sentCommandId).toEqual(0);
         });
         it('should accept an address of 0x0', function (done) {
