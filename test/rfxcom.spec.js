@@ -536,6 +536,20 @@ describe("RfxCom", function() {
                 device.open();
                 device.parser.emit("data", [0x0A, 0x71, 0x00, 0x37, 0x08, 0xF8, 0x00, 0x8A, 0x64, 0x67, 0x70]);
             });
+            it("should emit a waterlevel event when it receives message type 0x73", function(done) {
+                const fakeSerialPort = new FakeSerialPort(),
+                    device = new rfxcom.RfxCom("/", {
+                        port: fakeSerialPort
+                    });
+                device.on("waterlevel", function (evt, packetType) {
+                    expect(packetType).toBe(0x73);
+                    expect(this.packetNames[packetType]).toEqual("waterlevel");
+                    expect(this.deviceNames[packetType][evt.subtype]).toEqual(["TS FT002"]);
+                    done();
+                });
+                device.open();
+                device.parser.emit("data", [0x0D, 0x73, 0x00, 0x2A, 0x12, 0x34, 0x00, 0x01, 0xF4, 0x01, 0x5f, 0x00, 0x00, 0x73]);
+            });
         });
         describe(".initialise function", function () {
             it("should emit a 'connectfailed' event if the serial port device file does not exist", function (done) {
