@@ -7,7 +7,7 @@ describe('Transmitter class', function () {
         fakeSerialPort = {},
         device = {};
     beforeEach(function () {
-        this.addMatchers({
+        jasmine.addMatchers({
             toHaveSent: matchers.toHaveSent
         });
         fakeSerialPort = new FakeSerialPort();
@@ -36,7 +36,7 @@ describe('Transmitter class', function () {
             expect(transmitter.options).toEqual({});
         });
         it ('should throw an exception if no subtype is supplied', function () {
-            expect(function () {new rfxcom.Transmitter(device)}).toThrow("Must provide a subtype.")
+            expect(function () {new rfxcom.Transmitter(device)}).toThrow(new Error(("Must provide a subtype.")))
         })
     });
     describe('instance methods', function () {

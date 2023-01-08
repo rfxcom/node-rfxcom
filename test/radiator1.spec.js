@@ -10,7 +10,7 @@ describe('Radiator1 class', function () {
         fakeSerialPort = {},
         device = {};
     beforeEach(function () {
-        this.addMatchers({
+        jasmine.addMatchers({
             toHaveSent: matchers.toHaveSent
         });
         fakeSerialPort = new FakeSerialPort();
@@ -89,12 +89,12 @@ describe('Radiator1 class', function () {
                 it('should throw an exception with a missing setpoint', function () {
                     expect(function () {
                         radiator.setTemperature('0x1234567/8');
-                    }).toThrow("Invalid temperature: must be a number in range 5.0-28.0");
+                    }).toThrow(new Error(("Invalid temperature: must be a number in range 5.0-28.0")));
                 });
                 it('should throw an exception with a setpoint in the wrong format', function () {
                     expect(function () {
                         radiator.setTemperature('0x1234567/8', "28.2");
-                    }).toThrow("Invalid temperature: must be a number in range 5.0-28.0");
+                    }).toThrow(new Error(("Invalid temperature: must be a number in range 5.0-28.0")));
                 });
             });
         });
@@ -102,7 +102,7 @@ describe('Radiator1 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     radiator.setDayMode('0x1234');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address & unit code', function (done) {
                 let sentCommandId = NaN;
@@ -125,22 +125,22 @@ describe('Radiator1 class', function () {
             it('should throw an exception with an invalid address 0x4000000', function () {
                 expect(function () {
                     radiator.setDayMode('0x4000000/8');
-                }).toThrow("Address 0x4000000 outside valid range");
+                }).toThrow(new Error(("Address 0x4000000 outside valid range")));
             });
             it('should throw an exception with an invalid address 0x0', function () {
                 expect(function () {
                     radiator.setDayMode('0x0/8');
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
             it('should throw an exception with an invalid unit code 0', function () {
                 expect(function () {
                     radiator.setDayMode('0x1234567/0');
-                }).toThrow("Invalid unit code 0");
+                }).toThrow(new Error(("Invalid unit code 0")));
             });
             it('should throw an exception with an invalid unit code 17', function () {
                 expect(function () {
                     radiator.setDayMode('0x1234567/17');
-                }).toThrow("Invalid unit code 17");
+                }).toThrow(new Error(("Invalid unit code 17")));
             });
         });
     });

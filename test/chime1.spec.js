@@ -8,7 +8,7 @@ describe('Chime1 class', function () {
         fakeSerialPort,
         device;
     beforeEach(function () {
-        this.addMatchers({
+        jasmine.addMatchers({
             toHaveSent: matchers.toHaveSent
         });
         fakeSerialPort = new FakeSerialPort();
@@ -24,7 +24,7 @@ describe('Chime1 class', function () {
         it('should throw an error if no subtype is specified', function () {
             expect(function () {
                 chime1 = new rfxcom.Chime1(device);
-            }).toThrow("Must provide a subtype.");
+            }).toThrow(new Error(("Must provide a subtype.")));
         });
     });
     describe('BYRON_SX', function () {
@@ -73,17 +73,17 @@ describe('Chime1 class', function () {
         it('should throw an error with an invalid tone number', function () {
             expect(function () {
                 chime1.chime('0x2a', -1)
-            }).toThrow("Invalid tone: value must be in range 0-15");
+            }).toThrow(new Error(("Invalid tone: value must be in range 0-15")));
         });
         it('should throw an error with an invalid device ID', function () {
             expect(function () {
                 chime1.chime('0x23a')
-            }).toThrow("Device ID 0x23a outside valid range");
+            }).toThrow(new Error(("Device ID 0x23a outside valid range")));
         });
         it('should throw an error with an invalid device ID format', function () {
             expect(function () {
                 chime1.chime('0x23/0xa')
-            }).toThrow("Invalid device ID format");
+            }).toThrow(new Error(("Invalid device ID format")));
         });
     });
     describe('BYRON_MP001', function () {
@@ -102,12 +102,12 @@ describe('Chime1 class', function () {
         it('should throw an error with an invalid device ID format', function () {
             expect(function () {
                 chime1.chime('10100')
-            }).toThrow("Invalid device ID format");
+            }).toThrow(new Error(("Invalid device ID format")));
         });
         it('should throw an error with an invalid device ID format', function () {
             expect(function () {
                 chime1.chime('10100x')
-            }).toThrow("Invalid device ID format");
+            }).toThrow(new Error(("Invalid device ID format")));
         });
     });
     describe('SELECT_PLUS', function () {
@@ -135,7 +135,7 @@ describe('Chime1 class', function () {
         it('should throw an error with an invalid device ID', function () {
             expect(function () {
                 chime1.chime('0x40000')
-            }).toThrow("Device ID 0x40000 outside valid range");
+            }).toThrow(new Error(("Device ID 0x40000 outside valid range")));
         });
     });
     describe('BYRON_BY', function () {
@@ -172,7 +172,7 @@ describe('Chime1 class', function () {
         it('should throw an error with an invalid sound code', function () {
             expect(function () {
                 chime1.chime('0x103ff', 9)
-            }).toThrow("Invalid tone: value must be in range 0-7");
+            }).toThrow(new Error(("Invalid tone: value must be in range 0-7")));
         });
         it('should accept an address of 0x0', function (done) {
             let sentCommandId = NaN;
@@ -195,7 +195,7 @@ describe('Chime1 class', function () {
         it('should throw an error with an invalid device ID', function () {
             expect(function () {
                 chime1.chime('0x20000')
-            }).toThrow("Device ID 0x20000 outside valid range");
+            }).toThrow(new Error(("Device ID 0x20000 outside valid range")));
         });
     });
     describe('ENVIVO', function () {
@@ -232,12 +232,12 @@ describe('Chime1 class', function () {
         it('should throw an error with an invalid address', function () {
             expect(function () {
                 chime1.chime('0x1000000')
-            }).toThrow("Device ID 0x1000000 outside valid range");
+            }).toThrow(new Error(("Device ID 0x1000000 outside valid range")));
         });
         it('should throw an error with an invalid device ID', function () {
             expect(function () {
                 chime1.chime('0x400/1')
-            }).toThrow("Invalid device ID format");
+            }).toThrow(new Error(("Invalid device ID format")));
         });
     });
     describe('ALFAWISE', function () {
@@ -274,12 +274,12 @@ describe('Chime1 class', function () {
         it('should throw an error with an invalid address', function () {
             expect(function () {
                 chime1.chime('0x1000000')
-            }).toThrow("Device ID 0x1000000 outside valid range");
+            }).toThrow(new Error(("Device ID 0x1000000 outside valid range")));
         });
         it('should throw an error with an invalid device ID', function () {
             expect(function () {
                 chime1.chime('0x400/1')
-            }).toThrow("Invalid device ID format");
+            }).toThrow(new Error(("Invalid device ID format")));
         });
     });
     describe('QH_A19', function () {
@@ -316,17 +316,17 @@ describe('Chime1 class', function () {
         it('should throw an error with an invalid address', function () {
             expect(function () {
                 chime1.chime('0xffffff04')
-            }).toThrow("Device ID 0xffffff04 outside valid range");
+            }).toThrow(new Error(("Device ID 0xffffff04 outside valid range")));
         });
         it('should throw an error with an invalid address', function () {
             expect(function () {
                 chime1.chime('0x00000004')
-            }).toThrow("Device ID 0x4 outside valid range");
+            }).toThrow(new Error(("Device ID 0x4 outside valid range")));
         });
         it('should throw an error with an invalid device ID', function () {
             expect(function () {
                 chime1.chime('0x400/1')
-            }).toThrow("Invalid device ID format");
+            }).toThrow(new Error(("Invalid device ID format")));
         });
     });
     describe('BYRON_DBY', function () {
@@ -363,12 +363,12 @@ describe('Chime1 class', function () {
         it('should throw an error with an invalid address', function () {
             expect(function () {
                 chime1.chime('0x100000000')
-            }).toThrow("Device ID 0x100000000 outside valid range");
+            }).toThrow(new Error(("Device ID 0x100000000 outside valid range")));
         });
         it('should throw an error with an invalid device ID', function () {
             expect(function () {
                 chime1.chime('0x400/1')
-            }).toThrow("Invalid device ID format");
+            }).toThrow(new Error(("Invalid device ID format")));
         });
     });
 

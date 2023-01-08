@@ -4,7 +4,7 @@ const rfxcom = require('../lib'),
     FakeSerialPort = require('./helper');
 
 beforeEach(function () {
-    this.addMatchers({
+    jasmine.addMatchers({
         toHaveSent: matchers.toHaveSent
     });
 });
@@ -14,7 +14,7 @@ describe('Edisio class', function () {
         fakeSerialPort,
         device;
     beforeEach(function () {
-        this.addMatchers({
+        jasmine.addMatchers({
             toHaveSent: matchers.toHaveSent
         });
         fakeSerialPort = new FakeSerialPort();
@@ -34,7 +34,7 @@ describe('Edisio class', function () {
         it('should throw an error if no subtype is specified', function () {
             expect(function () {
                 edisio = new rfxcom.Edisio(device);
-            }).toThrow("Must provide a subtype.");
+            }).toThrow(new Error(("Must provide a subtype.")));
         });
     });
     describe('EDISIO_CONTROLLER', function () {
@@ -112,12 +112,12 @@ describe('Edisio class', function () {
                 it('should throw an error for level -1', function () {
                     expect(function () {
                         edisio.setLevel('0x12345678/9', -1);
-                    }).toThrow("Dim level must be in the range 0-100");
+                    }).toThrow(new Error(("Dim level must be in the range 0-100")));
                 });
                 it('should throw an error for level 101', function () {
                     expect(function () {
                         edisio.setLevel('0x12345678/9', -1);
-                    }).toThrow("Dim level must be in the range 0-100");
+                    }).toThrow(new Error(("Dim level must be in the range 0-100")));
                 });
             });
             describe('increaseLevel()', function () {
@@ -202,17 +202,17 @@ describe('Edisio class', function () {
                 it('should throw an error for {R: 0, G: -1, B: 0}', function () {
                     expect(function () {
                         edisio.setColour('0x12345678/9', {R: 0, G: -1, B: 0});
-                    }).toThrow("Colour RGB values must be in the range 0-255");
+                    }).toThrow(new Error(("Colour RGB values must be in the range 0-255")));
                 });
                 it('should throw an error for {R: 255, G: 256, B: 255}', function () {
                     expect(function () {
                         edisio.setColour('0x12345678/9', {R: 255, G: 256, B: 255});
-                    }).toThrow("Colour RGB values must be in the range 0-255");
+                    }).toThrow(new Error(("Colour RGB values must be in the range 0-255")));
                 });
                 it('should throw an error for a malformed colour parameter', function () {
                     expect(function () {
                         edisio.setColour('0x12345678/9', {R: 255, B: 255});
-                    }).toThrow("Colour must be an object with fields R, G, B");
+                    }).toThrow(new Error(("Colour must be an object with fields R, G, B")));
                 });
             });
             describe('program()', function () {
@@ -291,7 +291,7 @@ describe('Edisio class', function () {
                 it('should throw an exception with an invalid deviceId format', function () {
                     expect(function () {
                         edisio.switchOff('0x12345678');
-                    }).toThrow("Invalid deviceId format");
+                    }).toThrow(new Error(("Invalid deviceId format")));
                 });
                 it('should accept the highest address & unit code', function (done) {
                     let sentCommandId = NaN;
@@ -316,27 +316,27 @@ describe('Edisio class', function () {
                 it('should throw an exception with a unitCode of 0 (group address)', function () {
                     expect(function () {
                         edisio.switchOff('0x12345678/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
                 it('should throw an exception with a unitCode of -1', function () {
                     expect(function () {
                         edisio.switchOff('0x12345678/-1');
-                    }).toThrow("Invalid unit code -1");
+                    }).toThrow(new Error(("Invalid unit code -1")));
                 });
                 it('should throw an exception with a unitCode of 17', function () {
                     expect(function () {
                         edisio.switchOff('0x12345678/17');
-                    }).toThrow("Invalid unit code 17");
+                    }).toThrow(new Error(("Invalid unit code 17")));
                 });
                 it('should throw an exception with an address of 0x0', function () {
                     expect(function () {
                         edisio.switchOff('0x0/1');
-                    }).toThrow("Address 0x0 outside valid range");
+                    }).toThrow(new Error(("Address 0x0 outside valid range")));
                 });
                 it('should throw an exception with an address of 0x1ffffffff', function () {
                     expect(function () {
                         edisio.switchOff('0x1ffffffff/1');
-                    }).toThrow("Address 0x1ffffffff outside valid range");
+                    }).toThrow(new Error(("Address 0x1ffffffff outside valid range")));
                 });
             });
         });

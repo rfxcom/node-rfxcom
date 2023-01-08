@@ -10,7 +10,7 @@ describe('Thermostat3 class', function () {
         fakeSerialPort = {},
         device = {};
     beforeEach(function () {
-        this.addMatchers({
+        jasmine.addMatchers({
             toHaveSent: matchers.toHaveSent
         });
         fakeSerialPort = new FakeSerialPort();
@@ -53,14 +53,14 @@ describe('Thermostat3 class', function () {
                 it('should throw an unsupported command error', function () {
                     expect(function () {
                         thermostat.switchOn2('0x12');
-                    }).toThrow("Device does not support switchOn2()");
+                    }).toThrow(new Error(("Device does not support switchOn2()")));
                 });
             });
             describe('switchOff2()', function () {
                 it('should throw an unsupported command error', function () {
                     expect(function () {
                         thermostat.switchOff2('0x12');
-                    }).toThrow("Device does not support switchOff2()");
+                    }).toThrow(new Error(("Device does not support switchOff2()")));
                 });
             });
             describe('up()', function () {
@@ -123,7 +123,7 @@ describe('Thermostat3 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     thermostat.switchOn('0x1234/A');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address', function (done) {
                 let sentCommandId = NaN;
@@ -146,7 +146,7 @@ describe('Thermostat3 class', function () {
             it('should throw an exception with an invalid address 0x100', function () {
                 expect(function () {
                     thermostat.switchOn('0x100');
-                }).toThrow("Address 0x100 outside valid range");
+                }).toThrow(new Error(("Address 0x100 outside valid range")));
             });
         });
     });
@@ -225,21 +225,21 @@ describe('Thermostat3 class', function () {
                 it('should throw an unsupported command error', function () {
                     expect(function () {
                         thermostat.runUp('0x12345');
-                    }).toThrow("Device does not support runUp()");
+                    }).toThrow(new Error(("Device does not support runUp()")));
                 });
             });
             describe('runDown()', function () {
                 it('should throw an unsupported command error', function () {
                     expect(function () {
                         thermostat.runDown('0x12345');
-                    }).toThrow("Device does not support runDown()");
+                    }).toThrow(new Error(("Device does not support runDown()")));
                 });
             });
             describe('stop()', function () {
                 it('should throw an unsupported command error', function () {
                     expect(function () {
                         thermostat.stop('0x12345');
-                    }).toThrow("Device does not support stop()");
+                    }).toThrow(new Error(("Device does not support stop()")));
                 });
             });
         });
@@ -247,7 +247,7 @@ describe('Thermostat3 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     thermostat.switchOn('0x1234/A');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address', function (done) {
                 let sentCommandId = NaN;
@@ -270,7 +270,7 @@ describe('Thermostat3 class', function () {
             it('should throw an exception with an invalid address 0x40000', function () {
                 expect(function () {
                     thermostat.switchOn('0x40000');
-                }).toThrow("Address 0x40000 outside valid range");
+                }).toThrow(new Error(("Address 0x40000 outside valid range")));
             });
         });
     });
@@ -305,14 +305,14 @@ describe('Thermostat3 class', function () {
                 it('should throw an unsupported command error', function () {
                     expect(function () {
                         thermostat.switchOn2('0x1234');
-                    }).toThrow("Device does not support switchOn2()");
+                    }).toThrow(new Error(("Device does not support switchOn2()")));
                 });
             });
             describe('switchOff2()', function () {
                 it('should throw an unsupported command error', function () {
                     expect(function () {
                         thermostat.switchOff2('0x1234');
-                    }).toThrow("Device does not support switchOff2()");
+                    }).toThrow(new Error(("Device does not support switchOff2()")));
                 });
             });
             describe('up()', function () {
@@ -363,7 +363,7 @@ describe('Thermostat3 class', function () {
                 it('should throw an unsupported command error', function () {
                     expect(function () {
                         thermostat.stop('0x1234');
-                    }).toThrow("Device does not support stop()");
+                    }).toThrow(new Error(("Device does not support stop()")));
                 });
             });
         });
@@ -371,7 +371,7 @@ describe('Thermostat3 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     thermostat.switchOn('0x1234/A');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address', function (done) {
                 let sentCommandId = NaN;
@@ -394,7 +394,7 @@ describe('Thermostat3 class', function () {
             it('should throw an exception with an invalid address 0x10000', function () {
                 expect(function () {
                     thermostat.switchOn('0x10000');
-                }).toThrow("Address 0x10000 outside valid range");
+                }).toThrow(new Error(("Address 0x10000 outside valid range")));
             });
         });
     });
@@ -429,14 +429,14 @@ describe('Thermostat3 class', function () {
                 it('should throw an unsupported command error', function () {
                     expect(function () {
                         thermostat.switchOn2('0x12345');
-                    }).toThrow("Device does not support switchOn2()");
+                    }).toThrow(new Error(("Device does not support switchOn2()")));
                 });
             });
             describe('switchOff2()', function () {
                 it('should throw an unsupported command error', function () {
                     expect(function () {
                         thermostat.switchOff2('0x12345');
-                    }).toThrow("Device does not support switchOff2()");
+                    }).toThrow(new Error(("Device does not support switchOff2()")));
                 });
             });
             describe('up()', function () {
@@ -465,21 +465,21 @@ describe('Thermostat3 class', function () {
                 it('should throw an unsupported command error', function () {
                     expect(function () {
                         thermostat.runUp('0x12345');
-                    }).toThrow("Device does not support runUp()");
+                    }).toThrow(new Error(("Device does not support runUp()")));
                 });
             });
             describe('runDown()', function () {
                 it('should throw an unsupported command error', function () {
                     expect(function () {
                         thermostat.runDown('0x12345');
-                    }).toThrow("Device does not support runDown()");
+                    }).toThrow(new Error(("Device does not support runDown()")));
                 });
             });
             describe('stop()', function () {
                 it('should throw an unsupported command error', function () {
                     expect(function () {
                         thermostat.stop('0x12345');
-                    }).toThrow("Device does not support stop()");
+                    }).toThrow(new Error(("Device does not support stop()")));
                 });
             });
         });
@@ -487,7 +487,7 @@ describe('Thermostat3 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     thermostat.switchOn('0x1234/A');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address', function (done) {
                 let sentCommandId = NaN;
@@ -510,7 +510,7 @@ describe('Thermostat3 class', function () {
             it('should throw an exception with an invalid address 0x10000', function () {
                 expect(function () {
                     thermostat.switchOn('0x40000');
-                }).toThrow("Address 0x40000 outside valid range");
+                }).toThrow(new Error(("Address 0x40000 outside valid range")));
             });
         });
     });
@@ -545,14 +545,14 @@ describe('Thermostat3 class', function () {
                 it('should throw an unsupported command error', function () {
                     expect(function () {
                         thermostat.switchOn2('0x12');
-                    }).toThrow("Device does not support switchOn2()");
+                    }).toThrow(new Error(("Device does not support switchOn2()")));
                 });
             });
             describe('switchOff2()', function () {
                 it('should throw an unsupported command error', function () {
                     expect(function () {
                         thermostat.switchOff2('0x12');
-                    }).toThrow("Device does not support switchOff2()");
+                    }).toThrow(new Error(("Device does not support switchOff2()")));
                 });
             });
             describe('up()', function () {
@@ -615,7 +615,7 @@ describe('Thermostat3 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     thermostat.switchOn('0x1234/A');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address', function (done) {
                 let sentCommandId = NaN;
@@ -638,7 +638,7 @@ describe('Thermostat3 class', function () {
             it('should throw an exception with an invalid address 0x100', function () {
                 expect(function () {
                     thermostat.switchOn('0x100');
-                }).toThrow("Address 0x100 outside valid range");
+                }).toThrow(new Error(("Address 0x100 outside valid range")));
             });
         });
     });

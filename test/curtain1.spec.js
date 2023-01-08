@@ -11,7 +11,7 @@ describe('Curtain1 class', function () {
         fakeSerialPort,
         device;
     beforeEach(function () {
-        this.addMatchers({
+        jasmine.addMatchers({
             toHaveSent: matchers.toHaveSent
         });
         fakeSerialPort = new FakeSerialPort();
@@ -60,12 +60,12 @@ describe('Curtain1 class', function () {
         it('should throw an exception with an invalid format deviceId', function () {
             expect(function () {
                 curtain1.open(['A', '1', 1]);
-            }).toThrow("Invalid deviceId format");
+            }).toThrow(new Error(("Invalid deviceId format")));
         });
         it('should throw an exception with houseCode < \'A\'', function () {
             expect(function () {
                 curtain1.open(['@', '1']);
-            }).toThrow("Invalid house code '@'");
+            }).toThrow(new Error(("Invalid house code '@'")));
         });
         it('should accept house code \'P\'', function (done) {
             let sentCommandId = NaN;
@@ -79,17 +79,17 @@ describe('Curtain1 class', function () {
         it('should throw an exception with houseCode > \'P\'', function () {
             expect(function () {
                 curtain1.open(['q', '1']);
-            }).toThrow("Invalid house code 'q'");
+            }).toThrow(new Error(("Invalid house code 'q'")));
         });
         it('should throw an exception with unitCode < 1', function () {
             expect(function () {
                 curtain1.open(['d', '0']);
-            }).toThrow("Invalid unit code 0");
+            }).toThrow(new Error(("Invalid unit code 0")));
         });
         it('should throw an exception with a unitCode > 16', function () {
             expect(function () {
                 curtain1.open(['d', '17']);
-            }).toThrow("Invalid unit code 17");
+            }).toThrow(new Error(("Invalid unit code 17")));
         });
         it('should handle no callback', function () {
             curtain1.open('A16');

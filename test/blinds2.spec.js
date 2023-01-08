@@ -8,7 +8,7 @@ describe('Blinds2 class', function () {
         fakeSerialPort,
         device;
     beforeEach(function () {
-        this.addMatchers({
+        jasmine.addMatchers({
             toHaveSent: matchers.toHaveSent
         });
         fakeSerialPort = new FakeSerialPort();
@@ -25,7 +25,7 @@ describe('Blinds2 class', function () {
         it('should throw an error if no subtype is specified', function () {
             expect(function () {
                 blinds2 = new rfxcom.Blinds2(device);
-            }).toThrow("Must provide a subtype.");
+            }).toThrow(new Error(("Must provide a subtype.")));
         });
     });
 
@@ -177,12 +177,12 @@ describe('Blinds2 class', function () {
             it('should throw an error for address < 1', function () {
                 expect(function () {
                     blinds2.open('0x0/9')
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
             it('should throw an error for address > 0xffffffff', function () {
                 expect(function () {
                     blinds2.open('0x100000000/9')
-                }).toThrow("Address 0x100000000 outside valid range");
+                }).toThrow(new Error(("Address 0x100000000 outside valid range")));
             });
             it('should accept unit code 1', function (done) {
                 let sentCommandId = NaN;
@@ -214,22 +214,22 @@ describe('Blinds2 class', function () {
             it('should throw an error for unit code > 16', function () {
                 expect(function () {
                     blinds2.open('0x12345678/17')
-                }).toThrow("Invalid unit code 17");
+                }).toThrow(new Error(("Invalid unit code 17")));
             });
             it('should throw an error for unit code < 0', function () {
                 expect(function () {
                     blinds2.open('0x12345678/-1')
-                }).toThrow("Invalid unit code -1");
+                }).toThrow(new Error(("Invalid unit code -1")));
             });
             it('should throw an error for a missing unit code', function () {
                 expect(function () {
                     blinds2.open('0x12345678')
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should throw an error for a malformed ID', function () {
                 expect(function () {
                     blinds2.open('0x1/234/567/8')
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
           });
     });

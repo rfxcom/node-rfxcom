@@ -10,7 +10,7 @@ describe('Thermostat4 class', function () {
         fakeSerialPort = {},
         device = {};
     beforeEach(function () {
-        this.addMatchers({
+        jasmine.addMatchers({
             toHaveSent: matchers.toHaveSent
         });
         fakeSerialPort = new FakeSerialPort();
@@ -93,7 +93,7 @@ describe('Thermostat4 class', function () {
                 it('should throw an exception with a missing params', function () {
                     expect(function() {
                         thermostat.sendMessage('0x123456');
-                    }).toThrow("Missing params");
+                    }).toThrow(new Error(("Missing params")));
                 });
                 it('should throw an exception with a missing mode', function () {
                     const
@@ -104,7 +104,7 @@ describe('Thermostat4 class', function () {
                         };
                     expect(function() {
                         thermostat.sendMessage('0x123456', params);
-                    }).toThrow("mode parameter must be specified");
+                    }).toThrow(new Error(("mode parameter must be specified")));
                 });
                 it('should throw an exception with an invalid mode', function () {
                     const
@@ -116,7 +116,7 @@ describe('Thermostat4 class', function () {
                         };
                     expect(function() {
                         thermostat.sendMessage('0x123456', params);
-                    }).toThrow("Invalid parameter mode: must be in range 0-3");
+                    }).toThrow(new Error(("Invalid parameter mode: must be in range 0-3")));
                 });
                 it('should throw an exception with an invalid mode string', function () {
                     const
@@ -128,7 +128,7 @@ describe('Thermostat4 class', function () {
                         };
                     expect(function() {
                         thermostat.sendMessage('0x123456', params);
-                    }).toThrow("Invalid parameter mode: 'I am invalid!'");
+                    }).toThrow(new Error(("Invalid parameter mode: 'I am invalid!'")));
                 });
                 it('should throw an exception with a missing flamePower', function () {
                     const
@@ -139,7 +139,7 @@ describe('Thermostat4 class', function () {
                         };
                     expect(function() {
                         thermostat.sendMessage('0x123456', params);
-                    }).toThrow("Invalid parameter flamePower: must be in range 1-5");
+                    }).toThrow(new Error(("Invalid parameter flamePower: must be in range 1-5")));
                 });
             });
         });
@@ -154,7 +154,7 @@ describe('Thermostat4 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     thermostat.sendMessage('0x1234/A', params);
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address', function (done) {
                 let sentCommandId = NaN;
@@ -177,12 +177,12 @@ describe('Thermostat4 class', function () {
             it('should throw an exception with an invalid address 0x1000000', function () {
                 expect(function () {
                     thermostat.sendMessage('0x1000000', params);
-                }).toThrow("Address 0x1000000 outside valid range");
+                }).toThrow(new Error(("Address 0x1000000 outside valid range")));
             });
             it('should throw an exception with an invalid address 0x0', function () {
                 expect(function () {
                     thermostat.sendMessage('0x0', params);
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
         });
     });
@@ -257,7 +257,7 @@ describe('Thermostat4 class', function () {
                 it('should throw an exception with a missing params', function () {
                     expect(function() {
                         thermostat.sendMessage('0x123456');
-                    }).toThrow("Missing params");
+                    }).toThrow(new Error(("Missing params")));
                 });
                 it('should throw an exception with a missing mode', function () {
                     const
@@ -268,7 +268,7 @@ describe('Thermostat4 class', function () {
                         };
                     expect(function() {
                         thermostat.sendMessage('0x123456', params);
-                    }).toThrow("mode parameter must be specified");
+                    }).toThrow(new Error(("mode parameter must be specified")));
                 });
                 it('should throw an exception with an invalid mode', function () {
                     const
@@ -280,7 +280,7 @@ describe('Thermostat4 class', function () {
                         };
                     expect(function() {
                         thermostat.sendMessage('0x123456', params);
-                    }).toThrow("Invalid parameter mode: must be in range 0-3");
+                    }).toThrow(new Error(("Invalid parameter mode: must be in range 0-3")));
                 });
                 it('should throw an exception with an invalid mode string', function () {
                     const
@@ -292,7 +292,7 @@ describe('Thermostat4 class', function () {
                         };
                     expect(function() {
                         thermostat.sendMessage('0x123456', params);
-                    }).toThrow("Invalid parameter mode: 'I am invalid!'");
+                    }).toThrow(new Error(("Invalid parameter mode: 'I am invalid!'")));
                 });
                 it('should throw an exception with a missing flamePower', function () {
                     const
@@ -303,7 +303,7 @@ describe('Thermostat4 class', function () {
                         };
                     expect(function() {
                         thermostat.sendMessage('0x123456', params);
-                    }).toThrow("Invalid parameter flamePower: must be in range 1-5");
+                    }).toThrow(new Error(("Invalid parameter flamePower: must be in range 1-5")));
                 });
             });
         });
@@ -318,7 +318,7 @@ describe('Thermostat4 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     thermostat.sendMessage('0x1234/A', params);
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address', function (done) {
                 let sentCommandId = NaN;
@@ -341,12 +341,12 @@ describe('Thermostat4 class', function () {
             it('should throw an exception with an invalid address 0x1000000', function () {
                 expect(function () {
                     thermostat.sendMessage('0x1000000', params);
-                }).toThrow("Address 0x1000000 outside valid range");
+                }).toThrow(new Error(("Address 0x1000000 outside valid range")));
             });
             it('should throw an exception with an invalid address 0x0', function () {
                 expect(function () {
                     thermostat.sendMessage('0x0', params);
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
         });
     });
@@ -421,7 +421,7 @@ describe('Thermostat4 class', function () {
                 it('should throw an exception with a missing params', function () {
                     expect(function() {
                         thermostat.sendMessage('0x123456');
-                    }).toThrow("Missing params");
+                    }).toThrow(new Error(("Missing params")));
                 });
                 it('should throw an exception with a missing mode', function () {
                     const
@@ -432,7 +432,7 @@ describe('Thermostat4 class', function () {
                         };
                     expect(function() {
                         thermostat.sendMessage('0x123456', params);
-                    }).toThrow("mode parameter must be specified");
+                    }).toThrow(new Error(("mode parameter must be specified")));
                 });
                 it('should throw an exception with an invalid mode', function () {
                     const
@@ -444,7 +444,7 @@ describe('Thermostat4 class', function () {
                         };
                     expect(function() {
                         thermostat.sendMessage('0x123456', params);
-                    }).toThrow("Invalid parameter mode: must be in range 0-3");
+                    }).toThrow(new Error(("Invalid parameter mode: must be in range 0-3")));
                 });
                 it('should throw an exception with an invalid mode string', function () {
                     const
@@ -456,7 +456,7 @@ describe('Thermostat4 class', function () {
                         };
                     expect(function() {
                         thermostat.sendMessage('0x123456', params);
-                    }).toThrow("Invalid parameter mode: 'I am invalid!'");
+                    }).toThrow(new Error(("Invalid parameter mode: 'I am invalid!'")));
                 });
                 it('should throw an exception with a missing flamePower', function () {
                     const
@@ -467,7 +467,7 @@ describe('Thermostat4 class', function () {
                         };
                     expect(function() {
                         thermostat.sendMessage('0x123456', params);
-                    }).toThrow("Invalid parameter flamePower: must be in range 1-5");
+                    }).toThrow(new Error(("Invalid parameter flamePower: must be in range 1-5")));
                 });
             });
         });
@@ -482,7 +482,7 @@ describe('Thermostat4 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     thermostat.sendMessage('0x1234/A', params);
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address', function (done) {
                 let sentCommandId = NaN;
@@ -505,12 +505,12 @@ describe('Thermostat4 class', function () {
             it('should throw an exception with an invalid address 0x1000000', function () {
                 expect(function () {
                     thermostat.sendMessage('0x1000000', params);
-                }).toThrow("Address 0x1000000 outside valid range");
+                }).toThrow(new Error(("Address 0x1000000 outside valid range")));
             });
             it('should throw an exception with an invalid address 0x0', function () {
                 expect(function () {
                     thermostat.sendMessage('0x0', params);
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
         });
     });

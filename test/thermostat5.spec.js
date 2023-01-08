@@ -10,7 +10,7 @@ describe('Thermostat5 class', function () {
         fakeSerialPort = {},
         device = {};
     beforeEach(function () {
-        this.addMatchers({
+        jasmine.addMatchers({
             toHaveSent: matchers.toHaveSent
         });
         fakeSerialPort = new FakeSerialPort();
@@ -31,7 +31,7 @@ describe('Thermostat5 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     thermostat.sendMessage('0x1234/A', params);
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the lowest address', function (done) {
                 let sentCommandId = NaN;
@@ -54,19 +54,19 @@ describe('Thermostat5 class', function () {
             it('should throw an exception with an invalid address 0x10000', function () {
                 expect(function () {
                     thermostat.sendMessage('0x10000', params);
-                }).toThrow("Address 0x10000 outside valid range");
+                }).toThrow(new Error(("Address 0x10000 outside valid range")));
             });
             it('should throw an exception with an invalid address 0x0', function () {
                 expect(function () {
                     thermostat.sendMessage('0x0', params);
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
         });
         describe('commands', function () {
             it('should throw an exception with a missing params', function () {
                 expect(function() {
                     thermostat.sendMessage('0x1234');
-                }).toThrow("Missing params");
+                }).toThrow(new Error(("Missing params")));
             });
             it('should throw an exception with a missing mode', function () {
                 const
@@ -78,7 +78,7 @@ describe('Thermostat5 class', function () {
                     };
                 expect(function() {
                     thermostat.sendMessage('0x1234', params);
-                }).toThrow("mode parameter must be specified");
+                }).toThrow(new Error(("mode parameter must be specified")));
             });
             it('should throw an exception with an invalid mode', function () {
                 const
@@ -91,7 +91,7 @@ describe('Thermostat5 class', function () {
                     };
                 expect(function() {
                     thermostat.sendMessage('0x1234', params);
-                }).toThrow("Invalid parameter mode: must be in range 0-4");
+                }).toThrow(new Error(("Invalid parameter mode: must be in range 0-4")));
             });
             it('should throw an exception with an invalid mode string', function () {
                 const
@@ -104,7 +104,7 @@ describe('Thermostat5 class', function () {
                     };
                 expect(function() {
                     thermostat.sendMessage('0x1234', params);
-                }).toThrow("Invalid parameter mode: 'I am invalid!'");
+                }).toThrow(new Error(("Invalid parameter mode: 'I am invalid!'")));
             });
             it('should send the correct bytes to the serialport with all parameters at minimum values', function (done) {
                 const
@@ -151,7 +151,7 @@ describe('Thermostat5 class', function () {
                     };
                 expect(function() {
                     thermostat.sendMessage('0x1234', params);
-                }).toThrow("Invalid parameter flameBrightness: must be in range 0-5");
+                }).toThrow(new Error(("Invalid parameter flameBrightness: must be in range 0-5")));
             });
             it('should throw an exception with flame brightness = 6', function () {
                 const
@@ -164,7 +164,7 @@ describe('Thermostat5 class', function () {
                     };
                 expect(function() {
                     thermostat.sendMessage('0x1234', params);
-                }).toThrow("Invalid parameter flameBrightness: must be in range 0-5");
+                }).toThrow(new Error(("Invalid parameter flameBrightness: must be in range 0-5")));
             });
             it('should throw an exception with flame colour = 0', function () {
                 const
@@ -177,7 +177,7 @@ describe('Thermostat5 class', function () {
                     };
                 expect(function() {
                     thermostat.sendMessage('0x1234', params);
-                }).toThrow("Invalid parameter flameColour: must be in range 1-3");
+                }).toThrow(new Error(("Invalid parameter flameColour: must be in range 1-3")));
             });
             it('should throw an exception with flame colour = 4', function () {
                 const
@@ -190,7 +190,7 @@ describe('Thermostat5 class', function () {
                     };
                 expect(function() {
                     thermostat.sendMessage('0x1234', params);
-                }).toThrow("Invalid parameter flameColour: must be in range 1-3");
+                }).toThrow(new Error(("Invalid parameter flameColour: must be in range 1-3")));
             });
             it('should throw an exception with fuel brightness = -1', function () {
                 const
@@ -203,7 +203,7 @@ describe('Thermostat5 class', function () {
                     };
                 expect(function() {
                     thermostat.sendMessage('0x1234', params);
-                }).toThrow("Invalid parameter fuelBrightness: must be in range 0-5");
+                }).toThrow(new Error(("Invalid parameter fuelBrightness: must be in range 0-5")));
             });
             it('should throw an exception with fuel brightness = 6', function () {
                 const
@@ -216,7 +216,7 @@ describe('Thermostat5 class', function () {
                     };
                 expect(function() {
                     thermostat.sendMessage('0x1234', params);
-                }).toThrow("Invalid parameter fuelBrightness: must be in range 0-5");
+                }).toThrow(new Error(("Invalid parameter fuelBrightness: must be in range 0-5")));
             });
             it('should throw an exception with fuel colour = 0', function () {
                 const
@@ -229,7 +229,7 @@ describe('Thermostat5 class', function () {
                     };
                 expect(function() {
                     thermostat.sendMessage('0x1234', params);
-                }).toThrow("Invalid parameter fuelColour: must be in range 1-14");
+                }).toThrow(new Error(("Invalid parameter fuelColour: must be in range 1-14")));
             });
             it('should throw an exception with fuel colour = 15', function () {
                 const
@@ -242,7 +242,7 @@ describe('Thermostat5 class', function () {
                     };
                 expect(function() {
                     thermostat.sendMessage('0x1234', params);
-                }).toThrow("Invalid parameter fuelColour: must be in range 1-14");
+                }).toThrow(new Error(("Invalid parameter fuelColour: must be in range 1-14")));
             });
             it('should accept a numeric mode value 1', function (done) {
                 let sentCommandId = NaN;

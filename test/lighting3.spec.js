@@ -11,7 +11,7 @@ describe('Lighting3 class', function () {
         fakeSerialPort,
         device;
     beforeEach(function () {
-        this.addMatchers({
+        jasmine.addMatchers({
             toHaveSent: matchers.toHaveSent
         });
         fakeSerialPort = new FakeSerialPort();
@@ -27,7 +27,7 @@ describe('Lighting3 class', function () {
         it('should throw an error if no subtype is specified', function () {
             expect(function () {
                 lighting3 = new rfxcom.Lighting3(device);
-            }).toThrow("Must provide a subtype.");
+            }).toThrow(new Error(("Must provide a subtype.")));
         });
     });
     describe('.switchOn', function () {
@@ -109,7 +109,7 @@ describe('Lighting3 class', function () {
         it('should throw an exception with an out of range setLevel(level)', function () {
             expect(function () {
                 lighting3.setLevel(['1', '1'], 11);
-            }).toThrow("Invalid level: value must be in range 0-10");
+            }).toThrow(new Error(("Invalid level: value must be in range 0-10")));
         });
         it('should accept a program command', function (done) {
             let sentCommandId = NaN;
@@ -153,17 +153,17 @@ describe('Lighting3 class', function () {
         it('should throw an exception with a badly formatted deviceId', function () {
             expect(function () {
                 lighting3.switchOn('0xF09AC8');
-            }).toThrow("Invalid deviceId format");
+            }).toThrow(new Error(("Invalid deviceId format")));
         });
         it('should throw an exception with an invalid system number', function () {
             expect(function () {
                 lighting3.switchOn('17/1');
-            }).toThrow("Invalid system code 17");
+            }).toThrow(new Error(("Invalid system code 17")));
         });
         it('should throw an exception with an invalid channel number', function () {
             expect(function () {
                 lighting3.switchOn('16/11');
-            }).toThrow("Invalid channel number 11");
+            }).toThrow(new Error(("Invalid channel number 11")));
         });
         it('should handle no callback', function () {
             lighting3.switchOn('16/0');

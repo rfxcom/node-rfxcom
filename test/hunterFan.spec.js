@@ -7,7 +7,7 @@ describe('HunterFan class', function () {
         fakeSerialPort = {},
         device = {};
     beforeEach(function () {
-        this.addMatchers({
+        jasmine.addMatchers({
             toHaveSent: matchers.toHaveSent
         });
         fakeSerialPort = new FakeSerialPort();
@@ -104,7 +104,7 @@ describe('HunterFan class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     hunterFan.toggleLightOnOff('0x1/A/2');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address value', function (done) {
                 let sentCommandId = NaN;
@@ -127,17 +127,17 @@ describe('HunterFan class', function () {
             it('should throw an exception with an invalid address 0x1000000000000', function () {
                 expect(function () {
                     hunterFan.toggleLightOnOff('0x1000000000000');
-                }).toThrow("Address 0x1000000000000 outside valid range");
+                }).toThrow(new Error(("Address 0x1000000000000 outside valid range")));
             });
             it('should throw an exception with an invalid address 0', function () {
                 expect(function () {
                     hunterFan.toggleLightOnOff('0');
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
             it('should throw an exception with an invalid address -1', function () {
                 expect(function () {
                     hunterFan.toggleLightOnOff('-1');
-                }).toThrow("Address -0x1 outside valid range");
+                }).toThrow(new Error(("Address -0x1 outside valid range")));
             });
         });
     });

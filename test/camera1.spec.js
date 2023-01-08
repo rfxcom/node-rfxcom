@@ -11,7 +11,7 @@ describe('Camera1 class', function () {
         fakeSerialPort = {},
         device = {};
     beforeEach(function () {
-        this.addMatchers({
+        jasmine.addMatchers({
             toHaveSent: matchers.toHaveSent
         });
         fakeSerialPort = new FakeSerialPort();
@@ -121,12 +121,12 @@ describe('Camera1 class', function () {
                 it('should throw an error for position < 0', function () {
                     expect(function () {
                         camera.goToPosition('A', -1);
-                    }).toThrow("Invalid position: value must be in range 0-4");
+                    }).toThrow(new Error(("Invalid position: value must be in range 0-4")));
                 });
                 it('should throw an error for position > 4', function () {
                     expect(function () {
                         camera.goToPosition('A', 5);
-                    }).toThrow("Invalid position: value must be in range 0-4");
+                    }).toThrow(new Error(("Invalid position: value must be in range 0-4")));
                 });
             });
             describe('programPosition()', function () {
@@ -178,12 +178,12 @@ describe('Camera1 class', function () {
                 it('should throw an error for position < 0', function () {
                     expect(function () {
                         camera.programPosition('A', -1);
-                    }).toThrow("Invalid position: value must be in range 0-4");
+                    }).toThrow(new Error(("Invalid position: value must be in range 0-4")));
                 });
                 it('should throw an error for position > 4', function () {
                     expect(function () {
                         camera.programPosition('A', 5);
-                    }).toThrow("Invalid position: value must be in range 0-4");
+                    }).toThrow(new Error(("Invalid position: value must be in range 0-4")));
                 });
             });
             describe('sweep()', function () {
@@ -213,7 +213,7 @@ describe('Camera1 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     camera.panLeft('0x1234/A');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest house code', function (done) {
                 let sentCommandId = NaN;
@@ -236,12 +236,12 @@ describe('Camera1 class', function () {
             it('should throw an exception with an invalid house code "@"', function () {
                 expect(function () {
                     camera.panLeft('@');
-                }).toThrow("Invalid house code '@'");
+                }).toThrow(new Error(("Invalid house code '@'")));
             });
             it('should throw an exception with an invalid address "Q"', function () {
                 expect(function () {
                     camera.panLeft('Q');
-                }).toThrow("Invalid house code 'Q'");
+                }).toThrow(new Error(("Invalid house code 'Q'")));
             });
         });
     });
