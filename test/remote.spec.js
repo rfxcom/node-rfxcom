@@ -359,8 +359,6 @@ describe('Remote class', function () {
                 });
             });
         });
-        // TODO - why are there no tests here?
-/*         describe('address checking', function () {
-        });
- */    });
+        // There are no address tests as this subtype is receive-only
+    });
 });
