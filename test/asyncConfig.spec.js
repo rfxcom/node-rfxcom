@@ -3,12 +3,12 @@ const rfxcom = require('../lib'),
     matchers = require('./matchers'),
     FakeSerialPort = require('./helper');
 
-describe('AsyncData class', function () {
-    let asyncData,
+describe('AsyncConfig class', function () {
+    let asyncConfig,
         fakeSerialPort,
         device;
     beforeEach(function () {
-        this.addMatchers({
+        jasmine.addMatchers({
             toHaveSent: matchers.toHaveSent
         });
         fakeSerialPort = new FakeSerialPort();
@@ -28,8 +28,8 @@ describe('AsyncData class', function () {
     describe('instantiation', function () {
         it('should throw an error if no subtype is specified', function () {
             expect(function () {
-                asyncData = new rfxcom.AsyncData(device);
-            }).toThrow("Must provide a subtype.");
+                asyncConfig = new rfxcom.AsyncConfig(device);
+            }).toThrow(new Error("Must provide a subtype."));
         });
     });
 });

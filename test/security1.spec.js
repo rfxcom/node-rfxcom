@@ -10,7 +10,7 @@ describe('Security1 class', function () {
         fakeSerialPort = {},
         device = {};
     beforeEach(function () {
-        this.addMatchers({
+        jasmine.addMatchers({
             toHaveSent: matchers.toHaveSent
         });
         fakeSerialPort = new FakeSerialPort();
@@ -42,63 +42,63 @@ describe('Security1 class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.sendPanic('0x1234');
-                    }).toThrow("Device does not support sendPanic()");
+                    }).toThrow(new Error(("Device does not support sendPanic()")));
                 });
             });
             describe('cancelPanic', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.cancelPanic('0x1234');
-                    }).toThrow("Device does not support cancelPanic()");
+                    }).toThrow(new Error(("Device does not support cancelPanic()")));
                 });
             });
             describe('armSystemAway', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemAway('0x1234');
-                    }).toThrow("Device does not support armSystemAway()");
+                    }).toThrow(new Error(("Device does not support armSystemAway()")));
                 });
             });
             describe('armSystemAwayWithDelay', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemAwayWithDelay('0x1234');
-                    }).toThrow("Device does not support armSystemAwayWithDelay()");
+                    }).toThrow(new Error(("Device does not support armSystemAwayWithDelay()")));
                 });
             });
             describe('armSystemHome', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemHome('0x1234');
-                    }).toThrow("Device does not support armSystemHome()");
+                    }).toThrow(new Error(("Device does not support armSystemHome()")));
                 });
             });
             describe('armSystemHomeWithDelay', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemHomeWithDelay('0x1234');
-                    }).toThrow("Device does not support armSystemHomeWithDelay()");
+                    }).toThrow(new Error(("Device does not support armSystemHomeWithDelay()")));
                 });
             });
             describe('disarmSystem', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.disarmSystem('0x1234');
-                    }).toThrow("Device does not support disarmSystem()");
+                    }).toThrow(new Error(("Device does not support disarmSystem()")));
                 });
             });
             describe('switchOnLight', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.switchOnLight('0x1234', 1);
-                    }).toThrow("Device does not support switchOnLight()");
+                    }).toThrow(new Error(("Device does not support switchOnLight()")));
                 });
             });
             describe('switchOffLight', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.switchOffLight('0x1234', 1);
-                    }).toThrow("Device does not support switchOffLight()");
+                    }).toThrow(new Error(("Device does not support switchOffLight()")));
                 });
             });
         });
@@ -106,7 +106,7 @@ describe('Security1 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     security.sendStatus('0x1234/A');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address value', function (done) {
                 let sentCommandId = NaN;
@@ -129,7 +129,7 @@ describe('Security1 class', function () {
             it('should throw an exception with an invalid address 0x10000', function () {
                 expect(function () {
                     security.sendStatus('0x10000');
-                }).toThrow("Address 0x10000 outside valid range");
+                }).toThrow(new Error(("Address 0x10000 outside valid range")));
             });
         })
     });
@@ -153,63 +153,63 @@ describe('Security1 class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.sendPanic('0x1234');
-                    }).toThrow("Device does not support sendPanic()");
+                    }).toThrow(new Error(("Device does not support sendPanic()")));
                 });
             });
             describe('cancelPanic', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.cancelPanic('0x1234');
-                    }).toThrow("Device does not support cancelPanic()");
+                    }).toThrow(new Error(("Device does not support cancelPanic()")));
                 });
             });
             describe('armSystemAway', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemAway('0x1234');
-                    }).toThrow("Device does not support armSystemAway()");
+                    }).toThrow(new Error(("Device does not support armSystemAway()")));
                 });
             });
             describe('armSystemAwayWithDelay', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemAwayWithDelay('0x1234');
-                    }).toThrow("Device does not support armSystemAwayWithDelay()");
+                    }).toThrow(new Error(("Device does not support armSystemAwayWithDelay()")));
                 });
             });
             describe('armSystemHome', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemHome('0x1234');
-                    }).toThrow("Device does not support armSystemHome()");
+                    }).toThrow(new Error(("Device does not support armSystemHome()")));
                 });
             });
             describe('armSystemHomeWithDelay', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemHomeWithDelay('0x1234');
-                    }).toThrow("Device does not support armSystemHomeWithDelay()");
+                    }).toThrow(new Error(("Device does not support armSystemHomeWithDelay()")));
                 });
             });
             describe('disarmSystem', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.disarmSystem('0x1234');
-                    }).toThrow("Device does not support disarmSystem()");
+                    }).toThrow(new Error(("Device does not support disarmSystem()")));
                 });
             });
             describe('switchOnLight', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.switchOnLight('0x1234', 1);
-                    }).toThrow("Device does not support switchOnLight()");
+                    }).toThrow(new Error(("Device does not support switchOnLight()")));
                 });
             });
             describe('switchOffLight', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.switchOffLight('0x1234', 1);
-                    }).toThrow("Device does not support switchOffLight()");
+                    }).toThrow(new Error(("Device does not support switchOffLight()")));
                 });
             });
         });
@@ -217,7 +217,7 @@ describe('Security1 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     security.sendStatus('0x1234/A');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address value', function (done) {
                 let sentCommandId = NaN;
@@ -240,7 +240,7 @@ describe('Security1 class', function () {
             it('should throw an exception with an invalid address 0x10000', function () {
                 expect(function () {
                     security.sendStatus('0x10000');
-                }).toThrow("Address 0x10000 outside valid range");
+                }).toThrow(new Error(("Address 0x10000 outside valid range")));
             });
         })
     });
@@ -359,7 +359,7 @@ describe('Security1 class', function () {
                 it('should throw an exception for channel 3', function () {
                     expect(function () {
                         security.switchLightOn('0x1234', 3);
-                    }).toThrow("Invalid channel: value must be in range 1-2");
+                    }).toThrow(new Error(("Invalid channel: value must be in range 1-2")));
                 });
             });
             describe('switchLightOff', function () {
@@ -384,7 +384,7 @@ describe('Security1 class', function () {
                 it('should throw an exception for channel 3', function () {
                     expect(function () {
                         security.switchLightOff('0x1234', 3);
-                    }).toThrow("Invalid channel: value must be in range 1-2");
+                    }).toThrow(new Error(("Invalid channel: value must be in range 1-2")));
                 });
             });
             //DEPRECATED FUNCTION!!
@@ -410,7 +410,7 @@ describe('Security1 class', function () {
                 it('should throw an exception for channel 3', function () {
                     expect(function () {
                         security.switchOnLight('0x1234', 3);
-                    }).toThrow("Invalid channel: value must be in range 1-2");
+                    }).toThrow(new Error(("Invalid channel: value must be in range 1-2")));
                 });
             });
             //DEPRECATED FUNCTION!!
@@ -436,7 +436,7 @@ describe('Security1 class', function () {
                 it('should throw an exception for channel 3', function () {
                     expect(function () {
                         security.switchOffLight('0x1234', 3);
-                    }).toThrow("Invalid channel: value must be in range 1-2");
+                    }).toThrow(new Error(("Invalid channel: value must be in range 1-2")));
                 });
             });
         });
@@ -444,7 +444,7 @@ describe('Security1 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     security.sendStatus('0x1234/A');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address value', function (done) {
                 let sentCommandId = NaN;
@@ -467,7 +467,7 @@ describe('Security1 class', function () {
             it('should throw an exception with an invalid address 0x10000', function () {
                 expect(function () {
                     security.sendStatus('0x10000');
-                }).toThrow("Address 0x10000 outside valid range");
+                }).toThrow(new Error(("Address 0x10000 outside valid range")));
             });
         })
     });
@@ -491,63 +491,63 @@ describe('Security1 class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.sendPanic('0x1234');
-                    }).toThrow("Device does not support sendPanic()");
+                    }).toThrow(new Error(("Device does not support sendPanic()")));
                 });
             });
             describe('cancelPanic', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.cancelPanic('0x1234');
-                    }).toThrow("Device does not support cancelPanic()");
+                    }).toThrow(new Error(("Device does not support cancelPanic()")));
                 });
             });
             describe('armSystemAway', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemAway('0x1234');
-                    }).toThrow("Device does not support armSystemAway()");
+                    }).toThrow(new Error(("Device does not support armSystemAway()")));
                 });
             });
             describe('armSystemAwayWithDelay', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemAwayWithDelay('0x1234');
-                    }).toThrow("Device does not support armSystemAwayWithDelay()");
+                    }).toThrow(new Error(("Device does not support armSystemAwayWithDelay()")));
                 });
             });
             describe('armSystemHome', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemHome('0x1234');
-                    }).toThrow("Device does not support armSystemHome()");
+                    }).toThrow(new Error(("Device does not support armSystemHome()")));
                 });
             });
             describe('armSystemHomeWithDelay', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemHomeWithDelay('0x1234');
-                    }).toThrow("Device does not support armSystemHomeWithDelay()");
+                    }).toThrow(new Error(("Device does not support armSystemHomeWithDelay()")));
                 });
             });
             describe('disarmSystem', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.disarmSystem('0x1234');
-                    }).toThrow("Device does not support disarmSystem()");
+                    }).toThrow(new Error(("Device does not support disarmSystem()")));
                 });
             });
             describe('switchOnLight', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.switchOnLight('0x1234', 1);
-                    }).toThrow("Device does not support switchOnLight()");
+                    }).toThrow(new Error(("Device does not support switchOnLight()")));
                 });
             });
             describe('switchOffLight', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.switchOffLight('0x1234', 1);
-                    }).toThrow("Device does not support switchOffLight()");
+                    }).toThrow(new Error(("Device does not support switchOffLight()")));
                 });
             });
         });
@@ -555,7 +555,7 @@ describe('Security1 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     security.sendStatus('0x1234/A');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address value', function (done) {
                 let sentCommandId = NaN;
@@ -578,7 +578,7 @@ describe('Security1 class', function () {
             it('should throw an exception with an invalid address 0x10000', function () {
                 expect(function () {
                     security.sendStatus('0x10000');
-                }).toThrow("Address 0x10000 outside valid range");
+                }).toThrow(new Error(("Address 0x10000 outside valid range")));
             });
         })
     });
@@ -602,63 +602,63 @@ describe('Security1 class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.sendPanic('0x1234');
-                    }).toThrow("Device does not support sendPanic()");
+                    }).toThrow(new Error(("Device does not support sendPanic()")));
                 });
             });
             describe('cancelPanic', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.cancelPanic('0x1234');
-                    }).toThrow("Device does not support cancelPanic()");
+                    }).toThrow(new Error(("Device does not support cancelPanic()")));
                 });
             });
             describe('armSystemAway', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemAway('0x1234');
-                    }).toThrow("Device does not support armSystemAway()");
+                    }).toThrow(new Error(("Device does not support armSystemAway()")));
                 });
             });
             describe('armSystemAwayWithDelay', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemAwayWithDelay('0x1234');
-                    }).toThrow("Device does not support armSystemAwayWithDelay()");
+                    }).toThrow(new Error(("Device does not support armSystemAwayWithDelay()")));
                 });
             });
             describe('armSystemHome', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemHome('0x1234');
-                    }).toThrow("Device does not support armSystemHome()");
+                    }).toThrow(new Error(("Device does not support armSystemHome()")));
                 });
             });
             describe('armSystemHomeWithDelay', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemHomeWithDelay('0x1234');
-                    }).toThrow("Device does not support armSystemHomeWithDelay()");
+                    }).toThrow(new Error(("Device does not support armSystemHomeWithDelay()")));
                 });
             });
             describe('disarmSystem', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.disarmSystem('0x1234');
-                    }).toThrow("Device does not support disarmSystem()");
+                    }).toThrow(new Error(("Device does not support disarmSystem()")));
                 });
             });
             describe('switchOnLight', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.switchOnLight('0x1234', 1);
-                    }).toThrow("Device does not support switchOnLight()");
+                    }).toThrow(new Error(("Device does not support switchOnLight()")));
                 });
             });
             describe('switchOffLight', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.switchOffLight('0x1234', 1);
-                    }).toThrow("Device does not support switchOffLight()");
+                    }).toThrow(new Error(("Device does not support switchOffLight()")));
                 });
             });
         });
@@ -666,7 +666,7 @@ describe('Security1 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     security.sendStatus('0x1234/A');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address value', function (done) {
                 let sentCommandId = NaN;
@@ -689,7 +689,7 @@ describe('Security1 class', function () {
             it('should throw an exception with an invalid address 0x1000000', function () {
                 expect(function () {
                     security.sendStatus('0x1000000');
-                }).toThrow("Address 0x1000000 outside valid range");
+                }).toThrow(new Error(("Address 0x1000000 outside valid range")));
             });
         })
     });
@@ -713,63 +713,63 @@ describe('Security1 class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.sendPanic('0x1234');
-                    }).toThrow("Device does not support sendPanic()");
+                    }).toThrow(new Error(("Device does not support sendPanic()")));
                 });
             });
             describe('cancelPanic', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.cancelPanic('0x1234');
-                    }).toThrow("Device does not support cancelPanic()");
+                    }).toThrow(new Error(("Device does not support cancelPanic()")));
                 });
             });
             describe('armSystemAway', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemAway('0x1234');
-                    }).toThrow("Device does not support armSystemAway()");
+                    }).toThrow(new Error(("Device does not support armSystemAway()")));
                 });
             });
             describe('armSystemAwayWithDelay', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemAwayWithDelay('0x1234');
-                    }).toThrow("Device does not support armSystemAwayWithDelay()");
+                    }).toThrow(new Error(("Device does not support armSystemAwayWithDelay()")));
                 });
             });
             describe('armSystemHome', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemHome('0x1234');
-                    }).toThrow("Device does not support armSystemHome()");
+                    }).toThrow(new Error(("Device does not support armSystemHome()")));
                 });
             });
             describe('armSystemHomeWithDelay', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemHomeWithDelay('0x1234');
-                    }).toThrow("Device does not support armSystemHomeWithDelay()");
+                    }).toThrow(new Error(("Device does not support armSystemHomeWithDelay()")));
                 });
             });
             describe('disarmSystem', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.disarmSystem('0x1234');
-                    }).toThrow("Device does not support disarmSystem()");
+                    }).toThrow(new Error(("Device does not support disarmSystem()")));
                 });
             });
             describe('switchOnLight', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.switchOnLight('0x1234', 1);
-                    }).toThrow("Device does not support switchOnLight()");
+                    }).toThrow(new Error(("Device does not support switchOnLight()")));
                 });
             });
             describe('switchOffLight', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.switchOffLight('0x1234', 1);
-                    }).toThrow("Device does not support switchOffLight()");
+                    }).toThrow(new Error(("Device does not support switchOffLight()")));
                 });
             });
         });
@@ -777,7 +777,7 @@ describe('Security1 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     security.sendStatus('0x1234/A');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address value', function (done) {
                 let sentCommandId = NaN;
@@ -800,7 +800,7 @@ describe('Security1 class', function () {
             it('should throw an exception with an invalid address 0x1000000', function () {
                 expect(function () {
                     security.sendStatus('0x1000000');
-                }).toThrow("Address 0x1000000 outside valid range");
+                }).toThrow(new Error(("Address 0x1000000 outside valid range")));
             });
         })
     });
@@ -824,63 +824,63 @@ describe('Security1 class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.sendPanic('0x1234');
-                    }).toThrow("Device does not support sendPanic()");
+                    }).toThrow(new Error(("Device does not support sendPanic()")));
                 });
             });
             describe('cancelPanic', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.cancelPanic('0x1234');
-                    }).toThrow("Device does not support cancelPanic()");
+                    }).toThrow(new Error(("Device does not support cancelPanic()")));
                 });
             });
             describe('armSystemAway', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemAway('0x1234');
-                    }).toThrow("Device does not support armSystemAway()");
+                    }).toThrow(new Error(("Device does not support armSystemAway()")));
                 });
             });
             describe('armSystemAwayWithDelay', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemAwayWithDelay('0x1234');
-                    }).toThrow("Device does not support armSystemAwayWithDelay()");
+                    }).toThrow(new Error(("Device does not support armSystemAwayWithDelay()")));
                 });
             });
             describe('armSystemHome', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemHome('0x1234');
-                    }).toThrow("Device does not support armSystemHome()");
+                    }).toThrow(new Error(("Device does not support armSystemHome()")));
                 });
             });
             describe('armSystemHomeWithDelay', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemHomeWithDelay('0x1234');
-                    }).toThrow("Device does not support armSystemHomeWithDelay()");
+                    }).toThrow(new Error(("Device does not support armSystemHomeWithDelay()")));
                 });
             });
             describe('disarmSystem', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.disarmSystem('0x1234');
-                    }).toThrow("Device does not support disarmSystem()");
+                    }).toThrow(new Error(("Device does not support disarmSystem()")));
                 });
             });
             describe('switchOnLight', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.switchOnLight('0x1234', 1);
-                    }).toThrow("Device does not support switchOnLight()");
+                    }).toThrow(new Error(("Device does not support switchOnLight()")));
                 });
             });
             describe('switchOffLight', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.switchOffLight('0x1234', 1);
-                    }).toThrow("Device does not support switchOffLight()");
+                    }).toThrow(new Error(("Device does not support switchOffLight()")));
                 });
             });
         });
@@ -888,7 +888,7 @@ describe('Security1 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     security.sendStatus('0x1234/A');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address value', function (done) {
                 let sentCommandId = NaN;
@@ -911,7 +911,7 @@ describe('Security1 class', function () {
             it('should throw an exception with an invalid address 0x1000000', function () {
                 expect(function () {
                     security.sendStatus('0x1000000');
-                }).toThrow("Address 0x1000000 outside valid range");
+                }).toThrow(new Error(("Address 0x1000000 outside valid range")));
             });
         })
     });
@@ -935,63 +935,63 @@ describe('Security1 class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.sendPanic('0x1234');
-                    }).toThrow("Device does not support sendPanic()");
+                    }).toThrow(new Error(("Device does not support sendPanic()")));
                 });
             });
             describe('cancelPanic', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.cancelPanic('0x1234');
-                    }).toThrow("Device does not support cancelPanic()");
+                    }).toThrow(new Error(("Device does not support cancelPanic()")));
                 });
             });
             describe('armSystemAway', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemAway('0x1234');
-                    }).toThrow("Device does not support armSystemAway()");
+                    }).toThrow(new Error(("Device does not support armSystemAway()")));
                 });
             });
             describe('armSystemAwayWithDelay', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemAwayWithDelay('0x1234');
-                    }).toThrow("Device does not support armSystemAwayWithDelay()");
+                    }).toThrow(new Error(("Device does not support armSystemAwayWithDelay()")));
                 });
             });
             describe('armSystemHome', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemHome('0x1234');
-                    }).toThrow("Device does not support armSystemHome()");
+                    }).toThrow(new Error(("Device does not support armSystemHome()")));
                 });
             });
             describe('armSystemHomeWithDelay', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemHomeWithDelay('0x1234');
-                    }).toThrow("Device does not support armSystemHomeWithDelay()");
+                    }).toThrow(new Error(("Device does not support armSystemHomeWithDelay()")));
                 });
             });
             describe('disarmSystem', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.disarmSystem('0x1234');
-                    }).toThrow("Device does not support disarmSystem()");
+                    }).toThrow(new Error(("Device does not support disarmSystem()")));
                 });
             });
             describe('switchOnLight', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.switchOnLight('0x1234', 1);
-                    }).toThrow("Device does not support switchOnLight()");
+                    }).toThrow(new Error(("Device does not support switchOnLight()")));
                 });
             });
             describe('switchOffLight', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.switchOffLight('0x1234', 1);
-                    }).toThrow("Device does not support switchOffLight()");
+                    }).toThrow(new Error(("Device does not support switchOffLight()")));
                 });
             });
         });
@@ -999,7 +999,7 @@ describe('Security1 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     security.sendStatus('0x1234/A');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address value', function (done) {
                 let sentCommandId = NaN;
@@ -1022,7 +1022,7 @@ describe('Security1 class', function () {
             it('should throw an exception with an invalid address 0x1000000', function () {
                 expect(function () {
                     security.sendStatus('0x1000000');
-                }).toThrow("Address 0x1000000 outside valid range");
+                }).toThrow(new Error(("Address 0x1000000 outside valid range")));
             });
         })
     });
@@ -1046,63 +1046,63 @@ describe('Security1 class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.sendPanic('0x1234');
-                    }).toThrow("Device does not support sendPanic()");
+                    }).toThrow(new Error(("Device does not support sendPanic()")));
                 });
             });
             describe('cancelPanic', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.cancelPanic('0x1234');
-                    }).toThrow("Device does not support cancelPanic()");
+                    }).toThrow(new Error(("Device does not support cancelPanic()")));
                 });
             });
             describe('armSystemAway', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemAway('0x1234');
-                    }).toThrow("Device does not support armSystemAway()");
+                    }).toThrow(new Error(("Device does not support armSystemAway()")));
                 });
             });
             describe('armSystemAwayWithDelay', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemAwayWithDelay('0x1234');
-                    }).toThrow("Device does not support armSystemAwayWithDelay()");
+                    }).toThrow(new Error(("Device does not support armSystemAwayWithDelay()")));
                 });
             });
             describe('armSystemHome', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemHome('0x1234');
-                    }).toThrow("Device does not support armSystemHome()");
+                    }).toThrow(new Error(("Device does not support armSystemHome()")));
                 });
             });
             describe('armSystemHomeWithDelay', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemHomeWithDelay('0x1234');
-                    }).toThrow("Device does not support armSystemHomeWithDelay()");
+                    }).toThrow(new Error(("Device does not support armSystemHomeWithDelay()")));
                 });
             });
             describe('disarmSystem', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.disarmSystem('0x1234');
-                    }).toThrow("Device does not support disarmSystem()");
+                    }).toThrow(new Error(("Device does not support disarmSystem()")));
                 });
             });
             describe('switchOnLight', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.switchOnLight('0x1234', 1);
-                    }).toThrow("Device does not support switchOnLight()");
+                    }).toThrow(new Error(("Device does not support switchOnLight()")));
                 });
             });
             describe('switchOffLight', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.switchOffLight('0x1234', 1);
-                    }).toThrow("Device does not support switchOffLight()");
+                    }).toThrow(new Error(("Device does not support switchOffLight()")));
                 });
             });
         });
@@ -1110,7 +1110,7 @@ describe('Security1 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     security.sendStatus('0x1234/A');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address value', function (done) {
                 let sentCommandId = NaN;
@@ -1133,7 +1133,7 @@ describe('Security1 class', function () {
             it('should throw an exception with an invalid address 0x1000000', function () {
                 expect(function () {
                     security.sendStatus('0x1000000');
-                }).toThrow("Address 0x1000000 outside valid range");
+                }).toThrow(new Error(("Address 0x1000000 outside valid range")));
             });
         })
     });
@@ -1157,63 +1157,63 @@ describe('Security1 class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.sendPanic('0x1234');
-                    }).toThrow("Device does not support sendPanic()");
+                    }).toThrow(new Error(("Device does not support sendPanic()")));
                 });
             });
             describe('cancelPanic', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.cancelPanic('0x1234');
-                    }).toThrow("Device does not support cancelPanic()");
+                    }).toThrow(new Error(("Device does not support cancelPanic()")));
                 });
             });
             describe('armSystemAway', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemAway('0x1234');
-                    }).toThrow("Device does not support armSystemAway()");
+                    }).toThrow(new Error(("Device does not support armSystemAway()")));
                 });
             });
             describe('armSystemAwayWithDelay', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemAwayWithDelay('0x1234');
-                    }).toThrow("Device does not support armSystemAwayWithDelay()");
+                    }).toThrow(new Error(("Device does not support armSystemAwayWithDelay()")));
                 });
             });
             describe('armSystemHome', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemHome('0x1234');
-                    }).toThrow("Device does not support armSystemHome()");
+                    }).toThrow(new Error(("Device does not support armSystemHome()")));
                 });
             });
             describe('armSystemHomeWithDelay', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemHomeWithDelay('0x1234');
-                    }).toThrow("Device does not support armSystemHomeWithDelay()");
+                    }).toThrow(new Error(("Device does not support armSystemHomeWithDelay()")));
                 });
             });
             describe('disarmSystem', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.disarmSystem('0x1234');
-                    }).toThrow("Device does not support disarmSystem()");
+                    }).toThrow(new Error(("Device does not support disarmSystem()")));
                 });
             });
             describe('switchOnLight', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.switchOnLight('0x1234', 1);
-                    }).toThrow("Device does not support switchOnLight()");
+                    }).toThrow(new Error(("Device does not support switchOnLight()")));
                 });
             });
             describe('switchOffLight', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.switchOffLight('0x1234', 1);
-                    }).toThrow("Device does not support switchOffLight()");
+                    }).toThrow(new Error(("Device does not support switchOffLight()")));
                 });
             });
         });
@@ -1221,7 +1221,7 @@ describe('Security1 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     security.sendStatus('0x1234/A');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address value', function (done) {
                 let sentCommandId = NaN;
@@ -1244,7 +1244,7 @@ describe('Security1 class', function () {
             it('should throw an exception with an invalid address 0x10000', function () {
                 expect(function () {
                     security.sendStatus('0x10000');
-                }).toThrow("Address 0x10000 outside valid range");
+                }).toThrow(new Error(("Address 0x10000 outside valid range")));
             });
         })
     });
@@ -1268,63 +1268,63 @@ describe('Security1 class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.sendPanic('0x1234');
-                    }).toThrow("Device does not support sendPanic()");
+                    }).toThrow(new Error(("Device does not support sendPanic()")));
                 });
             });
             describe('cancelPanic', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.cancelPanic('0x1234');
-                    }).toThrow("Device does not support cancelPanic()");
+                    }).toThrow(new Error(("Device does not support cancelPanic()")));
                 });
             });
             describe('armSystemAway', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemAway('0x1234');
-                    }).toThrow("Device does not support armSystemAway()");
+                    }).toThrow(new Error(("Device does not support armSystemAway()")));
                 });
             });
             describe('armSystemAwayWithDelay', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemAwayWithDelay('0x1234');
-                    }).toThrow("Device does not support armSystemAwayWithDelay()");
+                    }).toThrow(new Error(("Device does not support armSystemAwayWithDelay()")));
                 });
             });
             describe('armSystemHome', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemHome('0x1234');
-                    }).toThrow("Device does not support armSystemHome()");
+                    }).toThrow(new Error(("Device does not support armSystemHome()")));
                 });
             });
             describe('armSystemHomeWithDelay', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.armSystemHomeWithDelay('0x1234');
-                    }).toThrow("Device does not support armSystemHomeWithDelay()");
+                    }).toThrow(new Error(("Device does not support armSystemHomeWithDelay()")));
                 });
             });
             describe('disarmSystem', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.disarmSystem('0x1234');
-                    }).toThrow("Device does not support disarmSystem()");
+                    }).toThrow(new Error(("Device does not support disarmSystem()")));
                 });
             });
             describe('switchOnLight', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.switchOnLight('0x1234', 1);
-                    }).toThrow("Device does not support switchOnLight()");
+                    }).toThrow(new Error(("Device does not support switchOnLight()")));
                 });
             });
             describe('switchOffLight', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         security.switchOffLight('0x1234', 1);
-                    }).toThrow("Device does not support switchOffLight()");
+                    }).toThrow(new Error(("Device does not support switchOffLight()")));
                 });
             });
         });
@@ -1332,7 +1332,7 @@ describe('Security1 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     security.sendStatus('0x1234/A');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address value', function (done) {
                 let sentCommandId = NaN;
@@ -1355,12 +1355,12 @@ describe('Security1 class', function () {
             it('should throw an exception with an invalid address 0x4000000', function () {
                 expect(function () {
                     security.sendStatus('0x4000000');
-                }).toThrow("Address 0x4000000 outside valid range");
+                }).toThrow(new Error(("Address 0x4000000 outside valid range")));
             });
             it('should throw an exception with an invalid address 0x0', function () {
                 expect(function () {
                     security.sendStatus('0x0');
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
         })
     });

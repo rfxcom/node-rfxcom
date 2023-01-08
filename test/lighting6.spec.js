@@ -5,7 +5,7 @@ const rfxcom = require('../lib'),
     FakeSerialPort = require('./helper');
 
 beforeEach(function () {
-    this.addMatchers({
+    jasmine.addMatchers({
         toHaveSent: matchers.toHaveSent
     });
 });
@@ -15,7 +15,7 @@ describe('Lighting6 class', function () {
         fakeSerialPort,
         device;
     beforeEach(function () {
-        this.addMatchers({
+        jasmine.addMatchers({
             toHaveSent: matchers.toHaveSent
         });
         fakeSerialPort = new FakeSerialPort();
@@ -31,7 +31,7 @@ describe('Lighting6 class', function () {
         it('should throw an error if no subtype is specified', function () {
             expect(function () {
                 lighting6 = new rfxcom.Lighting6(device);
-            }).toThrow("Must provide a subtype.");
+            }).toThrow(new Error(("Must provide a subtype.")));
         });
     });
     describe('.switchOn', function () {
@@ -126,17 +126,17 @@ describe('Lighting6 class', function () {
         it('should throw an exception with an invalid group code', function () {
             expect(function () {
                 lighting6.switchOn(['0xFFFF', 'Q', '5']);
-            }).toThrow("Invalid group code 'Q'");
+            }).toThrow(new Error(("Invalid group code 'Q'")));
         });
         it('should throw an exception with an invalid unit code', function () {
             expect(function () {
                 lighting6.switchOn(['0xFFFF', 'P', '6']);
-            }).toThrow("Invalid unit number 6");
+            }).toThrow(new Error(("Invalid unit number 6")));
         });
         it('should throw an exception with a badly formatted deviceId', function () {
             expect(function () {
                 lighting6.switchOn('0xF09AC8');
-            }).toThrow("Invalid deviceId format");
+            }).toThrow(new Error(("Invalid deviceId format")));
         });
     });
     describe('CUVEO address checking', function () {
@@ -184,22 +184,22 @@ describe('Lighting6 class', function () {
         it('should throw an exception with an invalid group code', function () {
             expect(function () {
                 lighting6.switchOn(['0xFFFF', '4', '1']);
-            }).toThrow("Invalid group code '4'");
+            }).toThrow(new Error(("Invalid group code '4'")));
         });
         it('should throw an exception with an invalid unit code of 9 when the group is 1', function () {
             expect(function () {
                 lighting6.switchOn(['0xFFFF', '1', '9']);
-            }).toThrow("Invalid unit number 9");
+            }).toThrow(new Error(("Invalid unit number 9")));
         });
         it('should throw an exception with an invalid unit code of 3 when the group is 0', function () {
             expect(function () {
                 lighting6.switchOn(['0xFFFF', '0', '3']);
-            }).toThrow("Invalid unit number 3");
+            }).toThrow(new Error(("Invalid unit number 3")));
         });
         it('should throw an exception with a badly formatted deviceId', function () {
             expect(function () {
                 lighting6.switchOn('0xF09AC8');
-            }).toThrow("Invalid deviceId format");
+            }).toThrow(new Error(("Invalid deviceId format")));
         });
     });
 });

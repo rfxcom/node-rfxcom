@@ -5,7 +5,7 @@ const rfxcom = require('../lib'),
     FakeSerialPort = require('./helper');
 
 beforeEach(function () {
-    this.addMatchers({
+    jasmine.addMatchers({
         toHaveSent: matchers.toHaveSent
     });
 });
@@ -15,7 +15,7 @@ describe('Lighting5 class', function () {
         fakeSerialPort,
         device;
     beforeEach(function () {
-        this.addMatchers({
+        jasmine.addMatchers({
             toHaveSent: matchers.toHaveSent
         });
         fakeSerialPort = new FakeSerialPort();
@@ -32,7 +32,7 @@ describe('Lighting5 class', function () {
         it('should throw an error if no subtype is specified', function () {
             expect(function () {
                 lighting5 = new rfxcom.Lighting5(device);
-            }).toThrow("Must provide a subtype.");
+            }).toThrow(new Error(("Must provide a subtype.")));
         });
     });
     describe('LIGHTWAVERF', function () {
@@ -80,7 +80,7 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.switchOn('0xF09AC8/0');
-                    }).toThrow("Subtype doesn't support Group On");
+                    }).toThrow(new Error(("Subtype doesn't support Group On")));
                 });
             });
             describe('switchOff()', function () {
@@ -102,7 +102,7 @@ describe('Lighting5 class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.toggleOnOff('0xF09AC8/1');
-                    }).toThrow("Device does not support toggleOnOff()");
+                    }).toThrow(new Error(("Device does not support toggleOnOff()")));
                 })
             });
             describe('setLevel()', function () {
@@ -115,31 +115,31 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with an invalid level 32', function () {
                     expect(function () {
                         lighting5.setLevel('0xF09AC8/1', 32);
-                    }).toThrow("Invalid level: value must be in range 0-31");
+                    }).toThrow(new Error(("Invalid level: value must be in range 0-31")));
                 });
                 it('should throw an exception with an invalid level -1', function () {
                     expect(function () {
                         lighting5.setLevel('0xF09AC8/1', -1);
-                    }).toThrow("Invalid level: value must be in range 0-31");
+                    }).toThrow(new Error(("Invalid level: value must be in range 0-31")));
                 });
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.setLevel('0xF09AC8/0');
-                    }).toThrow("Group command must be On, Off, or Lock");
+                    }).toThrow(new Error(("Group command must be On, Off, or Lock")));
                 });
             });
             describe('increaseLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.increaseLevel('0xF09AC8/1');
-                    }).toThrow("Device does not support increaseLevel()");
+                    }).toThrow(new Error(("Device does not support increaseLevel()")));
                 })
             });
             describe('decreaseLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.decreaseLevel('0xF09AC8/1');
-                    }).toThrow("Device does not support decreaseLevel()");
+                    }).toThrow(new Error(("Device does not support decreaseLevel()")));
                 })
             });
             describe('setMood()', function () {
@@ -152,24 +152,24 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with an invalid mood value 6', function () {
                     expect(function () {
                         lighting5.setMood('0xF09AC8/1', 6);
-                    }).toThrow("Invalid mood: value must be in range 1-5.");
+                    }).toThrow(new Error(("Invalid mood: value must be in range 1-5.")));
                 });
                 it('should throw an exception with an invalid mood value 0', function () {
                     expect(function () {
                         lighting5.setMood('0xF09AC8/1', 0);
-                    }).toThrow("Invalid mood: value must be in range 1-5.");
+                    }).toThrow(new Error(("Invalid mood: value must be in range 1-5.")));
                 });
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.setMood('0xF09AC8/0');
-                    }).toThrow("Group command must be On, Off, or Lock");
+                    }).toThrow(new Error(("Group command must be On, Off, or Lock")));
                 });
             });
             describe('program()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.program('0xF09AC8/1');
-                    }).toThrow("Device does not support program()");
+                    }).toThrow(new Error(("Device does not support program()")));
                 })
             });
             describe('relayOpen()', function () {
@@ -182,7 +182,7 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.relayOpen('0xF09AC8/0');
-                    }).toThrow("Group command must be On, Off, or Lock");
+                    }).toThrow(new Error(("Group command must be On, Off, or Lock")));
                 });
             });
             describe('relayClose()', function () {
@@ -195,7 +195,7 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.relayClose('0xF09AC8/0');
-                    }).toThrow("Group command must be On, Off, or Lock");
+                    }).toThrow(new Error(("Group command must be On, Off, or Lock")));
                 });
             });
             describe('relayStop()', function () {
@@ -208,35 +208,35 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.relayStop('0xF09AC8/0');
-                    }).toThrow("Group command must be On, Off, or Lock");
+                    }).toThrow(new Error(("Group command must be On, Off, or Lock")));
                 });
             });
             describe('increaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.increaseColour('0xF09AC8/1');
-                    }).toThrow("Device does not support increaseColour()");
+                    }).toThrow(new Error(("Device does not support increaseColour()")));
                 })
             });
             describe('decreaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.decreaseColour('0xF09AC8/1');
-                    }).toThrow("Device does not support decreaseColour()");
+                    }).toThrow(new Error(("Device does not support decreaseColour()")));
                 })
             });
             describe('setColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setColour('0xF09AC8/1', 7);
-                    }).toThrow("Device does not support setColour()");
+                    }).toThrow(new Error(("Device does not support setColour()")));
                 })
             });
             describe('setScene()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setScene('0x1234/1', 1, 1);
-                    }).toThrow("Device does not support setScene()");
+                    }).toThrow(new Error(("Device does not support setScene()")));
                 });
             });
             describe('lock()', function () {
@@ -263,7 +263,7 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.unlock('0xF09AC8/0');
-                    }).toThrow("Group command must be On, Off, or Lock");
+                    }).toThrow(new Error(("Group command must be On, Off, or Lock")));
                 });
             });
         });
@@ -271,7 +271,7 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     lighting5.switchOn('0xF09AC8');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address and unit code values', function (done) {
                 let sentCommandId = NaN;
@@ -294,22 +294,22 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid unit code 17', function () {
                 expect(function () {
                     lighting5.switchOn('0xFFFFFF/17');
-                }).toThrow("Invalid unit code 17");
+                }).toThrow(new Error(("Invalid unit code 17")));
             });
             it('should throw an exception with an invalid unit code -1', function () {
                 expect(function () {
                     lighting5.switchOn('0xFFFFFF/-1');
-                }).toThrow("Invalid unit code -1");
+                }).toThrow(new Error(("Invalid unit code -1")));
             });
             it('should throw an exception with an invalid address 0x1000000', function () {
                 expect(function () {
                     lighting5.switchOn('0x1000000/1');
-                }).toThrow("Address 0x1000000 outside valid range");
+                }).toThrow(new Error(("Address 0x1000000 outside valid range")));
             });
             it('should throw an exception with an invalid address 0x000000', function () {
                 expect(function () {
                     lighting5.switchOn('0x000000/1');
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
         });
     });
@@ -331,7 +331,7 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.switchOn('0x000123/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('switchOff()', function () {
@@ -347,42 +347,42 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.switchOff('0x000123/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('toggleOnOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.toggleOnOff('0x000123/1');
-                    }).toThrow("Device does not support toggleOnOff()");
+                    }).toThrow(new Error(("Device does not support toggleOnOff()")));
                 });
             });
             describe('setLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setLevel('0x000123/1');
-                    }).toThrow("Device does not support setLevel()");
+                    }).toThrow(new Error(("Device does not support setLevel()")));
                 });
             });
             describe('increaseLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.increaseLevel('0x000123/1');
-                    }).toThrow("Device does not support increaseLevel()");
+                    }).toThrow(new Error(("Device does not support increaseLevel()")));
                 });
             });
             describe('decreaseLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.decreaseLevel('0x000123/1');
-                    }).toThrow("Device does not support decreaseLevel()");
+                    }).toThrow(new Error(("Device does not support decreaseLevel()")));
                 });
             });
             describe('setMood()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setMood('0x000123/1', 1);
-                    }).toThrow("Device does not support setMood()");
+                    }).toThrow(new Error(("Device does not support setMood()")));
                 });
             });
             describe('program()', function () {
@@ -395,70 +395,70 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.program('0x000123/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('relayOpen()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayOpen('0x000123/1');
-                    }).toThrow("Device does not support relayOpen()");
+                    }).toThrow(new Error(("Device does not support relayOpen()")));
                 });
             });
             describe('relayClose()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayClose('0x000123/1');
-                    }).toThrow("Device does not support relayClose()");
+                    }).toThrow(new Error(("Device does not support relayClose()")));
                 });
             });
             describe('relayStop()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayStop('0x000123/1');
-                    }).toThrow("Device does not support relayStop()");
+                    }).toThrow(new Error(("Device does not support relayStop()")));
                 });
             });
             describe('increaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.increaseColour('0x000123/1');
-                    }).toThrow("Device does not support increaseColour()");
+                    }).toThrow(new Error(("Device does not support increaseColour()")));
                 });
             });
             describe('decreaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.decreaseColour('0x000123/1');
-                    }).toThrow("Device does not support decreaseColour()");
+                    }).toThrow(new Error(("Device does not support decreaseColour()")));
                 });
             });
             describe('setColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setColour('0x000123/1', 5);
-                    }).toThrow("Device does not support setColour()");
+                    }).toThrow(new Error(("Device does not support setColour()")));
                 });
             });
             describe('setScene()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setScene('0x000123/1', 1, 1);
-                    }).toThrow("Device does not support setScene()");
+                    }).toThrow(new Error(("Device does not support setScene()")));
                 });
             });
             describe('lock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x1234/1');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
             describe('unlock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x1234/1');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
         });
@@ -466,7 +466,7 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     lighting5.switchOn('0x3FFF');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address and unit code values', function (done) {
                 let sentCommandId = NaN;
@@ -489,22 +489,22 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid unit number 5', function () {
                 expect(function () {
                     lighting5.switchOn('0x3FF/5');
-                }).toThrow("Invalid unit code 5");
+                }).toThrow(new Error(("Invalid unit code 5")));
             });
             it('should throw an exception with an invalid unit number -1', function () {
                 expect(function () {
                     lighting5.switchOn('0x3FF/-1');
-                }).toThrow("Invalid unit code -1");
+                }).toThrow(new Error(("Invalid unit code -1")));
             });
             it('should throw an exception with an invalid address 0x4000', function () {
                 expect(function () {
                     lighting5.switchOn('0x004000/4');
-                }).toThrow("Address 0x4000 outside valid range");
+                }).toThrow(new Error(("Address 0x4000 outside valid range")));
             });
             it('should throw an exception with an invalid address 0x0000', function () {
                 expect(function () {
                     lighting5.switchOn('0x000000/4');
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
         });
     });
@@ -557,105 +557,105 @@ describe('Lighting5 class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.toggleOnOff('0x012345/1');
-                    }).toThrow("Device does not support toggleOnOff()");
+                    }).toThrow(new Error(("Device does not support toggleOnOff()")));
                 });
             });
             describe('setLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setLevel('0x012345/1');
-                    }).toThrow("Device does not support setLevel()");
+                    }).toThrow(new Error(("Device does not support setLevel()")));
                 });
             });
             describe('increaseLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.increaseLevel('0x012345/1');
-                    }).toThrow("Device does not support increaseLevel()");
+                    }).toThrow(new Error(("Device does not support increaseLevel()")));
                 });
             });
             describe('decreaseLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.decreaseLevel('0x012345/1');
-                    }).toThrow("Device does not support decreaseLevel()");
+                    }).toThrow(new Error(("Device does not support decreaseLevel()")));
                 });
             });
             describe('setMood()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setMood('0x012345/1');
-                    }).toThrow("Device does not support setMood()");
+                    }).toThrow(new Error(("Device does not support setMood()")));
                 });
             });
             describe('program()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.program('0x012345/1');
-                    }).toThrow("Device does not support program()");
+                    }).toThrow(new Error(("Device does not support program()")));
                 });
             });
             describe('relayOpen()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayOpen('0x012345/1');
-                    }).toThrow("Device does not support relayOpen()");
+                    }).toThrow(new Error(("Device does not support relayOpen()")));
                 });
             });
             describe('relayClose()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayClose('0x012345/1');
-                    }).toThrow("Device does not support relayClose()");
+                    }).toThrow(new Error(("Device does not support relayClose()")));
                 });
             });
             describe('relayStop()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayStop('0x012345/1');
-                    }).toThrow("Device does not support relayStop()");
+                    }).toThrow(new Error(("Device does not support relayStop()")));
                 });
             });
             describe('increaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.increaseColour('0x012345/1');
-                    }).toThrow("Device does not support increaseColour()");
+                    }).toThrow(new Error(("Device does not support increaseColour()")));
                 });
             });
             describe('decreaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.decreaseColour('0x012345/1');
-                    }).toThrow("Device does not support decreaseColour()");
+                    }).toThrow(new Error(("Device does not support decreaseColour()")));
                 });
             });
             describe('setColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setColour('0x012345/1');
-                    }).toThrow("Device does not support setColour()");
+                    }).toThrow(new Error(("Device does not support setColour()")));
                 });
             });
             describe('setScene()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setScene('0x12345/1', 1, 1);
-                    }).toThrow("Device does not support setScene()");
+                    }).toThrow(new Error(("Device does not support setScene()")));
                 });
             });
             describe('lock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x12345/1');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
             describe('unlock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x12345/1');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
         });
@@ -663,7 +663,7 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     lighting5.switchOn('0x3FFF');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address and unit code values', function (done) {
                 let sentCommandId = NaN;
@@ -686,22 +686,22 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid unit number 7', function () {
                 expect(function () {
                     lighting5.switchOn('0x7FFF/7');
-                }).toThrow("Invalid unit code 7");
+                }).toThrow(new Error(("Invalid unit code 7")));
             });
             it('should throw an exception with an invalid unit number -1', function () {
                 expect(function () {
                     lighting5.switchOn('0x7FFF/-1');
-                }).toThrow("Invalid unit code -1");
+                }).toThrow(new Error(("Invalid unit code -1")));
             });
             it('should throw an exception with an invalid address 0x80000', function () {
                 expect(function () {
                     lighting5.switchOn('0x80000/4');
-                }).toThrow("Address 0x80000 outside valid range");
+                }).toThrow(new Error(("Address 0x80000 outside valid range")));
             });
             it('should throw an exception with an invalid address 0x0', function () {
                 expect(function () {
                     lighting5.switchOn('0x0/4');
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
         });
     });
@@ -723,14 +723,14 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.switchOn('0x1234/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('switchOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.switchOff('0x1234');
-                    }).toThrow("Device does not support switchOff()");
+                    }).toThrow(new Error(("Device does not support switchOff()")));
                 });
             });
             describe('toggleOnOff()', function () {
@@ -746,7 +746,7 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.toggleOnOff('0x1234/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('setLevel()', function () {
@@ -771,17 +771,17 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with invalid level 0', function () {
                     expect(function () {
                         lighting5.setLevel('0x1234', 0);
-                    }).toThrow("Invalid level: value must be in range 1-3");
+                    }).toThrow(new Error(("Invalid level: value must be in range 1-3")));
                 });
                 it('should throw an exception with invalid level 4', function () {
                     expect(function () {
                         lighting5.setLevel('0x1234', 4);
-                    }).toThrow("Invalid level: value must be in range 1-3");
+                    }).toThrow(new Error(("Invalid level: value must be in range 1-3")));
                 });
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.setLevel('0x1234/0', 2);
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('increaseLevel()', function () {
@@ -806,7 +806,7 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.increaseLevel('0x1234/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('decreaseLevel()', function () {
@@ -831,84 +831,84 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.decreaseLevel('0x1234/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('setMood()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setMood('0x1234');
-                    }).toThrow("Device does not support setMood()");
+                    }).toThrow(new Error(("Device does not support setMood()")));
                 });
             });
             describe('program()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.program('0x1234');
-                    }).toThrow("Device does not support program()");
+                    }).toThrow(new Error(("Device does not support program()")));
                 });
             });
             describe('relayOpen()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayOpen('0x1234');
-                    }).toThrow("Device does not support relayOpen()");
+                    }).toThrow(new Error(("Device does not support relayOpen()")));
                 });
             });
             describe('relayClose()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayClose('0x1234');
-                    }).toThrow("Device does not support relayClose()");
+                    }).toThrow(new Error(("Device does not support relayClose()")));
                 });
             });
             describe('relayStop()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayStop('0x1234');
-                    }).toThrow("Device does not support relayStop()");
+                    }).toThrow(new Error(("Device does not support relayStop()")));
                 });
             });
             describe('increaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.increaseColour('0x1234');
-                    }).toThrow("Device does not support increaseColour()");
+                    }).toThrow(new Error(("Device does not support increaseColour()")));
                 });
             });
             describe('decreaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.decreaseColour('0x1234');
-                    }).toThrow("Device does not support decreaseColour()");
+                    }).toThrow(new Error(("Device does not support decreaseColour()")));
                 });
             });
             describe('setColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setColour('0x1234');
-                    }).toThrow("Device does not support setColour()");
+                    }).toThrow(new Error(("Device does not support setColour()")));
                 });
             });
             describe('setScene()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setScene('0x1234', 1, 1);
-                    }).toThrow("Device does not support setScene()");
+                    }).toThrow(new Error(("Device does not support setScene()")));
                 });
             });
             describe('lock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x1234');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
             describe('unlock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x1234');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
         });
@@ -916,7 +916,7 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     lighting5.switchOn('0x3FFF/1/9');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address', function (done) {
                 let sentCommandId = NaN;
@@ -948,12 +948,12 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid address 0x10000', function () {
                 expect(function () {
                     lighting5.switchOn('0x10000');
-                }).toThrow("Address 0x10000 outside valid range");
+                }).toThrow(new Error(("Address 0x10000 outside valid range")));
             });
             it('should throw an exception with an invalid address 0x0000', function () {
                 expect(function () {
                     lighting5.switchOn('0x000000/4');
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
         });
     });
@@ -1006,105 +1006,105 @@ describe('Lighting5 class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.toggleOnOff('0x123456/1');
-                    }).toThrow("Device does not support toggleOnOff()");
+                    }).toThrow(new Error(("Device does not support toggleOnOff()")));
                 });
             });
             describe('setLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setLevel('0x123456/1');
-                    }).toThrow("Device does not support setLevel()");
+                    }).toThrow(new Error(("Device does not support setLevel()")));
                 });
             });
             describe('increaseLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.increaseLevel('0x123456/1');
-                    }).toThrow("Device does not support increaseLevel()");
+                    }).toThrow(new Error(("Device does not support increaseLevel()")));
                 });
             });
             describe('decreaseLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.decreaseLevel('0x123456/1');
-                    }).toThrow("Device does not support decreaseLevel()");
+                    }).toThrow(new Error(("Device does not support decreaseLevel()")));
                 });
             });
             describe('setMood()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setMood('0x123456/1');
-                    }).toThrow("Device does not support setMood()");
+                    }).toThrow(new Error(("Device does not support setMood()")));
                 });
             });
             describe('program()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.program('0x123456/1');
-                    }).toThrow("Device does not support program()");
+                    }).toThrow(new Error(("Device does not support program()")));
                 });
             });
             describe('relayOpen()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayOpen('0x123456/1');
-                    }).toThrow("Device does not support relayOpen()");
+                    }).toThrow(new Error(("Device does not support relayOpen()")));
                 });
             });
             describe('relayClose()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayClose('0x123456/1');
-                    }).toThrow("Device does not support relayClose()");
+                    }).toThrow(new Error(("Device does not support relayClose()")));
                 });
             });
             describe('relayStop()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayStop('0x123456/1');
-                    }).toThrow("Device does not support relayStop()");
+                    }).toThrow(new Error(("Device does not support relayStop()")));
                 });
             });
             describe('increaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.increaseColour('0x123456/1');
-                    }).toThrow("Device does not support increaseColour()");
+                    }).toThrow(new Error(("Device does not support increaseColour()")));
                 });
             });
             describe('decreaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.decreaseColour('0x123456/1');
-                    }).toThrow("Device does not support decreaseColour()");
+                    }).toThrow(new Error(("Device does not support decreaseColour()")));
                 });
             });
             describe('setColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setColour('0x123456/1');
-                    }).toThrow("Device does not support setColour()");
+                    }).toThrow(new Error(("Device does not support setColour()")));
                 });
             });
             describe('setScene()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setScene('0x123456/1', 1, 1);
-                    }).toThrow("Device does not support setScene()");
+                    }).toThrow(new Error(("Device does not support setScene()")));
                 });
             });
             describe('lock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x123456/1');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
             describe('unlock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x123456/1');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
         });
@@ -1112,7 +1112,7 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     lighting5.switchOn('0x3FFF');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address and unit code values', function (done) {
                 let sentCommandId = NaN;
@@ -1135,22 +1135,22 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid unit number 17', function () {
                 expect(function () {
                     lighting5.switchOn('0x7FFF/17');
-                }).toThrow("Invalid unit code 17");
+                }).toThrow(new Error(("Invalid unit code 17")));
             });
             it('should throw an exception with an invalid unit number -1', function () {
                 expect(function () {
                     lighting5.switchOn('0x7FFF/-1');
-                }).toThrow("Invalid unit code -1");
+                }).toThrow(new Error(("Invalid unit code -1")));
             });
             it('should throw an exception with an invalid address 0x1000000', function () {
                 expect(function () {
                     lighting5.switchOn('0x1000000/4');
-                }).toThrow("Address 0x1000000 outside valid range");
+                }).toThrow(new Error(("Address 0x1000000 outside valid range")));
             });
             it('should throw an exception with an invalid address 0x0', function () {
                 expect(function () {
                     lighting5.switchOn('0x0/4');
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
         });
     });
@@ -1163,14 +1163,14 @@ describe('Lighting5 class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.switchOn('0x1234/1');
-                    }).toThrow("Device does not support switchOn()");
+                    }).toThrow(new Error(("Device does not support switchOn()")));
                 });
             });
             describe('switchOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.switchOff('0x1234/1');
-                    }).toThrow("Device supports switchOff() only for group");
+                    }).toThrow(new Error(("Device supports switchOff() only for group")));
                 });
                 it('should handle a group address', function (done) {
                     let sentCommandId = NaN;
@@ -1213,14 +1213,14 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.toggleOnOff('0x1234/0');
-                    }).toThrow("Group command must be On or Off");
+                    }).toThrow(new Error(("Group command must be On or Off")));
                 });
             });
             describe('setLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setLevel('0x1234/1');
-                    }).toThrow("Device does not support setLevel()");
+                    }).toThrow(new Error(("Device does not support setLevel()")));
                 });
             });
             describe('increaseLevel()', function () {
@@ -1267,77 +1267,77 @@ describe('Lighting5 class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setMood('0x1234/1');
-                    }).toThrow("Device does not support setMood()");
+                    }).toThrow(new Error(("Device does not support setMood()")));
                 });
             });
             describe('program()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.program('0x1234/1');
-                    }).toThrow("Device does not support program()");
+                    }).toThrow(new Error(("Device does not support program()")));
                 });
             });
             describe('relayOpen()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayOpen('0x1234/1');
-                    }).toThrow("Device does not support relayOpen()");
+                    }).toThrow(new Error(("Device does not support relayOpen()")));
                 });
             });
             describe('relayClose()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayClose('0x1234/1');
-                    }).toThrow("Device does not support relayClose()");
+                    }).toThrow(new Error(("Device does not support relayClose()")));
                 });
             });
             describe('relayStop()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayStop('0x1234/1');
-                    }).toThrow("Device does not support relayStop()");
+                    }).toThrow(new Error(("Device does not support relayStop()")));
                 });
             });
             describe('increaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.increaseColour('0x1234/1');
-                    }).toThrow("Device does not support increaseColour()");
+                    }).toThrow(new Error(("Device does not support increaseColour()")));
                 });
             });
             describe('decreaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.decreaseColour('0x1234/1');
-                    }).toThrow("Device does not support decreaseColour()");
+                    }).toThrow(new Error(("Device does not support decreaseColour()")));
                 });
             });
             describe('setColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setColour('0x1234/1');
-                    }).toThrow("Device does not support setColour()");
+                    }).toThrow(new Error(("Device does not support setColour()")));
                 });
             });
             describe('setScene()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setScene('0x1234/1', 1, 1);
-                    }).toThrow("Device does not support setScene()");
+                    }).toThrow(new Error(("Device does not support setScene()")));
                 });
             });
             describe('lock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x1234/1');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
             describe('unlock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x1234/1');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
         });
@@ -1345,7 +1345,7 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     lighting5.toggleOnOff('0x3FFF');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address and unit code values', function (done) {
                 let sentCommandId = NaN;
@@ -1368,22 +1368,22 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid unit number 4', function () {
                 expect(function () {
                     lighting5.toggleOnOff('0x7FFF/4');
-                }).toThrow("Invalid unit code 4");
+                }).toThrow(new Error(("Invalid unit code 4")));
             });
             it('should throw an exception with an invalid unit number -1', function () {
                 expect(function () {
                     lighting5.toggleOnOff('0x7FFF/-1');
-                }).toThrow("Invalid unit code -1");
+                }).toThrow(new Error(("Invalid unit code -1")));
             });
             it('should throw an exception with an invalid address 0x8000', function () {
                 expect(function () {
                     lighting5.toggleOnOff('0x8000/1');
-                }).toThrow("Address 0x8000 outside valid range");
+                }).toThrow(new Error(("Address 0x8000 outside valid range")));
             });
             it('should throw an exception with an invalid address 0x0000', function () {
                 expect(function () {
                     lighting5.toggleOnOff('0x0/1');
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
         });
     });
@@ -1405,7 +1405,7 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.switchOn('0x123456/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('switchOff()', function () {
@@ -1421,21 +1421,21 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.switchOff('0x123456/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('toggleOnOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.toggleOnOff('0x123456');
-                    }).toThrow("Device does not support toggleOnOff()");
+                    }).toThrow(new Error(("Device does not support toggleOnOff()")));
                 });
             });
             describe('setLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setLevel('0x123456');
-                    }).toThrow("Device does not support setLevel()");
+                    }).toThrow(new Error(("Device does not support setLevel()")));
                 });
             });
             describe('increaseLevel()', function () {
@@ -1460,7 +1460,7 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.increaseLevel('0x123456/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('decreaseLevel()', function () {
@@ -1485,42 +1485,42 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.decreaseLevel('0x123456/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('setMood()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setMood('0x123456');
-                    }).toThrow("Device does not support setMood()");
+                    }).toThrow(new Error(("Device does not support setMood()")));
                 });
             });
             describe('program()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.program('0x123456');
-                    }).toThrow("Device does not support program()");
+                    }).toThrow(new Error(("Device does not support program()")));
                 });
             });
             describe('relayOpen()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayOpen('0x123456');
-                    }).toThrow("Device does not support relayOpen()");
+                    }).toThrow(new Error(("Device does not support relayOpen()")));
                 });
             });
             describe('relayClose()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayClose('0x123456');
-                    }).toThrow("Device does not support relayClose()");
+                    }).toThrow(new Error(("Device does not support relayClose()")));
                 });
             });
             describe('relayStop()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayStop('0x123456');
-                    }).toThrow("Device does not support relayStop()");
+                    }).toThrow(new Error(("Device does not support relayStop()")));
                 });
             });
             describe('increaseColour()', function () {
@@ -1536,7 +1536,7 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.increaseColour('0x123456/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('decreaseColour()', function () {
@@ -1552,7 +1552,7 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.decreaseColour('0x123456/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('setColour()', function () {
@@ -1577,38 +1577,38 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with invalid colour value -1', function () {
                     expect(function () {
                         lighting5.setColour('0x123456', -1);
-                    }).toThrow("Invalid colour: value must be in range 0-126");
+                    }).toThrow(new Error(("Invalid colour: value must be in range 0-126")));
                 });
                 it('should throw an exception with invalid colour value 127', function () {
                     expect(function () {
                         lighting5.setColour('0x123456', 127);
-                    }).toThrow("Invalid colour: value must be in range 0-126");
+                    }).toThrow(new Error(("Invalid colour: value must be in range 0-126")));
                 });
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.setColour('0x123456/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('setScene()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setScene('0x123456', 1, 1);
-                    }).toThrow("Device does not support setScene()");
+                    }).toThrow(new Error(("Device does not support setScene()")));
                 });
             });
             describe('lock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x123456');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
             describe('unlock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x123456');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
         });
@@ -1616,7 +1616,7 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     lighting5.switchOn('0xFFFFFF/1/1');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address', function (done) {
                 let sentCommandId = NaN;
@@ -1648,12 +1648,12 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid address 0x1000000', function () {
                 expect(function () {
                     lighting5.switchOn('0x1000000');
-                }).toThrow("Address 0x1000000 outside valid range");
+                }).toThrow(new Error(("Address 0x1000000 outside valid range")));
             });
             it('should throw an exception with an invalid address 0x0', function () {
                 expect(function () {
                     lighting5.switchOn('0x0');
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
         });
     });
@@ -1675,7 +1675,7 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.switchOn('0x1234/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('switchOff()', function () {
@@ -1691,112 +1691,112 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.switchOff('0x1234/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('toggleOnOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.toggleOnOff('0x1234');
-                    }).toThrow("Device does not support toggleOnOff()");
+                    }).toThrow(new Error(("Device does not support toggleOnOff()")));
                 });
             });
             describe('setLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setLevel('0x1234');
-                    }).toThrow("Device does not support setLevel()");
+                    }).toThrow(new Error(("Device does not support setLevel()")));
                 });
             });
             describe('increaseLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.increaseLevel('0x1234');
-                    }).toThrow("Device does not support increaseLevel()");
+                    }).toThrow(new Error(("Device does not support increaseLevel()")));
                 });
             });
             describe('decreaseLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.decreaseLevel('0x1234');
-                    }).toThrow("Device does not support decreaseLevel()");
+                    }).toThrow(new Error(("Device does not support decreaseLevel()")));
                 });
             });
             describe('setMood()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setMood('0x1234', 1);
-                    }).toThrow("Device does not support setMood()");
+                    }).toThrow(new Error(("Device does not support setMood()")));
                 });
             });
             describe('program()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.program('0x1234');
-                    }).toThrow("Device does not support program()");
+                    }).toThrow(new Error(("Device does not support program()")));
                 });
             });
             describe('relayOpen()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayOpen('0x1234');
-                    }).toThrow("Device does not support relayOpen()");
+                    }).toThrow(new Error(("Device does not support relayOpen()")));
                 });
             });
             describe('relayClose()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayClose('0x1234');
-                    }).toThrow("Device does not support relayClose()");
+                    }).toThrow(new Error(("Device does not support relayClose()")));
                 });
             });
             describe('relayStop()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayStop('0x1234');
-                    }).toThrow("Device does not support relayStop()");
+                    }).toThrow(new Error(("Device does not support relayStop()")));
                 });
             });
             describe('increaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.increaseColour('0x1234');
-                    }).toThrow("Device does not support increaseColour()");
+                    }).toThrow(new Error(("Device does not support increaseColour()")));
                 });
             });
             describe('decreaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.decreaseColour('0x1234');
-                    }).toThrow("Device does not support decreaseColour()");
+                    }).toThrow(new Error(("Device does not support decreaseColour()")));
                 });
             });
             describe('setColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setColour('0x1234', 5);
-                    }).toThrow("Device does not support setColour()");
+                    }).toThrow(new Error(("Device does not support setColour()")));
                 });
             });
             describe('setScene()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setScene('0x1234', 1, 1);
-                    }).toThrow("Device does not support setScene()");
+                    }).toThrow(new Error(("Device does not support setScene()")));
                 });
             });
             describe('lock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x1234');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
             describe('unlock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x1234');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
         });
@@ -1804,7 +1804,7 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     lighting5.switchOn('0x1234/1/1');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address value', function (done) {
                 let sentCommandId = NaN;
@@ -1836,12 +1836,12 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid address 0x10000', function () {
                 expect(function () {
                     lighting5.switchOn('0x10000');
-                }).toThrow("Address 0x10000 outside valid range");
+                }).toThrow(new Error(("Address 0x10000 outside valid range")));
             });
             it('should throw an exception with an invalid address 0x0', function () {
                 expect(function () {
                     lighting5.switchOn('0x0');
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
         });
     });
@@ -1863,7 +1863,7 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.switchOn('0x1234/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('switchOff()', function () {
@@ -1879,21 +1879,21 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.switchOff('0x1234/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('toggleOnOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.toggleOnOff('0x1234');
-                    }).toThrow("Device does not support toggleOnOff()");
+                    }).toThrow(new Error(("Device does not support toggleOnOff()")));
                 });
             });
             describe('setLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setLevel('0x1234');
-                    }).toThrow("Device does not support setLevel()");
+                    }).toThrow(new Error(("Device does not support setLevel()")));
                 });
             });
             describe('increaseLevel()', function () {
@@ -1918,7 +1918,7 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.increaseLevel('0x1234/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('decreaseLevel()', function () {
@@ -1943,42 +1943,42 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.decreaseLevel('0x1234/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('setMood()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setMood('0x1234');
-                    }).toThrow("Device does not support setMood()");
+                    }).toThrow(new Error(("Device does not support setMood()")));
                 });
             });
             describe('program()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.program('0x1234');
-                    }).toThrow("Device does not support program()");
+                    }).toThrow(new Error(("Device does not support program()")));
                 });
             });
             describe('relayOpen()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayOpen('0x1234');
-                    }).toThrow("Device does not support relayOpen()");
+                    }).toThrow(new Error(("Device does not support relayOpen()")));
                 });
             });
             describe('relayClose()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayClose('0x1234');
-                    }).toThrow("Device does not support relayClose()");
+                    }).toThrow(new Error(("Device does not support relayClose()")));
                 });
             });
             describe('relayStop()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayStop('0x1234');
-                    }).toThrow("Device does not support relayStop()");
+                    }).toThrow(new Error(("Device does not support relayStop()")));
                 });
             });
             describe('increaseColour()', function () {
@@ -1994,7 +1994,7 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.increaseColour('0x1234/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('decreaseColour()', function () {
@@ -2010,7 +2010,7 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.decreaseColour('0x1234/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('setColour()', function () {
@@ -2035,38 +2035,38 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with invalid colour value -1', function () {
                     expect(function () {
                         lighting5.setColour('0x1234', -1);
-                    }).toThrow("Invalid colour: value must be in range 0-61");
+                    }).toThrow(new Error(("Invalid colour: value must be in range 0-61")));
                 });
                 it('should throw an exception with invalid colour value 62', function () {
                     expect(function () {
                         lighting5.setColour('0x1234', 62);
-                    }).toThrow("Invalid colour: value must be in range 0-61");
+                    }).toThrow(new Error(("Invalid colour: value must be in range 0-61")));
                 });
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.setColour('0x1234/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('setScene()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setScene('0x1234', 1, 1);
-                    }).toThrow("Device does not support setScene()");
+                    }).toThrow(new Error(("Device does not support setScene()")));
                 });
             });
             describe('lock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x1234');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
             describe('unlock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x1234');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
         });
@@ -2074,7 +2074,7 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     lighting5.switchOn('0xFFFFFF/1/1');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address', function (done) {
                 let sentCommandId = NaN;
@@ -2106,12 +2106,12 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid address 0x8000', function () {
                 expect(function () {
                     lighting5.switchOn('0x8000');
-                }).toThrow("Address 0x8000 outside valid range");
+                }).toThrow(new Error(("Address 0x8000 outside valid range")));
             });
             it('should throw an exception with an invalid address 0x0', function () {
                 expect(function () {
                     lighting5.switchOn('0x0');
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
         });
     });
@@ -2164,105 +2164,105 @@ describe('Lighting5 class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.toggleOnOff('0x12345/1');
-                    }).toThrow("Device does not support toggleOnOff()");
+                    }).toThrow(new Error(("Device does not support toggleOnOff()")));
                 });
             });
             describe('setLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setLevel('0x12345/1');
-                    }).toThrow("Device does not support setLevel()");
+                    }).toThrow(new Error(("Device does not support setLevel()")));
                 });
             });
             describe('increaseLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.increaseLevel('0x12345/1');
-                    }).toThrow("Device does not support increaseLevel()");
+                    }).toThrow(new Error(("Device does not support increaseLevel()")));
                 });
             });
             describe('decreaseLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.decreaseLevel('0x12345/1');
-                    }).toThrow("Device does not support decreaseLevel()");
+                    }).toThrow(new Error(("Device does not support decreaseLevel()")));
                 });
             });
             describe('setMood()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setMood('0x12345/1');
-                    }).toThrow("Device does not support setMood()");
+                    }).toThrow(new Error(("Device does not support setMood()")));
                 });
             });
             describe('program()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.program('0x12345/1');
-                    }).toThrow("Device does not support program()");
+                    }).toThrow(new Error(("Device does not support program()")));
                 });
             });
             describe('relayOpen()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayOpen('0x12345/1');
-                    }).toThrow("Device does not support relayOpen()");
+                    }).toThrow(new Error(("Device does not support relayOpen()")));
                 });
             });
             describe('relayClose()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayClose('0x12345/1');
-                    }).toThrow("Device does not support relayClose()");
+                    }).toThrow(new Error(("Device does not support relayClose()")));
                 });
             });
             describe('relayStop()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayStop('0x12345/1');
-                    }).toThrow("Device does not support relayStop()");
+                    }).toThrow(new Error(("Device does not support relayStop()")));
                 });
             });
             describe('increaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.increaseColour('0x12345/1');
-                    }).toThrow("Device does not support increaseColour()");
+                    }).toThrow(new Error(("Device does not support increaseColour()")));
                 });
             });
             describe('decreaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.decreaseColour('0x12345/1');
-                    }).toThrow("Device does not support decreaseColour()");
+                    }).toThrow(new Error(("Device does not support decreaseColour()")));
                 });
             });
             describe('setColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setColour('0x12345/1');
-                    }).toThrow("Device does not support setColour()");
+                    }).toThrow(new Error(("Device does not support setColour()")));
                 });
             });
             describe('setScene()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setScene('0x12345/1', 1, 1);
-                    }).toThrow("Device does not support setScene()");
+                    }).toThrow(new Error(("Device does not support setScene()")));
                 });
             });
             describe('lock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x12345/1');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
             describe('unlock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x1234/51');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
         });
@@ -2270,7 +2270,7 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     lighting5.switchOn('0x3FFF');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address and unit code values', function (done) {
                 let sentCommandId = NaN;
@@ -2293,22 +2293,22 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid unit number 5', function () {
                 expect(function () {
                     lighting5.switchOn('0x7FFF/5');
-                }).toThrow("Invalid unit code 5");
+                }).toThrow(new Error(("Invalid unit code 5")));
             });
             it('should throw an exception with an invalid unit number -1', function () {
                 expect(function () {
                     lighting5.switchOn('0x7FFF/-1');
-                }).toThrow("Invalid unit code -1");
+                }).toThrow(new Error(("Invalid unit code -1")));
             });
             it('should throw an exception with an invalid address 0x100000', function () {
                 expect(function () {
                     lighting5.switchOn('0x100000/4');
-                }).toThrow("Address 0x100000 outside valid range");
+                }).toThrow(new Error(("Address 0x100000 outside valid range")));
             });
             it('should throw an exception with an invalid address 0x0', function () {
                 expect(function () {
                     lighting5.switchOn('0x0/4');
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
         });
     });
@@ -2322,14 +2322,14 @@ describe('Lighting5 class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.switchOn('0x1234/1');
-                    }).toThrow("Device does not support switchOn()");
+                    }).toThrow(new Error(("Device does not support switchOn()")));
                 });
             });
             describe('switchOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.switchOff('0x1234/1');
-                    }).toThrow("Device supports switchOff() only for group");
+                    }).toThrow(new Error(("Device supports switchOff() only for group")));
                 });
                 it('should handle a group address', function (done) {
                     let sentCommandId = NaN;
@@ -2354,14 +2354,14 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.toggleOnOff('0x1234/0');
-                    }).toThrow("Group command must be Off");
+                    }).toThrow(new Error(("Group command must be Off")));
                 });
             });
             describe('setLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setLevel('0x1234/1');
-                    }).toThrow("Device does not support setLevel()");
+                    }).toThrow(new Error(("Device does not support setLevel()")));
                 });
             });
             describe('increaseLevel()', function () {
@@ -2386,12 +2386,12 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with an invalid room number', function () {
                     expect(function () {
                         lighting5.increaseLevel('0x1234/1', 0);
-                    }).toThrow("Invalid room number 0");
+                    }).toThrow(new Error(("Invalid room number 0")));
                 });
                 it('should throw an exception with a missing room number', function () {
                     expect(function () {
                         lighting5.increaseLevel('0x1234/1');
-                    }).toThrow("Missing room number");
+                    }).toThrow(new Error(("Missing room number")));
                 });
             });
             describe('decreaseLevel()', function () {
@@ -2416,68 +2416,68 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with an invalid room number', function () {
                     expect(function () {
                         lighting5.decreaseLevel('0x1234/1', 0);
-                    }).toThrow("Invalid room number 0");
+                    }).toThrow(new Error(("Invalid room number 0")));
                 });
                 it('should throw an exception with a missing room number', function () {
                     expect(function () {
                         lighting5.decreaseLevel('0x1234/1');
-                    }).toThrow("Missing room number");
+                    }).toThrow(new Error(("Missing room number")));
                 });
             });
             describe('setMood()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setMood('0x1234/1');
-                    }).toThrow("Device does not support setMood()");
+                    }).toThrow(new Error(("Device does not support setMood()")));
                 });
             });
             describe('program()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.program('0x1234/1');
-                    }).toThrow("Device does not support program()");
+                    }).toThrow(new Error(("Device does not support program()")));
                 });
             });
             describe('relayOpen()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayOpen('0x1234/1');
-                    }).toThrow("Device does not support relayOpen()");
+                    }).toThrow(new Error(("Device does not support relayOpen()")));
                 });
             });
             describe('relayClose()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayClose('0x1234/1');
-                    }).toThrow("Device does not support relayClose()");
+                    }).toThrow(new Error(("Device does not support relayClose()")));
                 });
             });
             describe('relayStop()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayStop('0x1234/1');
-                    }).toThrow("Device does not support relayStop()");
+                    }).toThrow(new Error(("Device does not support relayStop()")));
                 });
             });
             describe('increaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.increaseColour('0x1234/1');
-                    }).toThrow("Device does not support increaseColour()");
+                    }).toThrow(new Error(("Device does not support increaseColour()")));
                 });
             });
             describe('decreaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.decreaseColour('0x1234/1');
-                    }).toThrow("Device does not support decreaseColour()");
+                    }).toThrow(new Error(("Device does not support decreaseColour()")));
                 });
             });
             describe('setColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setColour('0x1234/1');
-                    }).toThrow("Device does not support setColour()");
+                    }).toThrow(new Error(("Device does not support setColour()")));
                 });
             });
             describe('setScene()', function () {
@@ -2520,26 +2520,26 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with an invalid room number', function () {
                     expect(function () {
                         lighting5.setScene('0x1234/1', 1, 0);
-                    }).toThrow("Invalid room number 0");
+                    }).toThrow(new Error(("Invalid room number 0")));
                 });
                 it('should throw an exception with an invalid scene', function () {
                     expect(function () {
                         lighting5.setScene('0x1234/1', 0, 1);
-                    }).toThrow("Invalid scene 0");
+                    }).toThrow(new Error(("Invalid scene 0")));
                 });
             });
             describe('lock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x1234/1');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
             describe('unlock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x1234/1');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
         });
@@ -2547,7 +2547,7 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     lighting5.toggleOnOff('0x3FFF');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address and unit code values', function (done) {
                 let sentCommandId = NaN;
@@ -2570,22 +2570,22 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid unit number 11', function () {
                 expect(function () {
                     lighting5.toggleOnOff('0x7FFF/11');
-                }).toThrow("Invalid unit code 11");
+                }).toThrow(new Error(("Invalid unit code 11")));
             });
             it('should throw an exception with an invalid unit number -1', function () {
                 expect(function () {
                     lighting5.toggleOnOff('0x7FFF/-1');
-                }).toThrow("Invalid unit code -1");
+                }).toThrow(new Error(("Invalid unit code -1")));
             });
             it('should throw an exception with an invalid address 0x8000', function () {
                 expect(function () {
                     lighting5.toggleOnOff('0x8000/1');
-                }).toThrow("Address 0x8000 outside valid range");
+                }).toThrow(new Error(("Address 0x8000 outside valid range")));
             });
             it('should throw an exception with an invalid address 0x0000', function () {
                 expect(function () {
                     lighting5.toggleOnOff('0x0/1');
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
         });
     });
@@ -2598,14 +2598,14 @@ describe('Lighting5 class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.switchOn('0x1234/1');
-                    }).toThrow("Device does not support switchOn()");
+                    }).toThrow(new Error(("Device does not support switchOn()")));
                 });
             });
             describe('switchOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.switchOff('0x1234/1');
-                    }).toThrow("Device supports switchOff() only for group");
+                    }).toThrow(new Error(("Device supports switchOff() only for group")));
                 });
                 it('should handle a group address', function (done) {
                     let sentCommandId = NaN;
@@ -2630,21 +2630,21 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.toggleOnOff('0x1234/0');
-                    }).toThrow("Group command must be Off");
+                    }).toThrow(new Error(("Group command must be Off")));
                 });
             });
             describe('setLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setLevel('0x1234/1');
-                    }).toThrow("Device does not support setLevel()");
+                    }).toThrow(new Error(("Device does not support setLevel()")));
                 });
             });
             describe('increaseLevel()', function () {
                 it('should throw an exception with an invalid unit number', function () {
                     expect(function () {
                         lighting5.increaseLevel('0x1234/1');
-                    }).toThrow("Only units 7 & 9 support dimming");
+                    }).toThrow(new Error(("Only units 7 & 9 support dimming")));
                 });
                 it('should send the correct bytes to the serial port for unit 7', function (done) {
                     let sentCommandId = NaN;
@@ -2678,7 +2678,7 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with an invalid unit number', function () {
                     expect(function () {
                         lighting5.decreaseLevel('0x1234/1');
-                    }).toThrow("Only units 7 & 9 support dimming");
+                    }).toThrow(new Error(("Only units 7 & 9 support dimming")));
                 });
                 it('should send the correct bytes to the serial port for unit 7', function (done) {
                     let sentCommandId = NaN;
@@ -2712,7 +2712,7 @@ describe('Lighting5 class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setMood('0x1234/1');
-                    }).toThrow("Device does not support setMood()");
+                    }).toThrow(new Error(("Device does not support setMood()")));
                 });
             });
             describe('program()', function () {
@@ -2730,42 +2730,42 @@ describe('Lighting5 class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayOpen('0x1234/1');
-                    }).toThrow("Device does not support relayOpen()");
+                    }).toThrow(new Error(("Device does not support relayOpen()")));
                 });
             });
             describe('relayClose()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayClose('0x1234/1');
-                    }).toThrow("Device does not support relayClose()");
+                    }).toThrow(new Error(("Device does not support relayClose()")));
                 });
             });
             describe('relayStop()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayStop('0x1234/1');
-                    }).toThrow("Device does not support relayStop()");
+                    }).toThrow(new Error(("Device does not support relayStop()")));
                 });
             });
             describe('increaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.increaseColour('0x1234/1');
-                    }).toThrow("Device does not support increaseColour()");
+                    }).toThrow(new Error(("Device does not support increaseColour()")));
                 });
             });
             describe('decreaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.decreaseColour('0x1234/1');
-                    }).toThrow("Device does not support decreaseColour()");
+                    }).toThrow(new Error(("Device does not support decreaseColour()")));
                 });
             });
             describe('setColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setColour('0x1234/1');
-                    }).toThrow("Device does not support setColour()");
+                    }).toThrow(new Error(("Device does not support setColour()")));
                 });
             });
             describe('setScene()', function () {
@@ -2817,21 +2817,21 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with an invalid scene number', function () {
                     expect(function () {
                         lighting5.setScene('0x1234/1', 0, 1);
-                    }).toThrow("Invalid scene number: value must be in range  1-4");
+                    }).toThrow(new Error(("Invalid scene number: value must be in range  1-4")));
                 });
             });
             describe('lock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x1234/1');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
             describe('unlock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x1234/1');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
         });
@@ -2839,7 +2839,7 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     lighting5.toggleOnOff('0x3FFF');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address and unit code values', function (done) {
                 let sentCommandId = NaN;
@@ -2862,22 +2862,22 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid unit number 11', function () {
                 expect(function () {
                     lighting5.toggleOnOff('0x7FFF/11');
-                }).toThrow("Invalid unit code 11");
+                }).toThrow(new Error(("Invalid unit code 11")));
             });
             it('should throw an exception with an invalid unit number -1', function () {
                 expect(function () {
                     lighting5.toggleOnOff('0x7FFF/-1');
-                }).toThrow("Invalid unit code -1");
+                }).toThrow(new Error(("Invalid unit code -1")));
             });
             it('should throw an exception with an invalid address 0x8000', function () {
                 expect(function () {
                     lighting5.toggleOnOff('0x8000/1');
-                }).toThrow("Address 0x8000 outside valid range");
+                }).toThrow(new Error(("Address 0x8000 outside valid range")));
             });
             it('should throw an exception with an invalid address 0x0000', function () {
                 expect(function () {
                     lighting5.toggleOnOff('0x0/1');
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
         });
     });
@@ -2899,7 +2899,7 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.switchOn('0x1234/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('switchOff()', function () {
@@ -2915,21 +2915,21 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.switchOff('0x1234/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('toggleOnOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.toggleOnOff('0x1234');
-                    }).toThrow("Device does not support toggleOnOff()");
+                    }).toThrow(new Error(("Device does not support toggleOnOff()")));
                 });
             });
             describe('setLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setLevel('0x1234');
-                    }).toThrow("Device does not support setLevel()");
+                    }).toThrow(new Error(("Device does not support setLevel()")));
                 });
             });
             describe('increaseLevel()', function () {
@@ -2954,7 +2954,7 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.increaseLevel('0x1234/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('decreaseLevel()', function () {
@@ -2979,42 +2979,42 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.decreaseLevel('0x1234/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('setMood()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setMood('0x1234');
-                    }).toThrow("Device does not support setMood()");
+                    }).toThrow(new Error(("Device does not support setMood()")));
                 });
             });
             describe('program()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.program('0x1234');
-                    }).toThrow("Device does not support program()");
+                    }).toThrow(new Error(("Device does not support program()")));
                 });
             });
             describe('relayOpen()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayOpen('0x1234');
-                    }).toThrow("Device does not support relayOpen()");
+                    }).toThrow(new Error(("Device does not support relayOpen()")));
                 });
             });
             describe('relayClose()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayClose('0x1234');
-                    }).toThrow("Device does not support relayClose()");
+                    }).toThrow(new Error(("Device does not support relayClose()")));
                 });
             });
             describe('relayStop()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayStop('0x1234');
-                    }).toThrow("Device does not support relayStop()");
+                    }).toThrow(new Error(("Device does not support relayStop()")));
                 });
             });
             describe('increaseColour()', function () {
@@ -3030,7 +3030,7 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.increaseColour('0x1234/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('decreaseColour()', function () {
@@ -3046,7 +3046,7 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.decreaseColour('0x1234/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('setColour()', function () {
@@ -3071,38 +3071,38 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with invalid colour value -1', function () {
                     expect(function () {
                         lighting5.setColour('0x1234', -1);
-                    }).toThrow("Invalid colour: value must be in range 0-126");
+                    }).toThrow(new Error(("Invalid colour: value must be in range 0-126")));
                 });
                 it('should throw an exception with invalid colour value 127', function () {
                     expect(function () {
                         lighting5.setColour('0x1234', 127);
-                    }).toThrow("Invalid colour: value must be in range 0-126");
+                    }).toThrow(new Error(("Invalid colour: value must be in range 0-126")));
                 });
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.setColour('0x1234/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('setScene()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setScene('0x1234', 1, 1);
-                    }).toThrow("Device does not support setScene()");
+                    }).toThrow(new Error(("Device does not support setScene()")));
                 });
             });
             describe('lock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x1234');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
             describe('unlock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x1234');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
         });
@@ -3110,7 +3110,7 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     lighting5.switchOn('0xFFFFFF/1/1');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address', function (done) {
                 let sentCommandId = NaN;
@@ -3142,12 +3142,12 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid address 0x10000', function () {
                 expect(function () {
                     lighting5.switchOn('0x10000');
-                }).toThrow("Address 0x10000 outside valid range");
+                }).toThrow(new Error(("Address 0x10000 outside valid range")));
             });
             it('should throw an exception with an invalid address 0x0', function () {
                 expect(function () {
                     lighting5.switchOn('0x0');
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
         });
     });
@@ -3160,14 +3160,14 @@ describe('Lighting5 class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.switchOn('0x1234');
-                    }).toThrow("Device does not support switchOn()");
+                    }).toThrow(new Error(("Device does not support switchOn()")));
                 });
             });
             describe('switchOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.switchOff('0x1234');
-                    }).toThrow("Device does not support switchOff()");
+                    }).toThrow(new Error(("Device does not support switchOff()")));
                 });
             });
             describe('toggleOnOff()', function () {
@@ -3183,7 +3183,7 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.toggleOnOff('0x1234/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('setLevel()', function () {
@@ -3208,17 +3208,17 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with invalid level 0', function () {
                     expect(function () {
                         lighting5.setLevel('0x1234', 0);
-                    }).toThrow("Invalid level: value must be in range 1-6");
+                    }).toThrow(new Error(("Invalid level: value must be in range 1-6")));
                 });
                 it('should throw an exception with invalid level 7', function () {
                     expect(function () {
                         lighting5.setLevel('0x1234', 7);
-                    }).toThrow("Invalid level: value must be in range 1-6");
+                    }).toThrow(new Error(("Invalid level: value must be in range 1-6")));
                 });
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.setLevel('0x1234/0', 2);
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('increaseLevel()', function () {
@@ -3243,7 +3243,7 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.increaseLevel('0x1234/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('decreaseLevel()', function () {
@@ -3268,84 +3268,84 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.decreaseLevel('0x1234/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('setMood()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setMood('0x1234');
-                    }).toThrow("Device does not support setMood()");
+                    }).toThrow(new Error(("Device does not support setMood()")));
                 });
             });
             describe('program()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.program('0x1234');
-                    }).toThrow("Device does not support program()");
+                    }).toThrow(new Error(("Device does not support program()")));
                 });
             });
             describe('relayOpen()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayOpen('0x1234');
-                    }).toThrow("Device does not support relayOpen()");
+                    }).toThrow(new Error(("Device does not support relayOpen()")));
                 });
             });
             describe('relayClose()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayClose('0x1234');
-                    }).toThrow("Device does not support relayClose()");
+                    }).toThrow(new Error(("Device does not support relayClose()")));
                 });
             });
             describe('relayStop()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayStop('0x1234');
-                    }).toThrow("Device does not support relayStop()");
+                    }).toThrow(new Error(("Device does not support relayStop()")));
                 });
             });
             describe('increaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.increaseColour('0x1234');
-                    }).toThrow("Device does not support increaseColour()");
+                    }).toThrow(new Error(("Device does not support increaseColour()")));
                 });
             });
             describe('decreaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.decreaseColour('0x1234');
-                    }).toThrow("Device does not support decreaseColour()");
+                    }).toThrow(new Error(("Device does not support decreaseColour()")));
                 });
             });
             describe('setColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setColour('0x1234');
-                    }).toThrow("Device does not support setColour()");
+                    }).toThrow(new Error(("Device does not support setColour()")));
                 });
             });
             describe('setScene()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setScene('0x1234', 1, 1);
-                    }).toThrow("Device does not support setScene()");
+                    }).toThrow(new Error(("Device does not support setScene()")));
                 });
             });
             describe('lock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x1234');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
             describe('unlock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x1234');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
         });
@@ -3353,7 +3353,7 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     lighting5.toggleOnOff('0x3FFF/1/9');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address', function (done) {
                 let sentCommandId = NaN;
@@ -3385,12 +3385,12 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid address 0x10000', function () {
                 expect(function () {
                     lighting5.toggleOnOff('0x10000');
-                }).toThrow("Address 0x10000 outside valid range");
+                }).toThrow(new Error(("Address 0x10000 outside valid range")));
             });
             it('should throw an exception with an invalid address 0x0000', function () {
                 expect(function () {
                     lighting5.toggleOnOff('0x000000/4');
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
         });
     });
@@ -3403,14 +3403,14 @@ describe('Lighting5 class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.switchOn('0x1234');
-                    }).toThrow("Device does not support switchOn()");
+                    }).toThrow(new Error(("Device does not support switchOn()")));
                 });
             });
             describe('switchOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.switchOff('0x1234');
-                    }).toThrow("Device does not support switchOff()");
+                    }).toThrow(new Error(("Device does not support switchOff()")));
                 });
             });
             describe('toggleOnOff()', function () {
@@ -3426,105 +3426,105 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.toggleOnOff('0x1234/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('setLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setLevel('0x1234');
-                    }).toThrow("Device does not support setLevel()");
+                    }).toThrow(new Error(("Device does not support setLevel()")));
                 });
             });
             describe('increaseLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.increaseLevel('0x1234');
-                    }).toThrow("Device does not support increaseLevel()");
+                    }).toThrow(new Error(("Device does not support increaseLevel()")));
                 });
             });
             describe('decreaseLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.decreaseLevel('0x1234');
-                    }).toThrow("Device does not support decreaseLevel()");
+                    }).toThrow(new Error(("Device does not support decreaseLevel()")));
                 });
             });
             describe('setMood()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setMood('0x1234');
-                    }).toThrow("Device does not support setMood()");
+                    }).toThrow(new Error(("Device does not support setMood()")));
                 });
             });
             describe('program()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.program('0x1234');
-                    }).toThrow("Device does not support program()");
+                    }).toThrow(new Error(("Device does not support program()")));
                 });
             });
             describe('relayOpen()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayOpen('0x1234');
-                    }).toThrow("Device does not support relayOpen()");
+                    }).toThrow(new Error(("Device does not support relayOpen()")));
                 });
             });
             describe('relayClose()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayClose('0x1234');
-                    }).toThrow("Device does not support relayClose()");
+                    }).toThrow(new Error(("Device does not support relayClose()")));
                 });
             });
             describe('relayStop()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayStop('0x1234');
-                    }).toThrow("Device does not support relayStop()");
+                    }).toThrow(new Error(("Device does not support relayStop()")));
                 });
             });
             describe('increaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.increaseColour('0x1234');
-                    }).toThrow("Device does not support increaseColour()");
+                    }).toThrow(new Error(("Device does not support increaseColour()")));
                 });
             });
             describe('decreaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.decreaseColour('0x1234');
-                    }).toThrow("Device does not support decreaseColour()");
+                    }).toThrow(new Error(("Device does not support decreaseColour()")));
                 });
             });
             describe('setColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setColour('0x1234');
-                    }).toThrow("Device does not support setColour()");
+                    }).toThrow(new Error(("Device does not support setColour()")));
                 });
             });
             describe('setScene()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setScene('0x1234', 1, 1);
-                    }).toThrow("Device does not support setScene()");
+                    }).toThrow(new Error(("Device does not support setScene()")));
                 });
             });
             describe('lock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x1234');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
             describe('unlock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x1234');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
         });
@@ -3532,7 +3532,7 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     lighting5.toggleOnOff('0x3FFF/1/9');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address', function (done) {
                 let sentCommandId = NaN;
@@ -3564,12 +3564,12 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid address 0x10000', function () {
                 expect(function () {
                     lighting5.toggleOnOff('0x10000');
-                }).toThrow("Address 0x10000 outside valid range");
+                }).toThrow(new Error(("Address 0x10000 outside valid range")));
             });
             it('should throw an exception with an invalid address 0x0000', function () {
                 expect(function () {
                     lighting5.toggleOnOff('0x000000/4');
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
         });
     });
@@ -3622,105 +3622,105 @@ describe('Lighting5 class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.toggleOnOff('0x12345/A');
-                    }).toThrow("Device does not support toggleOnOff()");
+                    }).toThrow(new Error(("Device does not support toggleOnOff()")));
                 });
             });
             describe('setLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setLevel('0x12345/A');
-                    }).toThrow("Device does not support setLevel()");
+                    }).toThrow(new Error(("Device does not support setLevel()")));
                 });
             });
             describe('increaseLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.increaseLevel('0x12345/A');
-                    }).toThrow("Device does not support increaseLevel()");
+                    }).toThrow(new Error(("Device does not support increaseLevel()")));
                 });
             });
             describe('decreaseLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.decreaseLevel('0x12345/A');
-                    }).toThrow("Device does not support decreaseLevel()");
+                    }).toThrow(new Error(("Device does not support decreaseLevel()")));
                 });
             });
             describe('setMood()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setMood('0x12345/A');
-                    }).toThrow("Device does not support setMood()");
+                    }).toThrow(new Error(("Device does not support setMood()")));
                 });
             });
             describe('program()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.program('0x12345/A');
-                    }).toThrow("Device does not support program()");
+                    }).toThrow(new Error(("Device does not support program()")));
                 });
             });
             describe('relayOpen()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayOpen('0x12345/A');
-                    }).toThrow("Device does not support relayOpen()");
+                    }).toThrow(new Error(("Device does not support relayOpen()")));
                 });
             });
             describe('relayClose()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayClose('0x12345/A');
-                    }).toThrow("Device does not support relayClose()");
+                    }).toThrow(new Error(("Device does not support relayClose()")));
                 });
             });
             describe('relayStop()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayStop('0x12345/A');
-                    }).toThrow("Device does not support relayStop()");
+                    }).toThrow(new Error(("Device does not support relayStop()")));
                 });
             });
             describe('increaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.increaseColour('0x12345/A');
-                    }).toThrow("Device does not support increaseColour()");
+                    }).toThrow(new Error(("Device does not support increaseColour()")));
                 });
             });
             describe('decreaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.decreaseColour('0x12345/A');
-                    }).toThrow("Device does not support decreaseColour()");
+                    }).toThrow(new Error(("Device does not support decreaseColour()")));
                 });
             });
             describe('setColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setColour('0x12345/A');
-                    }).toThrow("Device does not support setColour()");
+                    }).toThrow(new Error(("Device does not support setColour()")));
                 });
             });
             describe('setScene()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setScene('0x12345/A', 1, 1);
-                    }).toThrow("Device does not support setScene()");
+                    }).toThrow(new Error(("Device does not support setScene()")));
                 });
             });
             describe('lock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x12345/A');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
             describe('unlock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x12345/A');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
         });
@@ -3728,7 +3728,7 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     lighting5.switchOn('0x3FFF');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address and unit code values', function (done) {
                 let sentCommandId = NaN;
@@ -3769,27 +3769,27 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid unit number F', function () {
                 expect(function () {
                     lighting5.switchOn('0x7FFF/F');
-                }).toThrow("Invalid unit code F");
+                }).toThrow(new Error(("Invalid unit code F")));
             });
             it('should throw an exception with an invalid unit number @', function () {
                 expect(function () {
                     lighting5.switchOn('0x7FFF/@');
-                }).toThrow("Invalid unit code @");
+                }).toThrow(new Error(("Invalid unit code @")));
             });
             it('should throw an exception with an invalid unit number 1', function () {
                 expect(function () {
                     lighting5.switchOn('0x7FFF/1');
-                }).toThrow("Invalid unit code 1");
+                }).toThrow(new Error(("Invalid unit code 1")));
             });
             it('should throw an exception with an invalid address 0x100000', function () {
                 expect(function () {
                     lighting5.switchOn('0x100000/a');
-                }).toThrow("Address 0x100000 outside valid range");
+                }).toThrow(new Error(("Address 0x100000 outside valid range")));
             });
             it('should throw an exception with an invalid address 0x0', function () {
                 expect(function () {
                     lighting5.switchOn('0x0/a');
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
         });
     });
@@ -3842,7 +3842,7 @@ describe('Lighting5 class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.toggleOnOff('0x1234/1');
-                    }).toThrow("Device does not support toggleOnOff()");
+                    }).toThrow(new Error(("Device does not support toggleOnOff()")));
                 });
             });
             describe('setLevel()', function () {
@@ -3855,108 +3855,108 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with an invalid level 9', function () {
                     expect(function () {
                         lighting5.setLevel('0x1234/1', 9);
-                    }).toThrow("Invalid level: value must be in range 1-8");
+                    }).toThrow(new Error(("Invalid level: value must be in range 1-8")));
                 });
                 it('should throw an exception with an invalid level -1', function () {
                     expect(function () {
                         lighting5.setLevel('0x1234/1', -1);
-                    }).toThrow("Invalid level: value must be in range 1-8");
+                    }).toThrow(new Error(("Invalid level: value must be in range 1-8")));
                 });
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.setLevel('0x1234/0', 1);
-                    }).toThrow("Group command must be On, Off, or Lock");
+                    }).toThrow(new Error(("Group command must be On, Off, or Lock")));
                 });
             });
             describe('increaseLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.increaseLevel('0x1234/1');
-                    }).toThrow("Device does not support increaseLevel()");
+                    }).toThrow(new Error(("Device does not support increaseLevel()")));
                 });
             });
             describe('decreaseLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.decreaseLevel('0x1234/1');
-                    }).toThrow("Device does not support decreaseLevel()");
+                    }).toThrow(new Error(("Device does not support decreaseLevel()")));
                 });
             });
             describe('setMood()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setMood('0x1234/1');
-                    }).toThrow("Device does not support setMood()");
+                    }).toThrow(new Error(("Device does not support setMood()")));
                 });
             });
             describe('program()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.program('0x1234/1');
-                    }).toThrow("Device does not support program()");
+                    }).toThrow(new Error(("Device does not support program()")));
                 });
             });
             describe('relayOpen()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayOpen('0x1234/1');
-                    }).toThrow("Device does not support relayOpen()");
+                    }).toThrow(new Error(("Device does not support relayOpen()")));
                 });
             });
             describe('relayClose()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayClose('0x1234/1');
-                    }).toThrow("Device does not support relayClose()");
+                    }).toThrow(new Error(("Device does not support relayClose()")));
                 });
             });
             describe('relayStop()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayStop('0x1234/1');
-                    }).toThrow("Device does not support relayStop()");
+                    }).toThrow(new Error(("Device does not support relayStop()")));
                 });
             });
             describe('increaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.increaseColour('0x1234/1');
-                    }).toThrow("Device does not support increaseColour()");
+                    }).toThrow(new Error(("Device does not support increaseColour()")));
                 });
             });
             describe('decreaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.decreaseColour('0x1234/1');
-                    }).toThrow("Device does not support decreaseColour()");
+                    }).toThrow(new Error(("Device does not support decreaseColour()")));
                 });
             });
             describe('setColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setColour('0x1234/1');
-                    }).toThrow("Device does not support setColour()");
+                    }).toThrow(new Error(("Device does not support setColour()")));
                 });
             });
             describe('setScene()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setScene('0x1234/1', 1, 1);
-                    }).toThrow("Device does not support setScene()");
+                    }).toThrow(new Error(("Device does not support setScene()")));
                 });
             });
             describe('lock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x1234/1');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
             describe('unlock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x1234/1');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
         });
@@ -3964,7 +3964,7 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     lighting5.switchOn('0x3FFF');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address and unit code values', function (done) {
                 let sentCommandId = NaN;
@@ -3987,22 +3987,22 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid unit number 5', function () {
                 expect(function () {
                     lighting5.switchOn('0x7FFF/5');
-                }).toThrow("Invalid unit code 5");
+                }).toThrow(new Error(("Invalid unit code 5")));
             });
             it('should throw an exception with an invalid unit number -1', function () {
                 expect(function () {
                     lighting5.switchOn('0x7FFF/-1');
-                }).toThrow("Invalid unit code -1");
+                }).toThrow(new Error(("Invalid unit code -1")));
             });
             it('should throw an exception with an invalid address 0x80000', function () {
                 expect(function () {
                     lighting5.switchOn('0x10000/4');
-                }).toThrow("Address 0x10000 outside valid range");
+                }).toThrow(new Error(("Address 0x10000 outside valid range")));
             });
             it('should throw an exception with an invalid address 0x0', function () {
                 expect(function () {
                     lighting5.switchOn('0x0/4');
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
         });
     });
@@ -4024,14 +4024,14 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.switchOn('0x1234/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('switchOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.switchOff('0x1234');
-                    }).toThrow("Device does not support switchOff()");
+                    }).toThrow(new Error(("Device does not support switchOff()")));
                 });
             });
             describe('toggleOnOff()', function () {
@@ -4047,7 +4047,7 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.toggleOnOff('0x1234/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('setLevel()', function () {
@@ -4072,17 +4072,17 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with invalid level 0', function () {
                     expect(function () {
                         lighting5.setLevel('0x1234', 0);
-                    }).toThrow("Invalid level: value must be in range 1-3");
+                    }).toThrow(new Error(("Invalid level: value must be in range 1-3")));
                 });
                 it('should throw an exception with invalid level 4', function () {
                     expect(function () {
                         lighting5.setLevel('0x1234', 4);
-                    }).toThrow("Invalid level: value must be in range 1-3");
+                    }).toThrow(new Error(("Invalid level: value must be in range 1-3")));
                 });
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.setLevel('0x1234/0', 2);
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('increaseLevel()', function () {
@@ -4107,7 +4107,7 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.increaseLevel('0x1234/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('decreaseLevel()', function () {
@@ -4132,84 +4132,84 @@ describe('Lighting5 class', function () {
                 it('should throw an exception with a group address', function () {
                     expect(function () {
                         lighting5.decreaseLevel('0x1234/0');
-                    }).toThrow("Subtype doesn't support group commands");
+                    }).toThrow(new Error(("Subtype doesn't support group commands")));
                 });
             });
             describe('setMood()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setMood('0x1234');
-                    }).toThrow("Device does not support setMood()");
+                    }).toThrow(new Error(("Device does not support setMood()")));
                 });
             });
             describe('program()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.program('0x1234');
-                    }).toThrow("Device does not support program()");
+                    }).toThrow(new Error(("Device does not support program()")));
                 });
             });
             describe('relayOpen()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayOpen('0x1234');
-                    }).toThrow("Device does not support relayOpen()");
+                    }).toThrow(new Error(("Device does not support relayOpen()")));
                 });
             });
             describe('relayClose()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayClose('0x1234');
-                    }).toThrow("Device does not support relayClose()");
+                    }).toThrow(new Error(("Device does not support relayClose()")));
                 });
             });
             describe('relayStop()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayStop('0x1234');
-                    }).toThrow("Device does not support relayStop()");
+                    }).toThrow(new Error(("Device does not support relayStop()")));
                 });
             });
             describe('increaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.increaseColour('0x1234');
-                    }).toThrow("Device does not support increaseColour()");
+                    }).toThrow(new Error(("Device does not support increaseColour()")));
                 });
             });
             describe('decreaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.decreaseColour('0x1234');
-                    }).toThrow("Device does not support decreaseColour()");
+                    }).toThrow(new Error(("Device does not support decreaseColour()")));
                 });
             });
             describe('setColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setColour('0x1234');
-                    }).toThrow("Device does not support setColour()");
+                    }).toThrow(new Error(("Device does not support setColour()")));
                 });
             });
             describe('setScene()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setScene('0x1234', 1, 1);
-                    }).toThrow("Device does not support setScene()");
+                    }).toThrow(new Error(("Device does not support setScene()")));
                 });
             });
             describe('lock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x1234');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
             describe('unlock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x1234');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
         });
@@ -4217,7 +4217,7 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     lighting5.switchOn('0x3FFF/1/9');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address', function (done) {
                 let sentCommandId = NaN;
@@ -4249,12 +4249,12 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid address 0x10000', function () {
                 expect(function () {
                     lighting5.switchOn('0x10000');
-                }).toThrow("Address 0x10000 outside valid range");
+                }).toThrow(new Error(("Address 0x10000 outside valid range")));
             });
             it('should throw an exception with an invalid address 0x0000', function () {
                 expect(function () {
                     lighting5.switchOn('0x000000/4');
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
         });
     });
@@ -4307,105 +4307,105 @@ describe('Lighting5 class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.toggleOnOff('0x1234/1');
-                    }).toThrow("Device does not support toggleOnOff()");
+                    }).toThrow(new Error(("Device does not support toggleOnOff()")));
                 });
             });
             describe('setLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setLevel('0x1234/1');
-                    }).toThrow("Device does not support setLevel()");
+                    }).toThrow(new Error(("Device does not support setLevel()")));
                 });
             });
             describe('increaseLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.increaseLevel('0x1234/1');
-                    }).toThrow("Device does not support increaseLevel()");
+                    }).toThrow(new Error(("Device does not support increaseLevel()")));
                 });
             });
             describe('decreaseLevel()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.decreaseLevel('0x1234/1');
-                    }).toThrow("Device does not support decreaseLevel()");
+                    }).toThrow(new Error(("Device does not support decreaseLevel()")));
                 });
             });
             describe('setMood()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setMood('0x1234/1');
-                    }).toThrow("Device does not support setMood()");
+                    }).toThrow(new Error(("Device does not support setMood()")));
                 });
             });
             describe('program()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.program('0x1234/1');
-                    }).toThrow("Device does not support program()");
+                    }).toThrow(new Error(("Device does not support program()")));
                 });
             });
             describe('relayOpen()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayOpen('0x1234/1');
-                    }).toThrow("Device does not support relayOpen()");
+                    }).toThrow(new Error(("Device does not support relayOpen()")));
                 });
             });
             describe('relayClose()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayClose('0x1234/1');
-                    }).toThrow("Device does not support relayClose()");
+                    }).toThrow(new Error(("Device does not support relayClose()")));
                 });
             });
             describe('relayStop()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.relayStop('0x1234/1');
-                    }).toThrow("Device does not support relayStop()");
+                    }).toThrow(new Error(("Device does not support relayStop()")));
                 });
             });
             describe('increaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.increaseColour('0x1234/1');
-                    }).toThrow("Device does not support increaseColour()");
+                    }).toThrow(new Error(("Device does not support increaseColour()")));
                 });
             });
             describe('decreaseColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.decreaseColour('0x1234/1');
-                    }).toThrow("Device does not support decreaseColour()");
+                    }).toThrow(new Error(("Device does not support decreaseColour()")));
                 });
             });
             describe('setColour()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setColour('0x1234/1');
-                    }).toThrow("Device does not support setColour()");
+                    }).toThrow(new Error(("Device does not support setColour()")));
                 });
             });
             describe('setScene()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.setScene('0x1234/1', 1, 1);
-                    }).toThrow("Device does not support setScene()");
+                    }).toThrow(new Error(("Device does not support setScene()")));
                 });
             });
             describe('lock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x1234/1');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
             describe('unlock()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         lighting5.lock('0x1234/1');
-                    }).toThrow("Device does not support lock()");
+                    }).toThrow(new Error(("Device does not support lock()")));
                 });
             });
         });
@@ -4413,7 +4413,7 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     lighting5.switchOn('0x3FFF');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address and unit code values', function (done) {
                 let sentCommandId = NaN;
@@ -4436,22 +4436,22 @@ describe('Lighting5 class', function () {
             it('should throw an exception with an invalid unit number 31', function () {
                 expect(function () {
                     lighting5.switchOn('0x7FFF/31');
-                }).toThrow("Invalid unit code 31");
+                }).toThrow(new Error(("Invalid unit code 31")));
             });
             it('should throw an exception with an invalid unit number -1', function () {
                 expect(function () {
                     lighting5.switchOn('0x7FFF/-1');
-                }).toThrow("Invalid unit code -1");
+                }).toThrow(new Error(("Invalid unit code -1")));
             });
             it('should throw an exception with an invalid address 0x80000', function () {
                 expect(function () {
                     lighting5.switchOn('0x10000/4');
-                }).toThrow("Address 0x10000 outside valid range");
+                }).toThrow(new Error(("Address 0x10000 outside valid range")));
             });
             it('should throw an exception with an invalid address 0x0', function () {
                 expect(function () {
                     lighting5.switchOn('0x0/4');
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
         });
     });

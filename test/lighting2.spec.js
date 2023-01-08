@@ -11,7 +11,7 @@ describe('Lighting2 class', function () {
         fakeSerialPort,
         device;
     beforeEach(function () {
-        this.addMatchers({
+        jasmine.addMatchers({
             toHaveSent: matchers.toHaveSent
         });
         fakeSerialPort = new FakeSerialPort();
@@ -27,7 +27,7 @@ describe('Lighting2 class', function () {
         it('should throw an error if no subtype is specified', function () {
             expect(function () {
                 lighting2 = new rfxcom.Lighting2(device);
-            }).toThrow("Must provide a subtype.");
+            }).toThrow(new Error(("Must provide a subtype.")));
         });
     });
     describe('.switchOn', function () {
@@ -76,12 +76,12 @@ describe('Lighting2 class', function () {
         it('should throw an exception with a badly formatted deviceId', function () {
             expect(function () {
                 lighting2.switchOn('0xF09AC8');
-            }).toThrow("Invalid deviceId format");
+            }).toThrow(new Error(("Invalid deviceId format")));
         });
         it('should throw an exception with an invalid deviceId', function () {
             expect(function () {
                 lighting2.switchOn('0x0FF09AC8/1');
-            }).toThrow("Device ID 0xff09ac8 outside valid range");
+            }).toThrow(new Error(("Device ID 0xff09ac8 outside valid range")));
         });
         it('should handle no callback', function () {
             lighting2.switchOn('0x03FFFFFF/1');
@@ -140,7 +140,7 @@ describe('Lighting2 class', function () {
         it('should throw an exception with an invalid level value', function () {
             expect(function () {
                 lighting2.setLevel('0x03FFFFFF/1', 0x10);
-            }).toThrow("Invalid level: value must be in range 0-15");
+            }).toThrow(new Error(("Invalid level: value must be in range 0-15")));
         });
         it('should handle no callback', function () {
             lighting2.setLevel('0x03FFFFFF/1', 5);
@@ -172,27 +172,27 @@ describe('Lighting2 class', function () {
         it('should throw an exception with a group address', function () {
             expect(function () {
                 lighting2.switchOn('A/0xFFFFFF/0');
-            }).toThrow("Subtype doesn't support group commands");
+            }).toThrow(new Error(("Subtype doesn't support group commands")));
         });
         it('should throw an exception with a badly formatted deviceId', function () {
             expect(function () {
                 lighting2.switchOn('0xF09AC8');
-            }).toThrow("Invalid deviceId format");
+            }).toThrow(new Error(("Invalid deviceId format")));
         });
         it('should throw an exception with an invalid house code', function () {
             expect(function () {
                 lighting2.switchOn('q/0xFFFFFF/1');
-            }).toThrow("Invalid house code 'q'");
+            }).toThrow(new Error(("Invalid house code 'q'")));
         });
         it('should throw an exception with an invalid remote ID', function () {
             expect(function () {
                 lighting2.switchOn('A/0x1FFFFFF/1');
-            }).toThrow("Remote ID 0x1ffffff outside valid range");
+            }).toThrow(new Error(("Remote ID 0x1ffffff outside valid range")));
         });
         it('should throw an exception with an invalid unit code', function () {
             expect(function () {
                 lighting2.switchOn('A/0xFFFFFF/42');
-            }).toThrow("Invalid unit code 42");
+            }).toThrow(new Error(("Invalid unit code 42")));
         });
     });
 });

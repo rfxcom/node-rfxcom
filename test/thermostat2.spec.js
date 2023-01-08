@@ -10,7 +10,7 @@ describe('Thermostat2 class', function () {
         fakeSerialPort = {},
         device = {};
     beforeEach(function () {
-        this.addMatchers({
+        jasmine.addMatchers({
             toHaveSent: matchers.toHaveSent
         });
         fakeSerialPort = new FakeSerialPort();
@@ -53,7 +53,7 @@ describe('Thermostat2 class', function () {
                 it('should throw an error with an invalid temperature', function () {
                     expect(function () {
                         thermostat.program('0x12');
-                    }).toThrow("Device does not support program()");
+                    }).toThrow(new Error(("Device does not support program()")));
                 });
 
             });
@@ -62,7 +62,7 @@ describe('Thermostat2 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     thermostat.switchOn('0x1234/A');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address', function (done) {
                 let sentCommandId = NaN;
@@ -85,7 +85,7 @@ describe('Thermostat2 class', function () {
             it('should throw an exception with an invalid address 0x20', function () {
                 expect(function () {
                     thermostat.switchOn('0x20');
-                }).toThrow("Address 0x20 outside valid range");
+                }).toThrow(new Error(("Address 0x20 outside valid range")));
             });
         });
     });
@@ -132,7 +132,7 @@ describe('Thermostat2 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     thermostat.switchOn('0x1234/A');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address', function (done) {
                 let sentCommandId = NaN;
@@ -155,7 +155,7 @@ describe('Thermostat2 class', function () {
             it('should throw an exception with an invalid address 0x20', function () {
                 expect(function () {
                     thermostat.switchOn('0x20');
-                }).toThrow("Address 0x20 outside valid range");
+                }).toThrow(new Error(("Address 0x20 outside valid range")));
             });
         });
     });

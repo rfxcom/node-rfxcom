@@ -5,7 +5,7 @@ const rfxcom = require('../lib'),
     FakeSerialPort = require('./helper');
 
 beforeEach(function () {
-    this.addMatchers({
+    jasmine.addMatchers({
         toHaveSent: matchers.toHaveSent
     });
 });
@@ -15,7 +15,7 @@ describe('FunkBus class', function () {
         fakeSerialPort,
         device;
     beforeEach(function () {
-        this.addMatchers({
+        jasmine.addMatchers({
             toHaveSent: matchers.toHaveSent
         });
         fakeSerialPort = new FakeSerialPort();
@@ -31,7 +31,7 @@ describe('FunkBus class', function () {
         it('should throw an error if no subtype is specified', function () {
             expect(function () {
                 funkBus = new rfxcom.FunkBus(device);
-            }).toThrow("Must provide a subtype.");
+            }).toThrow(new Error(("Must provide a subtype.")));
         });
     });
     describe('INSTA', function () {
@@ -74,7 +74,7 @@ describe('FunkBus class', function () {
             it('should throw an exception with a group address', function () {
                 expect(function () {
                     funkBus.switchOn(['0xF09A', 'B', '0']);
-                }).toThrow("Device doesn't support group commands");
+                }).toThrow(new Error(("Device doesn't support group commands")));
             });
         });
         describe('switchOff', function () {
@@ -90,7 +90,7 @@ describe('FunkBus class', function () {
             it('should throw an exception with a group address', function () {
                 expect(function () {
                     funkBus.switchOff('0xF09A/B/0');
-                }).toThrow("Device doesn't support group commands");
+                }).toThrow(new Error(("Device doesn't support group commands")));
             });
         });
         describe('inceaseLevel', function () {
@@ -106,7 +106,7 @@ describe('FunkBus class', function () {
             it('should throw an exception with a group address', function () {
                 expect(function () {
                     funkBus.increaseLevel('0xF09A/B/0');
-                }).toThrow("Device doesn't support group commands");
+                }).toThrow(new Error(("Device doesn't support group commands")));
             });
         });
         describe('deceaseLevel', function () {
@@ -122,14 +122,14 @@ describe('FunkBus class', function () {
             it('should throw an exception with a group address', function () {
                 expect(function () {
                     funkBus.decreaseLevel('0xF09A/B/0');
-                }).toThrow("Device doesn't support group commands");
+                }).toThrow(new Error(("Device doesn't support group commands")));
             });
         });
         describe('setScene', function () {
             it('should throw an unsupported command exception', function () {
                 expect(function () {
                     funkBus.setScene('0xF09A/B/0');
-                }).toThrow("Device doesn't support command \"Scene\"");
+                }).toThrow(new Error(("Device doesn't support command \"Scene\"")));
             });
         });
         describe('buttonPress', function () {
@@ -190,10 +190,10 @@ describe('FunkBus class', function () {
             it('should throw an exception with an invalid buttonPressTime', function () {
                 expect(function () {
                     funkBus.buttonPress('0xF09A/B', "Up", 1, -0.01);
-                }).toThrow("Invalid buttonPressTime: value must be in range 0.0 - 12.0 seconds.");
+                }).toThrow(new Error(("Invalid buttonPressTime: value must be in range 0.0 - 12.0 seconds.")));
                 expect(function () {
                     funkBus.buttonPress('0xF09A/B', "Up", 1, 12.2);
-                }).toThrow("Invalid buttonPressTime: value must be in range 0.0 - 12.0 seconds.");
+                }).toThrow(new Error(("Invalid buttonPressTime: value must be in range 0.0 - 12.0 seconds.")));
             });
             it('should accept buttonNumber values from 1 to 8', function (done) {
                 let sentCommandId = NaN;
@@ -205,13 +205,13 @@ describe('FunkBus class', function () {
                 expect(sentCommandId).toEqual(0);
                 expect(function () {
                     funkBus.buttonPress('0xF09A/B', "Up", 9, 1.0);
-                }).toThrow("Invalid channel: value must be in range 1-8");
+                }).toThrow(new Error(("Invalid channel: value must be in range 1-8")));
                 expect(function () {
                     funkBus.buttonPress('0xF09A/B', "Up", 0, 1.0);
-                }).toThrow("Device doesn't support group commands");
+                }).toThrow(new Error(("Device doesn't support group commands")));
                 expect(function () {
                     funkBus.buttonPress('0xF09A/B', "Up", NaN, 1.0);
-                }).toThrow("Invalid channel: value must be in range 1-8");
+                }).toThrow(new Error(("Invalid channel: value must be in range 1-8")));
             });
             it('should send the correct bytes to the serialport for a "Down" command', function (done) {
                 let sentCommandId = NaN;
@@ -234,37 +234,37 @@ describe('FunkBus class', function () {
             it('should throw an exception for "All On"', function () {
                 expect(function () {
                     funkBus.buttonPress('0xF09A/B/0', "All On", 1, 0.0);
-                }).toThrow("Device doesn't support command \"All On\"");
+                }).toThrow(new Error(("Device doesn't support command \"All On\"")));
             });
             it('should throw an exception for "All Off"', function () {
                 expect(function () {
                     funkBus.buttonPress('0xF09A/B/0', "All Off", 1, 0.0);
-                }).toThrow("Device doesn't support command \"All Off\"");
+                }).toThrow(new Error(("Device doesn't support command \"All Off\"")));
             });
             it('should throw an exception for "Master Up"', function () {
                 expect(function () {
                     funkBus.buttonPress('0xF09A/B/0', "Master Up", 1, 0.0);
-                }).toThrow("Device doesn't support command \"Master Up\"");
+                }).toThrow(new Error(("Device doesn't support command \"Master Up\"")));
             });
             it('should throw an exception for "Master +"', function () {
                 expect(function () {
                     funkBus.buttonPress('0xF09A/B/0', "Master +", 1, 0.0);
-                }).toThrow("Device doesn't support command \"Master +\"");
+                }).toThrow(new Error(("Device doesn't support command \"Master +\"")));
             });
             it('should throw an exception for "Master Down"', function () {
                 expect(function () {
                     funkBus.buttonPress('0xF09A/B/0', "Master Down", 1, 0.0);
-                }).toThrow("Device doesn't support command \"Master Down\"");
+                }).toThrow(new Error(("Device doesn't support command \"Master Down\"")));
             });
             it('should throw an exception for "Master -"', function () {
                 expect(function () {
                     funkBus.buttonPress('0xF09A/B/0', "Master -", 1, 0.0);
-                }).toThrow("Device doesn't support command \"Master -\"");
+                }).toThrow(new Error(("Device doesn't support command \"Master -\"")));
             });
             it('should throw an exception for "Scene"', function () {
                 expect(function () {
                     funkBus.buttonPress('0xF09A/B/0', "Scene", 1, 0.0);
-                }).toThrow("Device doesn't support command \"Scene\"");
+                }).toThrow(new Error(("Device doesn't support command \"Scene\"")));
             });
         });
     });
@@ -374,12 +374,12 @@ describe('FunkBus class', function () {
             it('should throw an exception with an invalid scene number 0', function () {
                 expect(function () {
                     funkBus.setScene('0xF09A/B/1', 0);
-                }).toThrow("Invalid scene number 0");
+                }).toThrow(new Error(("Invalid scene number 0")));
             });
             it('should throw an exception with an invalid scene number 6', function () {
                 expect(function () {
                     funkBus.setScene('0xF09A/B/1', 6);
-                }).toThrow("Invalid scene number 6");
+                }).toThrow(new Error(("Invalid scene number 6")));
             });
         });
         describe('buttonPress', function () {
@@ -440,10 +440,10 @@ describe('FunkBus class', function () {
             it('should throw an exception with an invalid buttonPressTime', function () {
                 expect(function () {
                     funkBus.buttonPress('0xF09A/B', "Up", 1, -0.01);
-                }).toThrow("Invalid buttonPressTime: value must be in range 0.0 - 12.0 seconds.");
+                }).toThrow(new Error(("Invalid buttonPressTime: value must be in range 0.0 - 12.0 seconds.")));
                 expect(function () {
                     funkBus.buttonPress('0xF09A/B', "Up", 1, 12.2);
-                }).toThrow("Invalid buttonPressTime: value must be in range 0.0 - 12.0 seconds.");
+                }).toThrow(new Error(("Invalid buttonPressTime: value must be in range 0.0 - 12.0 seconds.")));
             });
             it('should accept buttonNumber values from 1 to 8', function (done) {
                 let sentCommandId = NaN;
@@ -455,10 +455,10 @@ describe('FunkBus class', function () {
                 expect(sentCommandId).toEqual(0);
                 expect(function () {
                     funkBus.buttonPress('0xF09A/B', "Up", 9, 1.0);
-                }).toThrow("Invalid channel: value must be in range 1-8");
+                }).toThrow(new Error(("Invalid channel: value must be in range 1-8")));
                 expect(function () {
                     funkBus.buttonPress('0xF09A/B', "Up", 0, 1.0);
-                }).toThrow("Device doesn't support group commands");
+                }).toThrow(new Error(("Device doesn't support group commands")));
             });
             it('should send the correct bytes to the serialport for a "Down" command', function (done) {
                 let sentCommandId = NaN;
@@ -568,22 +568,22 @@ describe('FunkBus class', function () {
         it('should throw an exception with an invalid channel code', function () {
             expect(function () {
                 funkBus.switchOn(['0xFFFF', 'A', '9']);
-            }).toThrow("Invalid channel: value must be in range 1-8");
+            }).toThrow(new Error(("Invalid channel: value must be in range 1-8")));
         });
         it('should throw an exception with an invalid group', function () {
             expect(function () {
                 funkBus.switchOn(['0xFFFF', 'D', '1']);
-            }).toThrow("Invalid group code 'D'");
+            }).toThrow(new Error(("Invalid group code 'D'")));
         });
         it('should throw an exception with an invalid ID', function () {
             expect(function () {
                 funkBus.switchOn(['0xFFFFFF', 'A', '1']);
-            }).toThrow("Device ID 0xffffff outside valid range");
+            }).toThrow(new Error(("Device ID 0xffffff outside valid range")));
         });
         it('should throw an exception with a badly formatted deviceId', function () {
             expect(function () {
                 funkBus.switchOn('0xF09AC8');
-            }).toThrow("Invalid deviceId format");
+            }).toThrow(new Error(("Invalid deviceId format")));
         });
     });
 });
