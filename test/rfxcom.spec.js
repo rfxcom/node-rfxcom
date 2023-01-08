@@ -6,7 +6,7 @@ const rfxcom = require('../lib'),
 
 describe("RfxCom", function() {
     beforeEach(function() {
-        this.addMatchers({
+        jasmine.addMatchers({
             toHaveSent: matchers.toHaveSent
         });
     });
@@ -536,22 +536,25 @@ describe("RfxCom", function() {
                         device = new rfxcom.RfxCom("/dev/ttyUSB0", {
                             port: fakeSerialPort
                         });
-                        jasmine.Clock.useMock(); // There is a 500ms Timeout in the initialisation code, we must mock it
+                        jasmine.clock().install(); // There is a 500ms Timeout in the initialisation code, we must mock it
                     });
+                afterEach(function () {
+                    jasmine.clock().uninstall()
+                })
                 it("should prepare the device for use.", function (done) {
                     const
-                        resetSpy = spyOn(device, "resetRFX").andCallThrough(),
-                        flushSpy = spyOn(device, "flush").andCallThrough(),
-                        getStatusSpy = spyOn(device, "getRFXStatus").andCallFake(function () {
+                        resetSpy = spyOn(device, "resetRFX").and.callThrough(),
+                        flushSpy = spyOn(device, "flush").and.callThrough(),
+                        getStatusSpy = spyOn(device, "getRFXStatus").and.callFake(function () {
                             device.statusMessageHandler([0x00, 0x01, 0x02, 0x53, 0x5E, 0x08, 0x02, 0x25, 0x00, 0x01, 0x01, 0x1C])
                         }),
-                        openSpy = spyOn(device, "open").andCallFake(function () {
+                        openSpy = spyOn(device, "open").and.callFake(function () {
                             device.connected = true;
                             device.emit("ready");
                         });
 
                     device.initialise(() => { done() });
-                    jasmine.Clock.tick(501);
+                    jasmine.clock().tick(501);
                     expect(resetSpy).toHaveBeenCalled();
                     // noinspection JSCheckFunctionSignatures
                     expect(flushSpy).toHaveBeenCalledWith(jasmine.any(Function));
@@ -561,23 +564,23 @@ describe("RfxCom", function() {
                 });
                 it("should prepare the device for use (current firmware).", function (done) {
                     const
-                        resetSpy = spyOn(device, "resetRFX").andCallThrough(),
-                        flushSpy = spyOn(device, "flush").andCallThrough(),
-                        startRxSpy = spyOn(device, "startRFXReceiver").andCallFake(function () {
+                        resetSpy = spyOn(device, "resetRFX").and.callThrough(),
+                        flushSpy = spyOn(device, "flush").and.callThrough(),
+                        startRxSpy = spyOn(device, "startRFXReceiver").and.callFake(function () {
                             device.statusMessageHandler([0x07, 0x02, 0x07, 0x43, 0x6F, 0x70, 0x79, 0x72, 0x69, 0x67, 0x68,
                                 0x74, 0x20, 0x52, 0x46, 0x58, 0x43, 0x4F, 0x4D])
                         }),
-                        getStatusSpy = spyOn(device, "getRFXStatus").andCallFake(function () {
+                        getStatusSpy = spyOn(device, "getRFXStatus").and.callFake(function () {
                             device.statusMessageHandler([0x00, 0x01, 0x02, 0x53, 0x5E, 0x08, 0x02, 0x25, 0x00, 0x01, 0x01,
                                 0x1C, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
                         }),
-                        openSpy = spyOn(device, "open").andCallFake(function () {
+                        openSpy = spyOn(device, "open").and.callFake(function () {
                             device.connected = true;
                             device.emit("ready");
                         });
 
                     device.initialise(() => { done() });
-                    jasmine.Clock.tick(501);
+                    jasmine.clock().tick(501);
                     expect(resetSpy).toHaveBeenCalled();
                     // noinspection JSCheckFunctionSignatures
                     expect(flushSpy).toHaveBeenCalledWith(jasmine.any(Function));
