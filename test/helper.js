@@ -11,7 +11,8 @@ class FakeSerialPort extends events.EventEmitter {
     }
 
     write(buffer, callback) {
-        this.bytesWritten += buffer;
+        // Must use array concatenation to handle recording multiple packets
+        this.bytesWritten = this.bytesWritten.concat(buffer);
         if (callback && typeof callback === "function") {
             callback();
         }
