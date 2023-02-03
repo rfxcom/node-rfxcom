@@ -47,6 +47,41 @@ describe('RawTx class', function () {
             expect(fakeSerialPort).toHaveSent([20, 0x7f, 0, 0, 7, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8]);
             expect(sentCommandId).toEqual(expectedPackets - 1);
         });
+        it ("should use a default value of 5 repeats if none specified", function (done) {
+            let sentCommandId = NaN;
+            const params = {
+                pulseTimes: "1 2 3 4 5 6 7 8"
+            }
+            const expectedPackets = 1;
+            let packet = 1;
+            rawtx.sendMessage('0x1234567/8', params, function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                if (packet == expectedPackets) {
+                    done();
+                }
+                packet++;
+            });
+            expect(fakeSerialPort).toHaveSent([20, 0x7f, 0, 0, 5, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8]);
+            expect(sentCommandId).toEqual(expectedPackets - 1);
+        });
+        it ("should handle a missing deviceId", function (done) {
+            let sentCommandId = NaN;
+            const params = {
+                repeats: 7,
+                pulseTimes: "1 2 3 4 5 6 7 8"
+            }
+            const expectedPackets = 1;
+            let packet = 1;
+            rawtx.sendMessage(params, function (err, response, cmdId) {
+                sentCommandId = cmdId;
+                if (packet == expectedPackets) {
+                    done();
+                }
+                packet++;
+            });
+            expect(fakeSerialPort).toHaveSent([20, 0x7f, 0, 0, 7, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8]);
+            expect(sentCommandId).toEqual(expectedPackets - 1);
+        });
         it ("should accept a numeric array of pulse times", function (done) {
             let sentCommandId = NaN;
             const params = {
