@@ -1,9 +1,9 @@
 {
   "name": "rfxcom",
-  "version": "2.4.1",
-  "author": "Kevin McDermott <kevin@bigkevmcd.com>",
+  "version": "2.5.0",
+  "contributors": ["Max Hadley <max@susato.co.uk>", "Kevin McDermott <kevin@bigkevmcd.com>"],
   "engines": {
-    "node": ">=10.4.0"
+    "node": ">=14.21.2"
   },
   "dependencies": {
     "date-format": "^4.0.0",
