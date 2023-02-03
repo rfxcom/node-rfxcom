@@ -8,7 +8,7 @@ To install
   npm install rfxcom
 </pre>
 
-Depends on serialport ^9.0.0, date-format ^3.0.0, and queue ^6.0.0
+Depends on serialport ^9.0.0, date-format ^4.0.0, and queue ^6.0.0
 
 Note
 ----
@@ -62,7 +62,6 @@ packet types which can be transmitted but are *not* currently supported are:
 * 0x61, ASYNC port configuration (RFXtrx433XL only)
 * 0x62, ASYNC port data (RFXtrx433XL only)
 * 0x72, FS20 (868 MHz devices only)
-* 0x7F, Raw transmit
 
 Each transmitter has a constructor, which must be called with an RfxCom object as the first parameter, the subtype as the
 second parameter, and an options object as an optional third parameter.
@@ -320,6 +319,10 @@ Emitted when a message is received from an RFXCOM rfxsensor device.
 "rfxmeter"
 ----------
 Emitted whan a message is received from an RFXCOM rfxmeter device.
+
+"waterlevel"
+---------
+Emitted when a message is received from a TS_FT002 water level (depth) sensor
 
 "weather"
 ---------
