@@ -10,7 +10,7 @@ describe('Thermostat1 class', function () {
         fakeSerialPort = {},
         device = {};
     beforeEach(function () {
-        this.addMatchers({
+        jasmine.addMatchers({
             toHaveSent: matchers.toHaveSent
         });
         fakeSerialPort = new FakeSerialPort();
@@ -49,22 +49,22 @@ describe('Thermostat1 class', function () {
                 it('should throw an error with an invalid temperature', function () {
                     expect(function () {
                         thermostat.sendMessage('0x1234', {temperature:99, setpoint:22.5, status:2, mode:0});
-                    }).toThrow("Invalid parameter temperature: must be in range 0-50");
+                    }).toThrow(new Error(("Invalid parameter temperature: must be in range 0-50")));
                 });
                 it('should throw an error with an invalid setpoint', function () {
                     expect(function () {
                         thermostat.sendMessage('0x1234', {temperature:24.5, setpoint:47, status:2, mode:0});
-                    }).toThrow("Invalid parameter setpoint: must be in range 5-45");
+                    }).toThrow(new Error(("Invalid parameter setpoint: must be in range 5-45")));
                 });
                 it('should throw an error with an invalid status', function () {
                     expect(function () {
                         thermostat.sendMessage('0x1234', {temperature:24.5, setpoint:22.5, status:5, mode:0});
-                    }).toThrow("Invalid parameter status: must be in range 0-3");
+                    }).toThrow(new Error(("Invalid parameter status: must be in range 0-3")));
                 });
                 it('should throw an error with an invalid mode', function () {
                     expect(function () {
                         thermostat.sendMessage('0x1234', {temperature:24.5, setpoint:22.5, status:2, mode:-1});
-                    }).toThrow("Invalid parameter mode: must be 0 or 1");
+                    }).toThrow(new Error(("Invalid parameter mode: must be 0 or 1")));
                 });
             });
         });
@@ -72,7 +72,7 @@ describe('Thermostat1 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     thermostat.sendMessage('0x1234/A', {temperature:24.5, setpoint:22.5, status:2, mode:0});
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address', function (done) {
                 let sentCommandId = NaN;
@@ -95,7 +95,7 @@ describe('Thermostat1 class', function () {
             it('should throw an exception with an invalid address 0x10000', function () {
                 expect(function () {
                     thermostat.sendMessage('0x10000', {temperature:24.5, setpoint:22.5, status:2, mode:0});
-                }).toThrow("Address 0x10000 outside valid range");
+                }).toThrow(new Error(("Address 0x10000 outside valid range")));
             });
         });
     });
@@ -117,7 +117,7 @@ describe('Thermostat1 class', function () {
                 it('should throw an error with an invalid temperature', function () {
                     expect(function () {
                         thermostat.sendMessage('0x1234', {temperature:99, setpoint:22.5, status:2, mode:0});
-                    }).toThrow("Invalid parameter temperature: must be in range 0-50");
+                    }).toThrow(new Error(("Invalid parameter temperature: must be in range 0-50")));
                 });
                 it('should not throw an error with an invalid setpoint', function (done) {
                     let sentCommandId = NaN;
@@ -131,12 +131,12 @@ describe('Thermostat1 class', function () {
                 it('should throw an error with an invalid status', function () {
                     expect(function () {
                         thermostat.sendMessage('0x1234', {temperature:24.5, setpoint:22.5, status:5, mode:0});
-                    }).toThrow("Invalid parameter status: must be in range 0-3");
+                    }).toThrow(new Error(("Invalid parameter status: must be in range 0-3")));
                 });
                 it('should throw an error with an invalid mode', function () {
                     expect(function () {
                         thermostat.sendMessage('0x1234', {temperature:24.5, setpoint:22.5, status:2, mode:-1});
-                    }).toThrow("Invalid parameter mode: must be 0 or 1");
+                    }).toThrow(new Error(("Invalid parameter mode: must be 0 or 1")));
                 });
             });
         });
@@ -144,7 +144,7 @@ describe('Thermostat1 class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     thermostat.sendMessage('0x1234/A', {temperature:24.5, setpoint:22.5, status:2, mode:0});
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address', function (done) {
                 let sentCommandId = NaN;
@@ -167,7 +167,7 @@ describe('Thermostat1 class', function () {
             it('should throw an exception with an invalid address 0x10000', function () {
                 expect(function () {
                     thermostat.sendMessage('0x10000', {temperature:24.5, setpoint:22.5, status:2, mode:0});
-                }).toThrow("Address 0x10000 outside valid range");
+                }).toThrow(new Error(("Address 0x10000 outside valid range")));
             });
         });
     });

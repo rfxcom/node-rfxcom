@@ -1,3 +1,17 @@
+Version 2.5.0
+-------------
+Support for RFX firmware 1045 (with longer chime1 packet)
+
+- Add support for raw data transmission
+- Add unit code to BLINDS_T11
+- Add BLINDS_T19 & BLINDS_T20
+- Add Thermostat5 transmitter
+- Add Blinds2 (bidirectional blinds) transmitter
+- Add support for waterlevel packet
+
+Various minor bug fixes
+Update test framework to Jasmine 4.4.x
+
 Version 2.4.0
 -------------
 Add Blinds1.intermediatePosition() function

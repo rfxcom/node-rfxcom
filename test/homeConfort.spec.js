@@ -13,7 +13,7 @@ describe('HomeConfort class', function () {
         fakeSerialPort,
         device;
     beforeEach(function () {
-        this.addMatchers({
+        jasmine.addMatchers({
             toHaveSent: matchers.toHaveSent
         });
         fakeSerialPort = new FakeSerialPort();
@@ -75,7 +75,7 @@ describe('HomeConfort class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     homeConfort.switchOn('0x3FFF');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address, house and unit code values', function (done) {
                 let sentCommandId = NaN;
@@ -98,32 +98,32 @@ describe('HomeConfort class', function () {
             it('should throw an exception with an invalid unit number 5', function () {
                 expect(function () {
                     homeConfort.switchOn('0x7FFF/D/7');
-                }).toThrow("Invalid unit code 7");
+                }).toThrow(new Error(("Invalid unit code 7")));
             });
             it('should throw an exception with an invalid unit number -1', function () {
                 expect(function () {
                     homeConfort.switchOn('0x7FFF/D/-1');
-                }).toThrow("Invalid unit code -1");
+                }).toThrow(new Error(("Invalid unit code -1")));
             });
             it('should throw an exception with an invalid house code E', function () {
                 expect(function () {
                     homeConfort.switchOn('0x7FFF/E/1');
-                }).toThrow("Invalid house code 'E'");
+                }).toThrow(new Error(("Invalid house code 'E'")));
             });
             it('should throw an exception with an invalid unit number @', function () {
                 expect(function () {
                     homeConfort.switchOn('0x7FFF/@/-1');
-                }).toThrow("Invalid house code '@'");
+                }).toThrow(new Error(("Invalid house code '@'")));
             });
             it('should throw an exception with an invalid address 0x80000', function () {
                 expect(function () {
                     homeConfort.switchOn('0x80000/A/4');
-                }).toThrow("Address 0x80000 outside valid range");
+                }).toThrow(new Error(("Address 0x80000 outside valid range")));
             });
             it('should throw an exception with an invalid address 0x0', function () {
                 expect(function () {
                     homeConfort.switchOn('0x0/A/4');
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
         });
     })

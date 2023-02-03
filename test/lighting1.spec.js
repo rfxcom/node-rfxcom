@@ -11,7 +11,7 @@ describe('Lighting1 class', function () {
         fakeSerialPort,
         device;
     beforeEach(function () {
-        this.addMatchers({
+        jasmine.addMatchers({
             toHaveSent: matchers.toHaveSent
         });
         fakeSerialPort = new FakeSerialPort();
@@ -27,7 +27,7 @@ describe('Lighting1 class', function () {
         it('should throw an error if no subtype is specified', function () {
             expect(function () {
                 lighting1 = new rfxcom.Lighting1(device);
-            }).toThrow("Must provide a subtype.");
+            }).toThrow(new Error(("Must provide a subtype.")));
         });
     });
     describe('.chime', function () {
@@ -108,12 +108,12 @@ describe('Lighting1 class', function () {
         it('should reject a group command', function () {
             expect(function () {
                 lighting1.switchOn('C0')
-            }).toThrow("Device does not support group on/off commands");
+            }).toThrow(new Error(("Device does not support group on/off commands")));
         });
         it('should reject a program command', function () {
             expect(function () {
                 lighting1.program('C0')
-            }).toThrow("Device does not support program()");
+            }).toThrow(new Error(("Device does not support program()")));
         });
     });
     describe('.lampCommands', function () {
@@ -177,7 +177,7 @@ describe('Lighting1 class', function () {
         it('should reject a group bright command', function () {
             expect(function () {
                 lighting1.increaseLevel(['C', '0'])
-            }).toThrow("Device does not support group dim/bright commands");
+            }).toThrow(new Error(("Device does not support group dim/bright commands")));
         });
     });
     describe('.X10 address checking', function () {
@@ -187,17 +187,17 @@ describe('Lighting1 class', function () {
         it('should reject an invalid house code', function () {
             expect(function () {
                 lighting1.switchOn(['Q', '1'])
-            }).toThrow("Invalid house code 'Q'");
+            }).toThrow(new Error(("Invalid house code 'Q'")));
         });
         it('should reject an invalid unit code', function () {
             expect(function () {
                 lighting1.switchOn(['P', '65'])
-            }).toThrow("Invalid unit code 65");
+            }).toThrow(new Error(("Invalid unit code 65")));
         });
         it('should reject an badly formatted address', function () {
             expect(function () {
                 lighting1.switchOn(['0x556', 'B', '1'])
-            }).toThrow("Invalid deviceId format");
+            }).toThrow(new Error(("Invalid deviceId format")));
         });
     });
     describe('.CHACON address checking', function () {
@@ -216,12 +216,12 @@ describe('Lighting1 class', function () {
         it('should reject an invalid house code', function () {
             expect(function () {
                 lighting1.switchOn(['D', '1'])
-            }).toThrow("Invalid house code 'D'");
+            }).toThrow(new Error(("Invalid house code 'D'")));
         });
         it('should reject an invalid unit code', function () {
             expect(function () {
                 lighting1.switchOn(['A', '5'])
-            }).toThrow("Invalid unit code 5");
+            }).toThrow(new Error(("Invalid unit code 5")));
         });
     });
     describe('.COCO address checking', function () {
@@ -240,12 +240,12 @@ describe('Lighting1 class', function () {
         it('should reject an invalid house code', function () {
             expect(function () {
                 lighting1.switchOn(['E', '1'])
-            }).toThrow("Invalid house code 'E'");
+            }).toThrow(new Error(("Invalid house code 'E'")));
         });
         it('should reject an invalid unit code', function () {
             expect(function () {
                 lighting1.switchOn(['A', '5'])
-            }).toThrow("Invalid unit code 5");
+            }).toThrow(new Error(("Invalid unit code 5")));
         });
     });
     describe('.IMPULS address checking', function () {
@@ -264,12 +264,12 @@ describe('Lighting1 class', function () {
         it('should reject an invalid house code', function () {
             expect(function () {
                 lighting1.switchOn(['Q', '1'])
-            }).toThrow("Invalid house code 'Q'");
+            }).toThrow(new Error(("Invalid house code 'Q'")));
         });
         it('should reject an invalid unit code', function () {
             expect(function () {
                 lighting1.switchOn(['A', '65'])
-            }).toThrow("Invalid unit code 65");
+            }).toThrow(new Error(("Invalid unit code 65")));
         });
     });
     describe('.PHILIPS_SBC address checking', function () {
@@ -288,12 +288,12 @@ describe('Lighting1 class', function () {
         it('should reject an invalid house code', function () {
             expect(function () {
                 lighting1.switchOn(['Q', '1'])
-            }).toThrow("Invalid house code 'Q'");
+            }).toThrow(new Error(("Invalid house code 'Q'")));
         });
         it('should reject an invalid unit code', function () {
             expect(function () {
                 lighting1.switchOn(['A', '9'])
-            }).toThrow("Invalid unit code 9");
+            }).toThrow(new Error(("Invalid unit code 9")));
         });
     });
     describe('.ENERGENIE_5_GANG address checking', function () {
@@ -312,12 +312,12 @@ describe('Lighting1 class', function () {
         it('should reject an invalid house code', function () {
             expect(function () {
                 lighting1.switchOn(['Q', '1'])
-            }).toThrow("Invalid house code 'Q'");
+            }).toThrow(new Error(("Invalid house code 'Q'")));
         });
         it('should reject an invalid unit code', function () {
             expect(function () {
                 lighting1.switchOn(['A', '11'])
-            }).toThrow("Invalid unit code 11");
+            }).toThrow(new Error(("Invalid unit code 11")));
         });
     });
     describe('.HQ address checking', function () {
@@ -336,12 +336,12 @@ describe('Lighting1 class', function () {
         it('should reject an invalid house code', function () {
             expect(function () {
                 lighting1.switchOn(['E', '1'])
-            }).toThrow("Invalid house code 'E'");
+            }).toThrow(new Error(("Invalid house code 'E'")));
         });
         it('should reject an invalid unit code', function () {
             expect(function () {
                 lighting1.switchOn(['A', '65'])
-            }).toThrow("Invalid unit code 65");
+            }).toThrow(new Error(("Invalid unit code 65")));
         });
     });
     describe('.OASE_FM address checking', function () {
@@ -360,12 +360,12 @@ describe('Lighting1 class', function () {
         it('should reject an invalid house code', function () {
             expect(function () {
                 lighting1.switchOn(['Q', '1'])
-            }).toThrow("Invalid house code 'Q'");
+            }).toThrow(new Error(("Invalid house code 'Q'")));
         });
         it('should reject an invalid unit code', function () {
             expect(function () {
                 lighting1.switchOn(['A', '4'])
-            }).toThrow("Invalid unit code 4");
+            }).toThrow(new Error(("Invalid unit code 4")));
         });
     });
 });

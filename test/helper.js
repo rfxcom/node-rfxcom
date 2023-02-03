@@ -2,38 +2,34 @@
 const events = require("events"),
         util = require("util");
 
-const FakeSerialPort = function() {
-    const self = this;
-    events.EventEmitter.call(this);
-    self.bytesWritten = [];
-    self.flushed = false;
-    self.isOpen = true;
-};
-util.inherits(FakeSerialPort, events.EventEmitter);
-
-FakeSerialPort.prototype.write = function(buffer, callback) {
-    const self = this;
-    self.bytesWritten += buffer;
-    if (callback && typeof callback === "function") {
-        callback();
+class FakeSerialPort extends events.EventEmitter {
+    constructor() {
+        super ();
+        this.bytesWritten = [];
+        this.flushed = false;
+        this.isOpen = true;
     }
-};
 
-// noinspection JSUnusedGlobalSymbols
-FakeSerialPort.prototype.flush = function(callback) {
-    const self = this;
-    self.flushed = true;
-    if (callback && typeof callback === "function") {
-        callback();
-    }
-};
+    write(buffer, callback) {
+        // Must use array concatenation to handle recording multiple packets
+        this.bytesWritten = this.bytesWritten.concat(buffer);
+        if (callback && typeof callback === "function") {
+            callback();
+        }
+    };
 
-FakeSerialPort.prototype.close = function(callback) {
-    const self = this;
-    self.isOpen = false;
-    if (callback && typeof callback === "function") {
-        callback();
-    }
-};
+    flush(callback) {
+        this.flushed = true;
+        if (callback && typeof callback === "function") {
+            callback();
+        }
+    };
 
+    close(callback) {
+        this.isOpen = false;
+        if (callback && typeof callback === "function") {
+            callback();
+        }
+    };    
+}
 module.exports = FakeSerialPort;

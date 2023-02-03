@@ -6,16 +6,16 @@
     "node": ">=10.4.0"
   },
   "dependencies": {
-    "date-format": "^3.0.0",
+    "date-format": "^4.0.0",
     "queue": "^6.0.2",
     "serialport": "^9.0.4"
   },
   "devDependencies": {
-    "jasmine-node": "^1.16.2",
+    "jasmine": "^4.5.0",
     "jshint": "^2.11.1"
   },
   "scripts": {
-    "test": "./node_modules/.bin/jasmine-node test",
+    "test": "jasmine",
     "watch": "./node_modules/.bin/jasmine-node --autotest .",
     "find-rfxcom": "./node_modules/.bin/bin/find-rfxcom.js",
     "set-protocols": "./node_modules/.bin/bin/set-protocols.js"

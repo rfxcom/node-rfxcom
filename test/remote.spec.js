@@ -10,7 +10,7 @@ describe('Remote class', function () {
         fakeSerialPort = {},
         device = {};
     beforeEach(function () {
-        this.addMatchers({
+        jasmine.addMatchers({
             toHaveSent: matchers.toHaveSent
         });
         fakeSerialPort = new FakeSerialPort();
@@ -58,17 +58,17 @@ describe('Remote class', function () {
                 it('should throw an error for position < 0', function () {
                     expect(function () {
                         remote.buttonPress('0x12', 'No such button');
-                    }).toThrow("Invalid button name 'No such button'");
+                    }).toThrow(new Error(("Invalid button name 'No such button'")));
                 });
                 it('should throw an error for a numeric button code > 255', function () {
                     expect(function () {
                         remote.buttonPress('0x12', 500);
-                    }).toThrow("Invalid button: value must be in range 0-255");
+                    }).toThrow(new Error(("Invalid button: value must be in range 0-255")));
                 });
                 it('should throw an error for a numeric button code < 0', function () {
                     expect(function () {
                         remote.buttonPress('0x12', -500);
-                    }).toThrow("Invalid button: value must be in range 0-255");
+                    }).toThrow(new Error(("Invalid button: value must be in range 0-255")));
                 });
             });
         });
@@ -76,7 +76,7 @@ describe('Remote class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     remote.buttonPress('0x1234/A', 8);
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address', function (done) {
                 let sentCommandId = NaN;
@@ -99,7 +99,7 @@ describe('Remote class', function () {
             it('should throw an exception with an invalid address 0x100', function () {
                 expect(function () {
                     remote.buttonPress('0x100', 8);
-                }).toThrow("Address 0x100 outside valid range");
+                }).toThrow(new Error(("Address 0x100 outside valid range")));
             });
         });
     });
@@ -139,17 +139,17 @@ describe('Remote class', function () {
                 it('should throw an error for position < 0', function () {
                     expect(function () {
                         remote.buttonPress('0x12', 'No such button');
-                    }).toThrow("Invalid button name 'No such button'");
+                    }).toThrow(new Error(("Invalid button name 'No such button'")));
                 });
                 it('should throw an error for a numeric button code > 255', function () {
                     expect(function () {
                         remote.buttonPress('0x12', 500);
-                    }).toThrow("Invalid button: value must be in range 0-255");
+                    }).toThrow(new Error(("Invalid button: value must be in range 0-255")));
                 });
                 it('should throw an error for a numeric button code < 0', function () {
                     expect(function () {
                         remote.buttonPress('0x12', -500);
-                    }).toThrow("Invalid button: value must be in range 0-255");
+                    }).toThrow(new Error(("Invalid button: value must be in range 0-255")));
                 });
             });
         });
@@ -157,7 +157,7 @@ describe('Remote class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     remote.buttonPress('0x1234/A', 8);
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address', function (done) {
                 let sentCommandId = NaN;
@@ -180,7 +180,7 @@ describe('Remote class', function () {
             it('should throw an exception with an invalid address 0x100', function () {
                 expect(function () {
                     remote.buttonPress('0x100', 8);
-                }).toThrow("Address 0x100 outside valid range");
+                }).toThrow(new Error(("Address 0x100 outside valid range")));
             });
         });
     });
@@ -220,17 +220,17 @@ describe('Remote class', function () {
                 it('should throw an error for position < 0', function () {
                     expect(function () {
                         remote.buttonPress('0x12', 'No such button');
-                    }).toThrow("Invalid button name 'No such button'");
+                    }).toThrow(new Error(("Invalid button name 'No such button'")));
                 });
                 it('should throw an error for a numeric button code > 255', function () {
                     expect(function () {
                         remote.buttonPress('0x12', 500);
-                    }).toThrow("Invalid button: value must be in range 0-255");
+                    }).toThrow(new Error(("Invalid button: value must be in range 0-255")));
                 });
                 it('should throw an error for a numeric button code < 0', function () {
                     expect(function () {
                         remote.buttonPress('0x12', -500);
-                    }).toThrow("Invalid button: value must be in range 0-255");
+                    }).toThrow(new Error(("Invalid button: value must be in range 0-255")));
                 });
             });
         });
@@ -238,7 +238,7 @@ describe('Remote class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     remote.buttonPress('0x1234/A', 8);
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address', function (done) {
                 let sentCommandId = NaN;
@@ -261,7 +261,7 @@ describe('Remote class', function () {
             it('should throw an exception with an invalid address 0x100', function () {
                 expect(function () {
                     remote.buttonPress('0x100', 8);
-                }).toThrow("Address 0x100 outside valid range");
+                }).toThrow(new Error(("Address 0x100 outside valid range")));
             });
         });
     });
@@ -301,17 +301,17 @@ describe('Remote class', function () {
                 it('should throw an error for position < 0', function () {
                     expect(function () {
                         remote.buttonPress('0x12', 'No such button');
-                    }).toThrow("Invalid button name 'No such button'");
+                    }).toThrow(new Error(("Invalid button name 'No such button'")));
                 });
                 it('should throw an error for a numeric button code > 255', function () {
                     expect(function () {
                         remote.buttonPress('0x12', 500);
-                    }).toThrow("Invalid button: value must be in range 0-255");
+                    }).toThrow(new Error(("Invalid button: value must be in range 0-255")));
                 });
                 it('should throw an error for a numeric button code < 0', function () {
                     expect(function () {
                         remote.buttonPress('0x12', -500);
-                    }).toThrow("Invalid button: value must be in range 0-255");
+                    }).toThrow(new Error(("Invalid button: value must be in range 0-255")));
                 });
             });
         });
@@ -319,7 +319,7 @@ describe('Remote class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     remote.buttonPress('0x1234/A', 96);
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address', function (done) {
                 let sentCommandId = NaN;
@@ -342,7 +342,7 @@ describe('Remote class', function () {
             it('should throw an exception with an invalid address 0x100', function () {
                 expect(function () {
                     remote.buttonPress('0x100', 8);
-                }).toThrow("Address 0x100 outside valid range");
+                }).toThrow(new Error(("Address 0x100 outside valid range")));
             });
         });
     });
@@ -355,11 +355,10 @@ describe('Remote class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         remote.buttonPress('0x12', 'VOL+');
-                    }).toThrow("Device does not support buttonPress()");
+                    }).toThrow(new Error(("Device does not support buttonPress()")));
                 });
             });
         });
-        describe('address checking', function () {
-        });
+        // There are no address tests as this subtype is receive-only
     });
 });

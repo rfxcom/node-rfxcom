@@ -11,7 +11,7 @@ describe('Fan class', function () {
         fakeSerialPort = {},
         device = {};
     beforeEach(function () {
-        this.addMatchers({
+        jasmine.addMatchers({
             toHaveSent: matchers.toHaveSent
         });
         fakeSerialPort = new FakeSerialPort();
@@ -32,7 +32,7 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.buttonPress('0x1234', 'T2');
-                    }).toThrow("Device does not support buttonPress()");
+                    }).toThrow(new Error(("Device does not support buttonPress()")));
                 });
 
             });
@@ -40,7 +40,7 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.setSpeed('0x1234');
-                    }).toThrow("Device does not support setSpeed()");
+                    }).toThrow(new Error(("Device does not support setSpeed()")));
                 });
             });
             describe('decreaseSpeed()', function () {
@@ -69,7 +69,7 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.switchOff('0x1234');
-                    }).toThrow("Device does not support switchOff()");
+                    }).toThrow(new Error(("Device does not support switchOff()")));
                 });
             });
             describe('startTimer()', function () {
@@ -87,21 +87,21 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.toggleOnOff('0x1234');
-                    }).toThrow("Device does not support toggleOnOff()");
+                    }).toThrow(new Error(("Device does not support toggleOnOff()")));
                 });
             });
             describe('toggleFanDirection()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.toggleFanDirection('0x1234');
-                    }).toThrow("Device does not support toggleFanDirection()");
+                    }).toThrow(new Error(("Device does not support toggleFanDirection()")));
                 });
             });
             describe('setFanDirection()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.setFanDirection('0x1234', 'forward');
-                    }).toThrow("Device does not support setFanDirection()");
+                    }).toThrow(new Error(("Device does not support setFanDirection()")));
                 });
             });
             describe('toggleLightOnOff()', function () {
@@ -119,14 +119,14 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.switchLightOn('0x1234');
-                    }).toThrow("Device does not support switchLightOn()");
+                    }).toThrow(new Error(("Device does not support switchLightOn()")));
                 });
             });
             describe('switchLightOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.switchLightOff('0x1234');
-                    }).toThrow("Device does not support switchLightOff()");
+                    }).toThrow(new Error(("Device does not support switchLightOff()")));
                 });
             });
             describe('program()', function () {
@@ -155,21 +155,21 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.eraseAll('0x1234');
-                    }).toThrow("Device does not support eraseAll()");
+                    }).toThrow(new Error(("Device does not support eraseAll()")));
                 });
             });
             describe('standby', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.standby('0x1');
-                    }).toThrow("Device does not support standby()");
+                    }).toThrow(new Error(("Device does not support standby()")));
                 });
             });
             describe('resetFilter', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.resetFilter('0x1');
-                    }).toThrow("Device does not support resetFilter()");
+                    }).toThrow(new Error(("Device does not support resetFilter()")));
                 });
             });
         });
@@ -177,7 +177,7 @@ describe('Fan class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     fan.startTimer('0x1234/A');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address value', function (done) {
                 let sentCommandId = NaN;
@@ -200,12 +200,12 @@ describe('Fan class', function () {
             it('should throw an exception with an invalid address 0x10000', function () {
                 expect(function () {
                     fan.startTimer('0x10000');
-                }).toThrow("Address 0x10000 outside valid range");
+                }).toThrow(new Error(("Address 0x10000 outside valid range")));
             });
             it('should throw an exception with an invalid address 0x0', function () {
                 expect(function () {
                     fan.startTimer('0x0');
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
         });
     });
@@ -218,14 +218,14 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.buttonPress('0x123456', 'T2');
-                    }).toThrow("Device does not support buttonPress()");
+                    }).toThrow(new Error(("Device does not support buttonPress()")));
                 });
             });
             describe('setSpeed', function () {
                 it('should throw an exception for speed 0', function () {
                     expect(function () {
                         fan.setSpeed('0x123456', 0);
-                    }).toThrow("Invalid speed: value must be in range 1-3");
+                    }).toThrow(new Error(("Invalid speed: value must be in range 1-3")));
                 });
                 it('should send the correct bytes to the serialport for speed 1', function (done) {
                     let sentCommandId = NaN;
@@ -257,28 +257,28 @@ describe('Fan class', function () {
                 it('should throw an exception for speed >3', function () {
                     expect(function () {
                         fan.setSpeed('0x123456', 4);
-                    }).toThrow("Invalid speed: value must be in range 1-3");
+                    }).toThrow(new Error(("Invalid speed: value must be in range 1-3")));
                 });
             });
             describe('decreaseSpeed()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.decreaseSpeed('0x123456');
-                    }).toThrow("Device does not support decreaseSpeed()");
+                    }).toThrow(new Error(("Device does not support decreaseSpeed()")));
                 });
             });
             describe('increaseSpeed()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.increaseSpeed('0x123456');
-                    }).toThrow("Device does not support increaseSpeed()");
+                    }).toThrow(new Error(("Device does not support increaseSpeed()")));
                 });
             });
             describe('switchOff', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.switchOff('0x123456');
-                    }).toThrow("Device does not support switchOff()");
+                    }).toThrow(new Error(("Device does not support switchOff()")));
                 });
             });
             describe('startTimer()', function () {
@@ -305,42 +305,42 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.toggleOnOff('0x123456');
-                    }).toThrow("Device does not support toggleOnOff()");
+                    }).toThrow(new Error(("Device does not support toggleOnOff()")));
                 });
             });
             describe('toggleFanDirection()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.toggleFanDirection('0x123456');
-                    }).toThrow("Device does not support toggleFanDirection()");
+                    }).toThrow(new Error(("Device does not support toggleFanDirection()")));
                 });
             });
             describe('setFanDirection()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.setFanDirection('0x123456', 'reverse');
-                    }).toThrow("Device does not support setFanDirection()");
+                    }).toThrow(new Error(("Device does not support setFanDirection()")));
                 });
             });
             describe('toggleLightOnOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.toggleLightOnOff('0x123456');
-                    }).toThrow("Device does not support toggleLightOnOff()");
+                    }).toThrow(new Error(("Device does not support toggleLightOnOff()")));
                 });
             });
             describe('switchLightOn()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.switchLightOn('0x123456');
-                    }).toThrow("Device does not support switchLightOn()");
+                    }).toThrow(new Error(("Device does not support switchLightOn()")));
                 });
             });
             describe('switchLightOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.switchLightOff('0x123456');
-                    }).toThrow("Device does not support switchLightOff()");
+                    }).toThrow(new Error(("Device does not support switchLightOff()")));
                 });
             });
             describe('program()', function () {
@@ -358,7 +358,7 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.confirm('0x123456');
-                    }).toThrow("Device does not support confirm()");
+                    }).toThrow(new Error(("Device does not support confirm()")));
                 });
             });
             describe('eraseAll', function () {
@@ -376,14 +376,14 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.standby('0x1');
-                    }).toThrow("Device does not support standby()");
+                    }).toThrow(new Error(("Device does not support standby()")));
                 });
             });
             describe('resetFilter', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.resetFilter('0x1');
-                    }).toThrow("Device does not support resetFilter()");
+                    }).toThrow(new Error(("Device does not support resetFilter()")));
                 });
             });
         });
@@ -391,7 +391,7 @@ describe('Fan class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     fan.startTimer('0x1234/A');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address value', function (done) {
                 let sentCommandId = NaN;
@@ -414,12 +414,12 @@ describe('Fan class', function () {
             it('should throw an exception with an invalid address 0x1000000', function () {
                 expect(function () {
                     fan.startTimer('0x1000000');
-                }).toThrow("Address 0x1000000 outside valid range");
+                }).toThrow(new Error(("Address 0x1000000 outside valid range")));
             });
             it('should throw an exception with an invalid address 0x0', function () {
                 expect(function () {
                     fan.startTimer('0x0');
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
         });
     });
@@ -432,14 +432,14 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.buttonPress('0x1', 'T2');
-                    }).toThrow("Device does not support buttonPress()");
+                    }).toThrow(new Error(("Device does not support buttonPress()")));
                 });
             });
             describe('setSpeed', function () {
                 it('should throw an exception for speed <0', function () {
                     expect(function () {
                         fan.setSpeed('0x1', -1);
-                    }).toThrow("Invalid speed: value must be in range 0-3");
+                    }).toThrow(new Error(("Invalid speed: value must be in range 0-3")));
                 });
                 it('should send the correct bytes to the serialport for speed 0', function (done) {
                     let sentCommandId = NaN;
@@ -471,21 +471,21 @@ describe('Fan class', function () {
                 it('should throw an exception for speed >3', function () {
                     expect(function () {
                         fan.setSpeed('0x1', 4);
-                    }).toThrow("Invalid speed: value must be in range 0-3");
+                    }).toThrow(new Error(("Invalid speed: value must be in range 0-3")));
                 });
             });
             describe('decreaseSpeed()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.decreaseSpeed('0x1');
-                    }).toThrow("Device does not support decreaseSpeed()");
+                    }).toThrow(new Error(("Device does not support decreaseSpeed()")));
                 });
             });
             describe('increaseSpeed()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.increaseSpeed('0x1');
-                    }).toThrow("Device does not support increaseSpeed()");
+                    }).toThrow(new Error(("Device does not support increaseSpeed()")));
                 });
             });
             describe('switchOff', function () {
@@ -503,28 +503,28 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.startTimer('0x1');
-                    }).toThrow("Device does not support startTimer()");
+                    }).toThrow(new Error(("Device does not support startTimer()")));
                 });
             });
             describe('toggleOnOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.toggleOnOff('0x1');
-                    }).toThrow("Device does not support toggleOnOff()");
+                    }).toThrow(new Error(("Device does not support toggleOnOff()")));
                 });
             });
             describe('toggleFanDirection()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.toggleFanDirection('0x1');
-                    }).toThrow("Device does not support toggleFanDirection()");
+                    }).toThrow(new Error(("Device does not support toggleFanDirection()")));
                 });
             });
             describe('setFanDirection()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.setFanDirection('0x1', 1);
-                    }).toThrow("Device does not support setFanDirection()");
+                    }).toThrow(new Error(("Device does not support setFanDirection()")));
                 });
             });
             describe('toggleLightOnOff()', function () {
@@ -542,49 +542,49 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.switchLightOn('0x1');
-                    }).toThrow("Device does not support switchLightOn()");
+                    }).toThrow(new Error(("Device does not support switchLightOn()")));
                 });
             });
             describe('switchLightOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.switchLightOff('0x1', 1);
-                    }).toThrow("Device does not support switchLightOff()");
+                    }).toThrow(new Error(("Device does not support switchLightOff()")));
                 });
             });
             describe('program()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.program('0x1');
-                    }).toThrow("Device does not support program()");
+                    }).toThrow(new Error(("Device does not support program()")));
                 });
             });
             describe('confirm()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.confirm('0x1');
-                    }).toThrow("Device does not support confirm()");
+                    }).toThrow(new Error(("Device does not support confirm()")));
                 });
             });
             describe('eraseAll', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.eraseAll('0x1');
-                    }).toThrow("Device does not support eraseAll()");
+                    }).toThrow(new Error(("Device does not support eraseAll()")));
                 });
             });
             describe('standby', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.standby('0x1');
-                    }).toThrow("Device does not support standby()");
+                    }).toThrow(new Error(("Device does not support standby()")));
                 });
             });
             describe('resetFilter', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.resetFilter('0x1');
-                    }).toThrow("Device does not support resetFilter()");
+                    }).toThrow(new Error(("Device does not support resetFilter()")));
                 });
             });
         });
@@ -592,7 +592,7 @@ describe('Fan class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     fan.switchOff('0x1/A');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address value', function (done) {
                 let sentCommandId = NaN;
@@ -615,12 +615,12 @@ describe('Fan class', function () {
             it('should throw an exception with an invalid address 0x10', function () {
                 expect(function () {
                     fan.switchOff('0x10');
-                }).toThrow("Address 0x10 outside valid range");
+                }).toThrow(new Error(("Address 0x10 outside valid range")));
             });
             it('should throw an exception with an invalid address -1', function () {
                 expect(function () {
                     fan.switchOff('-1');
-                }).toThrow("Address -0x1 outside valid range");
+                }).toThrow(new Error(("Address -0x1 outside valid range")));
             });
         });
     });
@@ -651,119 +651,119 @@ describe('Fan class', function () {
                 it('should throw an exception for an invalid button', function () {
                     expect(function () {
                         fan.buttonPress('0/10/0010110101/0x5', 'invalid');
-                    }).toThrow("Invalid button 'invalid'");
+                    }).toThrow(new Error(("Invalid button 'invalid'")));
                 });
             });
             describe('setSpeed', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.setSpeed('0/10/0010110101/0x5');
-                    }).toThrow("Device does not support setSpeed()");
+                    }).toThrow(new Error(("Device does not support setSpeed()")));
                 });
             });
             describe('decreaseSpeed()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.decreaseSpeed('0/10/0010110101/0x5');
-                    }).toThrow("Device does not support decreaseSpeed()");
+                    }).toThrow(new Error(("Device does not support decreaseSpeed()")));
                 });
             });
             describe('increaseSpeed()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.increaseSpeed('0/10/0010110101/0x5');
-                    }).toThrow("Device does not support increaseSpeed()");
+                    }).toThrow(new Error(("Device does not support increaseSpeed()")));
                 });
             });
             describe('switchOff', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.switchOff('0/10/0010110101/0x5');
-                    }).toThrow("Device does not support switchOff()");
+                    }).toThrow(new Error(("Device does not support switchOff()")));
                 });
             });
             describe('startTimer()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.startTimer('0/10/0010110101/0x5');
-                    }).toThrow("Device does not support startTimer()");
+                    }).toThrow(new Error(("Device does not support startTimer()")));
                 });
             });
             describe('toggleOnOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.toggleOnOff('0/10/0010110101/0x5');
-                    }).toThrow("Device does not support toggleOnOff()");
+                    }).toThrow(new Error(("Device does not support toggleOnOff()")));
                 });
             });
             describe('toggleFanDirection()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.toggleFanDirection('0/10/0010110101/0x5');
-                    }).toThrow("Device does not support toggleFanDirection()");
+                    }).toThrow(new Error(("Device does not support toggleFanDirection()")));
                 });
             });
             describe('setFanDirection()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.setFanDirection('0/10/0010110101/0x5');
-                    }).toThrow("Device does not support setFanDirection()");
+                    }).toThrow(new Error(("Device does not support setFanDirection()")));
                 });
             });
             describe('toggleLightOnOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.toggleLightOnOff('0/10/0010110101/0x5');
-                    }).toThrow("Device does not support toggleLightOnOff()");
+                    }).toThrow(new Error(("Device does not support toggleLightOnOff()")));
                 });
             });
             describe('switchLightOn()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.switchLightOn('0/10/0010110101/0x5');
-                    }).toThrow("Device does not support switchLightOn()");
+                    }).toThrow(new Error(("Device does not support switchLightOn()")));
                 });
             });
             describe('switchLightOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.switchLightOff('0/10/0010110101/0x5');
-                    }).toThrow("Device does not support switchLightOff()");
+                    }).toThrow(new Error(("Device does not support switchLightOff()")));
                 });
             });
             describe('program()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.program('0/10/0010110101/0x5');
-                    }).toThrow("Device does not support program()");
+                    }).toThrow(new Error(("Device does not support program()")));
                 });
             });
             describe('confirm()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.confirm('0/10/0010110101/0x5');
-                    }).toThrow("Device does not support confirm()");
+                    }).toThrow(new Error(("Device does not support confirm()")));
                 });
             });
             describe('eraseAll', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.eraseAll('0/10/0010110101/0x5');
-                    }).toThrow("Device does not support eraseAll()");
+                    }).toThrow(new Error(("Device does not support eraseAll()")));
                 });
             });
             describe('standby', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.standby('0x1');
-                    }).toThrow("Device does not support standby()");
+                    }).toThrow(new Error(("Device does not support standby()")));
                 });
             });
             describe('resetFilter', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.resetFilter('0x1');
-                    }).toThrow("Device does not support resetFilter()");
+                    }).toThrow(new Error(("Device does not support resetFilter()")));
                 });
             });
         });
@@ -771,7 +771,7 @@ describe('Fan class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     fan.buttonPress('0x1/A', 'T1');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest J, SW1, SW2 and Remote ID values', function (done) {
                 let sentCommandId = NaN;
@@ -794,12 +794,12 @@ describe('Fan class', function () {
             it('should throw an exception with an invalid Remote ID 0x20', function () {
                 expect(function () {
                     fan.buttonPress('1/11/1111111111/0x20', 'T1');
-                }).toThrow("Remote ID 0x20 outside valid range");
+                }).toThrow(new Error(("Remote ID 0x20 outside valid range")));
             });
             it('should throw an exception with an invalid Remote ID -0x1', function () {
                 expect(function () {
                     fan.buttonPress('1/11/1111111111/-0x1', 'T1');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
         });
     });
@@ -812,14 +812,14 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.buttonPress('0x1', 'T2');
-                    }).toThrow("Device does not support buttonPress()");
+                    }).toThrow(new Error(("Device does not support buttonPress()")));
                 });
             });
             describe('setSpeed', function () {
                 it('should throw an exception for speed <0', function () {
                     expect(function () {
                         fan.setSpeed('0x1', -1);
-                    }).toThrow("Invalid speed: value must be in range 0-3");
+                    }).toThrow(new Error(("Invalid speed: value must be in range 0-3")));
                 });
                 it('should send the correct bytes to the serialport for speed 0', function (done) {
                     let sentCommandId = NaN;
@@ -851,21 +851,21 @@ describe('Fan class', function () {
                 it('should throw an exception for speed >3', function () {
                     expect(function () {
                         fan.setSpeed('0x1', 4);
-                    }).toThrow("Invalid speed: value must be in range 0-3");
+                    }).toThrow(new Error(("Invalid speed: value must be in range 0-3")));
                 });
             });
             describe('decreaseSpeed()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.decreaseSpeed('0x1');
-                    }).toThrow("Device does not support decreaseSpeed()");
+                    }).toThrow(new Error(("Device does not support decreaseSpeed()")));
                 });
             });
             describe('increaseSpeed()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.increaseSpeed('0x1');
-                    }).toThrow("Device does not support increaseSpeed()");
+                    }).toThrow(new Error(("Device does not support increaseSpeed()")));
                 });
             });
             describe('switchOff', function () {
@@ -883,28 +883,28 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.startTimer('0x1');
-                    }).toThrow("Device does not support startTimer()");
+                    }).toThrow(new Error(("Device does not support startTimer()")));
                 });
             });
             describe('toggleOnOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.toggleOnOff('0x1');
-                    }).toThrow("Device does not support toggleOnOff()");
+                    }).toThrow(new Error(("Device does not support toggleOnOff()")));
                 });
             });
             describe('toggleFanDirection()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.toggleFanDirection('0x1');
-                    }).toThrow("Device does not support toggleFanDirection()");
+                    }).toThrow(new Error(("Device does not support toggleFanDirection()")));
                 });
             });
             describe('setFanDirection()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.setFanDirection('0x1', 1);
-                    }).toThrow("Device does not support setFanDirection()");
+                    }).toThrow(new Error(("Device does not support setFanDirection()")));
                 });
             });
             describe('toggleLightOnOff()', function () {
@@ -922,49 +922,49 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.switchLightOn('0x1');
-                    }).toThrow("Device does not support switchLightOn()");
+                    }).toThrow(new Error(("Device does not support switchLightOn()")));
                 });
             });
             describe('switchLightOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.switchLightOff('0x1');
-                    }).toThrow("Device does not support switchLightOff()");
+                    }).toThrow(new Error(("Device does not support switchLightOff()")));
                 });
             });
             describe('program()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.program('0x1');
-                    }).toThrow("Device does not support program()");
+                    }).toThrow(new Error(("Device does not support program()")));
                 });
             });
             describe('confirm()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.confirm('0x1');
-                    }).toThrow("Device does not support confirm()");
+                    }).toThrow(new Error(("Device does not support confirm()")));
                 });
             });
             describe('eraseAll', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.eraseAll('0x1');
-                    }).toThrow("Device does not support eraseAll()");
+                    }).toThrow(new Error(("Device does not support eraseAll()")));
                 });
             });
             describe('standby', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.standby('0x1');
-                    }).toThrow("Device does not support standby()");
+                    }).toThrow(new Error(("Device does not support standby()")));
                 });
             });
             describe('resetFilter', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.resetFilter('0x1');
-                    }).toThrow("Device does not support resetFilter()");
+                    }).toThrow(new Error(("Device does not support resetFilter()")));
                 });
             });
         });
@@ -972,7 +972,7 @@ describe('Fan class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     fan.switchOff('0x1/A');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address value', function (done) {
                 let sentCommandId = NaN;
@@ -995,12 +995,12 @@ describe('Fan class', function () {
             it('should throw an exception with an invalid address 0x10', function () {
                 expect(function () {
                     fan.switchOff('0x10');
-                }).toThrow("Address 0x10 outside valid range");
+                }).toThrow(new Error(("Address 0x10 outside valid range")));
             });
             it('should throw an exception with an invalid address -1', function () {
                 expect(function () {
                     fan.switchOff('-1');
-                }).toThrow("Address -0x1 outside valid range");
+                }).toThrow(new Error(("Address -0x1 outside valid range")));
             });
         });
     });
@@ -1013,14 +1013,14 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.buttonPress('0x1', 'T2');
-                    }).toThrow("Device does not support buttonPress()");
+                    }).toThrow(new Error(("Device does not support buttonPress()")));
                 });
             });
             describe('setSpeed', function () {
                 it('should throw an exception for speed 0', function () {
                     expect(function () {
                         fan.setSpeed('0x1', 0);
-                    }).toThrow("Invalid speed: value must be in range 1-6");
+                    }).toThrow(new Error(("Invalid speed: value must be in range 1-6")));
                 });
                 it('should send the correct bytes to the serialport for speed 1', function (done) {
                     let sentCommandId = NaN;
@@ -1061,7 +1061,7 @@ describe('Fan class', function () {
                 it('should throw an exception for speed >6', function () {
                     expect(function () {
                         fan.setSpeed('0x1', 7);
-                    }).toThrow("Invalid speed: value must be in range 1-6");
+                    }).toThrow(new Error(("Invalid speed: value must be in range 1-6")));
                 });
             });
             describe('decreaseSpeed()', function () {
@@ -1090,14 +1090,14 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.switchOff('0x1', 1);
-                    }).toThrow("Device does not support switchOff()");
+                    }).toThrow(new Error(("Device does not support switchOff()")));
                 });
             });
             describe('startTimer()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.startTimer('0x1');
-                    }).toThrow("Device does not support startTimer()");
+                    }).toThrow(new Error(("Device does not support startTimer()")));
                 });
             });
             describe('toggleOnOff()', function () {
@@ -1115,7 +1115,7 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.toggleFanDirection('0x1');
-                    }).toThrow("Device does not support toggleFanDirection()");
+                    }).toThrow(new Error(("Device does not support toggleFanDirection()")));
                 });
             });
             describe('setFanDirection()', function () {
@@ -1153,14 +1153,14 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.switchLightOn('0x1');
-                    }).toThrow("Device does not support switchLightOn()");
+                    }).toThrow(new Error(("Device does not support switchLightOn()")));
                 });
             });
             describe('switchLightOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.switchLightOff('0x1', 1);
-                    }).toThrow("Device does not support switchLightOff()");
+                    }).toThrow(new Error(("Device does not support switchLightOff()")));
                 });
             });
             describe('program()', function () {
@@ -1178,28 +1178,28 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.confirm('0x1');
-                    }).toThrow("Device does not support confirm()");
+                    }).toThrow(new Error(("Device does not support confirm()")));
                 });
             });
             describe('eraseAll', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.eraseAll('0x1');
-                    }).toThrow("Device does not support eraseAll()");
+                    }).toThrow(new Error(("Device does not support eraseAll()")));
                 });
             });
             describe('standby', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.standby('0x1');
-                    }).toThrow("Device does not support standby()");
+                    }).toThrow(new Error(("Device does not support standby()")));
                 });
             });
             describe('resetFilter', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.resetFilter('0x1');
-                    }).toThrow("Device does not support resetFilter()");
+                    }).toThrow(new Error(("Device does not support resetFilter()")));
                 });
             });
         });
@@ -1207,7 +1207,7 @@ describe('Fan class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     fan.toggleLightOnOff('0x1/A');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address value', function (done) {
                 let sentCommandId = NaN;
@@ -1230,12 +1230,12 @@ describe('Fan class', function () {
             it('should throw an exception with an invalid address 0x10', function () {
                 expect(function () {
                     fan.toggleLightOnOff('0x10');
-                }).toThrow("Address 0x10 outside valid range");
+                }).toThrow(new Error(("Address 0x10 outside valid range")));
             });
             it('should throw an exception with an invalid address -1', function () {
                 expect(function () {
                     fan.toggleLightOnOff('-1');
-                }).toThrow("Address -0x1 outside valid range");
+                }).toThrow(new Error(("Address -0x1 outside valid range")));
             });
         });
     });
@@ -1248,14 +1248,14 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.buttonPress('0x1', 'T2');
-                    }).toThrow("Device does not support buttonPress()");
+                    }).toThrow(new Error(("Device does not support buttonPress()")));
                 });
             });
             describe('setSpeed', function () {
                 it('should throw an exception for speed <0', function () {
                     expect(function () {
                         fan.setSpeed('0x1', -1);
-                    }).toThrow("Invalid speed: value must be in range 0-3");
+                    }).toThrow(new Error(("Invalid speed: value must be in range 0-3")));
                 });
                 it('should send the correct bytes to the serialport for speed 0', function (done) {
                     let sentCommandId = NaN;
@@ -1287,21 +1287,21 @@ describe('Fan class', function () {
                 it('should throw an exception for speed >3', function () {
                     expect(function () {
                         fan.setSpeed('0x1', 4);
-                    }).toThrow("Invalid speed: value must be in range 0-3");
+                    }).toThrow(new Error(("Invalid speed: value must be in range 0-3")));
                 });
             });
             describe('decreaseSpeed()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.decreaseSpeed('0x1');
-                    }).toThrow("Device does not support decreaseSpeed()");
+                    }).toThrow(new Error(("Device does not support decreaseSpeed()")));
                 });
             });
             describe('increaseSpeed()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.increaseSpeed('0x1');
-                    }).toThrow("Device does not support increaseSpeed()");
+                    }).toThrow(new Error(("Device does not support increaseSpeed()")));
                 });
             });
             describe('switchOff', function () {
@@ -1319,28 +1319,28 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.startTimer('0x1');
-                    }).toThrow("Device does not support startTimer()");
+                    }).toThrow(new Error(("Device does not support startTimer()")));
                 });
             });
             describe('toggleOnOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.toggleOnOff('0x1');
-                    }).toThrow("Device does not support toggleOnOff()");
+                    }).toThrow(new Error(("Device does not support toggleOnOff()")));
                 });
             });
             describe('toggleFanDirection()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.toggleFanDirection('0x1');
-                    }).toThrow("Device does not support toggleFanDirection()");
+                    }).toThrow(new Error(("Device does not support toggleFanDirection()")));
                 });
             });
             describe('setFanDirection()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.setFanDirection('0x1', 1);
-                    }).toThrow("Device does not support setFanDirection()");
+                    }).toThrow(new Error(("Device does not support setFanDirection()")));
                 });
             });
             describe('toggleLightOnOff()', function () {
@@ -1358,49 +1358,49 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.switchLightOn('0x1');
-                    }).toThrow("Device does not support switchLightOn()");
+                    }).toThrow(new Error(("Device does not support switchLightOn()")));
                 });
             });
             describe('switchLightOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.switchLightOff('0x1', 1);
-                    }).toThrow("Device does not support switchLightOff()");
+                    }).toThrow(new Error(("Device does not support switchLightOff()")));
                 });
             });
             describe('program()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.program('0x1');
-                    }).toThrow("Device does not support program()");
+                    }).toThrow(new Error(("Device does not support program()")));
                 });
             });
             describe('confirm()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.confirm('0x1');
-                    }).toThrow("Device does not support confirm()");
+                    }).toThrow(new Error(("Device does not support confirm()")));
                 });
             });
             describe('eraseAll', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.eraseAll('0x1');
-                    }).toThrow("Device does not support eraseAll()");
+                    }).toThrow(new Error(("Device does not support eraseAll()")));
                 });
             });
             describe('standby', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.standby('0x1');
-                    }).toThrow("Device does not support standby()");
+                    }).toThrow(new Error(("Device does not support standby()")));
                 });
             });
             describe('resetFilter', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.resetFilter('0x1');
-                    }).toThrow("Device does not support resetFilter()");
+                    }).toThrow(new Error(("Device does not support resetFilter()")));
                 });
             });
         });
@@ -1408,7 +1408,7 @@ describe('Fan class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     fan.switchOff('0x1/A');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address value', function (done) {
                 let sentCommandId = NaN;
@@ -1431,12 +1431,12 @@ describe('Fan class', function () {
             it('should throw an exception with an invalid address 0x10', function () {
                 expect(function () {
                     fan.switchOff('0x10');
-                }).toThrow("Address 0x10 outside valid range");
+                }).toThrow(new Error(("Address 0x10 outside valid range")));
             });
             it('should throw an exception with an invalid address -1', function () {
                 expect(function () {
                     fan.switchOff('-1');
-                }).toThrow("Address -0x1 outside valid range");
+                }).toThrow(new Error(("Address -0x1 outside valid range")));
             });
         });
     });
@@ -1449,14 +1449,14 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.buttonPress('0x1', 'T2');
-                    }).toThrow("Device does not support buttonPress()");
+                    }).toThrow(new Error(("Device does not support buttonPress()")));
                 });
             });
             describe('setSpeed', function () {
                 it('should throw an exception for speed <1', function () {
                     expect(function () {
                         fan.setSpeed('0x1', 0);
-                    }).toThrow("Invalid speed: value must be in range 1-5");
+                    }).toThrow(new Error(("Invalid speed: value must be in range 1-5")));
                 });
                 it('should send the correct bytes to the serialport for speed 1', function (done) {
                     let sentCommandId = NaN;
@@ -1488,28 +1488,28 @@ describe('Fan class', function () {
                 it('should throw an exception for speed >5', function () {
                     expect(function () {
                         fan.setSpeed('0x1', 6);
-                    }).toThrow("Invalid speed: value must be in range 1-5");
+                    }).toThrow(new Error(("Invalid speed: value must be in range 1-5")));
                 });
             });
             describe('decreaseSpeed()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.decreaseSpeed('0x1');
-                    }).toThrow("Device does not support decreaseSpeed()");
+                    }).toThrow(new Error(("Device does not support decreaseSpeed()")));
                 });
             });
             describe('increaseSpeed()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.increaseSpeed('0x1');
-                    }).toThrow("Device does not support increaseSpeed()");
+                    }).toThrow(new Error(("Device does not support increaseSpeed()")));
                 });
             });
             describe('switchOff', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.switchOff('0x1');
-                    }).toThrow("Device does not support switchOff()");
+                    }).toThrow(new Error(("Device does not support switchOff()")));
                 });
             });
             describe('startTimer()', function () {
@@ -1543,7 +1543,7 @@ describe('Fan class', function () {
                 it('should throw an exception for an invalid timeout', function () {
                     expect(function () {
                         fan.startTimer('0x1', 99);
-                    }).toThrow("Invalid timer timeout: value must be 1, 4, or 8");
+                    }).toThrow(new Error(("Invalid timer timeout: value must be 1, 4, or 8")));
                 });
             });
             describe('toggleOnOff()', function () {
@@ -1572,7 +1572,7 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.setFanDirection('0x1', 1);
-                    }).toThrow("Device does not support setFanDirection()");
+                    }).toThrow(new Error(("Device does not support setFanDirection()")));
                 });
             });
             describe('toggleLightOnOff()', function () {
@@ -1590,49 +1590,49 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.switchLightOn('0x1');
-                    }).toThrow("Device does not support switchLightOn()");
+                    }).toThrow(new Error(("Device does not support switchLightOn()")));
                 });
             });
             describe('switchLightOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.switchLightOff('0x1', 1);
-                    }).toThrow("Device does not support switchLightOff()");
+                    }).toThrow(new Error(("Device does not support switchLightOff()")));
                 });
             });
             describe('program()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.program('0x1');
-                    }).toThrow("Device does not support program()");
+                    }).toThrow(new Error(("Device does not support program()")));
                 });
             });
             describe('confirm()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.confirm('0x1');
-                    }).toThrow("Device does not support confirm()");
+                    }).toThrow(new Error(("Device does not support confirm()")));
                 });
             });
             describe('eraseAll', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.eraseAll('0x1');
-                    }).toThrow("Device does not support eraseAll()");
+                    }).toThrow(new Error(("Device does not support eraseAll()")));
                 });
             });
             describe('standby', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.standby('0x1');
-                    }).toThrow("Device does not support standby()");
+                    }).toThrow(new Error(("Device does not support standby()")));
                 });
             });
             describe('resetFilter', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.resetFilter('0x1');
-                    }).toThrow("Device does not support resetFilter()");
+                    }).toThrow(new Error(("Device does not support resetFilter()")));
                 });
             });
         });
@@ -1640,7 +1640,7 @@ describe('Fan class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     fan.toggleOnOff('0x1/A');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address value', function (done) {
                 let sentCommandId = NaN;
@@ -1663,12 +1663,12 @@ describe('Fan class', function () {
             it('should throw an exception with an invalid address 0x10000', function () {
                 expect(function () {
                     fan.toggleOnOff('0x10000');
-                }).toThrow("Address 0x10000 outside valid range");
+                }).toThrow(new Error(("Address 0x10000 outside valid range")));
             });
             it('should throw an exception with an invalid address 0x0', function () {
                 expect(function () {
                     fan.toggleOnOff('0x0');
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
         });
     });
@@ -1681,14 +1681,14 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.buttonPress('0x1', 'T2');
-                    }).toThrow("Device does not support buttonPress()");
+                    }).toThrow(new Error(("Device does not support buttonPress()")));
                 });
             });
             describe('setSpeed', function () {
                 it('should throw an exception for speed <0', function () {
                     expect(function () {
                         fan.setSpeed('0x1', -1);
-                    }).toThrow("Invalid speed: value must be in range 0-4");
+                    }).toThrow(new Error(("Invalid speed: value must be in range 0-4")));
                 });
                 it('should send the correct bytes to the serialport for speed 0', function (done) {
                     let sentCommandId = NaN;
@@ -1720,21 +1720,21 @@ describe('Fan class', function () {
                 it('should throw an exception for speed >4', function () {
                     expect(function () {
                         fan.setSpeed('0x1', 5);
-                    }).toThrow("Invalid speed: value must be in range 0-4");
+                    }).toThrow(new Error(("Invalid speed: value must be in range 0-4")));
                 });
             });
             describe('decreaseSpeed()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.decreaseSpeed('0x1');
-                    }).toThrow("Device does not support decreaseSpeed()");
+                    }).toThrow(new Error(("Device does not support decreaseSpeed()")));
                 });
             });
             describe('increaseSpeed()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.increaseSpeed('0x1');
-                    }).toThrow("Device does not support increaseSpeed()");
+                    }).toThrow(new Error(("Device does not support increaseSpeed()")));
                 });
             });
             describe('switchOff', function () {
@@ -1788,35 +1788,35 @@ describe('Fan class', function () {
                 it('should throw an exception for an invalid timeout', function () {
                     expect(function () {
                         fan.startTimer('0x1', 99);
-                    }).toThrow("Invalid timer timeout: value must be in range 1-4");
+                    }).toThrow(new Error(("Invalid timer timeout: value must be in range 1-4")));
                 });
             });
             describe('toggleOnOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.toggleOnOff('0x1', 1);
-                    }).toThrow("Device does not support toggleOnOff()");
+                    }).toThrow(new Error(("Device does not support toggleOnOff()")));
                 });
             });
             describe('toggleFanDirection()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.toggleFanDirection('0x1', 1);
-                    }).toThrow("Device does not support toggleFanDirection()");
+                    }).toThrow(new Error(("Device does not support toggleFanDirection()")));
                 });
             });
             describe('setFanDirection()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.setFanDirection('0x1', 1);
-                    }).toThrow("Device does not support setFanDirection()");
+                    }).toThrow(new Error(("Device does not support setFanDirection()")));
                 });
             });
             describe('toggleLightOnOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.toggleLightOnOff('0x1', 1);
-                    }).toThrow("Device does not support toggleLightOnOff()");
+                    }).toThrow(new Error(("Device does not support toggleLightOnOff()")));
                 });
             });
             describe('switchLightOn()', function () {
@@ -1845,35 +1845,35 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.program('0x1');
-                    }).toThrow("Device does not support program()");
+                    }).toThrow(new Error(("Device does not support program()")));
                 });
             });
             describe('confirm()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.confirm('0x1');
-                    }).toThrow("Device does not support confirm()");
+                    }).toThrow(new Error(("Device does not support confirm()")));
                 });
             });
             describe('eraseAll', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.eraseAll('0x1');
-                    }).toThrow("Device does not support eraseAll()");
+                    }).toThrow(new Error(("Device does not support eraseAll()")));
                 });
             });
             describe('standby', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.standby('0x1');
-                    }).toThrow("Device does not support standby()");
+                    }).toThrow(new Error(("Device does not support standby()")));
                 });
             });
             describe('resetFilter', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.resetFilter('0x1');
-                    }).toThrow("Device does not support resetFilter()");
+                    }).toThrow(new Error(("Device does not support resetFilter()")));
                 });
             });
         });
@@ -1881,7 +1881,7 @@ describe('Fan class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     fan.switchOff('0x1/A');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address value', function (done) {
                 let sentCommandId = NaN;
@@ -1904,12 +1904,12 @@ describe('Fan class', function () {
             it('should throw an exception with an invalid address 0x10', function () {
                 expect(function () {
                     fan.switchOff('0x10');
-                }).toThrow("Address 0x10 outside valid range");
+                }).toThrow(new Error(("Address 0x10 outside valid range")));
             });
             it('should throw an exception with an invalid address -1', function () {
                 expect(function () {
                     fan.switchOff('-1');
-                }).toThrow("Address -0x1 outside valid range");
+                }).toThrow(new Error(("Address -0x1 outside valid range")));
             });
         });
     });
@@ -1922,14 +1922,14 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.buttonPress('0x1', 'T2');
-                    }).toThrow("Device does not support buttonPress()");
+                    }).toThrow(new Error(("Device does not support buttonPress()")));
                 });
             });
             describe('setSpeed', function () {
                 it('should throw an exception for speed <0', function () {
                     expect(function () {
                         fan.setSpeed('0x1', -1);
-                    }).toThrow("Invalid speed: value must be in range 0-6");
+                    }).toThrow(new Error(("Invalid speed: value must be in range 0-6")));
                 });
                 it('should send the correct bytes to the serialport for speed 0', function (done) {
                     let sentCommandId = NaN;
@@ -1970,21 +1970,21 @@ describe('Fan class', function () {
                 it('should throw an exception for speed >6', function () {
                     expect(function () {
                         fan.setSpeed('0x1', 7);
-                    }).toThrow("Invalid speed: value must be in range 0-6");
+                    }).toThrow(new Error(("Invalid speed: value must be in range 0-6")));
                 });
             });
             describe('decreaseSpeed()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.decreaseSpeed('0x1');
-                    }).toThrow("Device does not support decreaseSpeed()");
+                    }).toThrow(new Error(("Device does not support decreaseSpeed()")));
                 });
             });
             describe('increaseSpeed()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.increaseSpeed('0x1');
-                    }).toThrow("Device does not support increaseSpeed()");
+                    }).toThrow(new Error(("Device does not support increaseSpeed()")));
                 });
             });
             describe('switchOff', function () {
@@ -2002,14 +2002,14 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.startTimer('0x1', 1);
-                    }).toThrow("Device does not support startTimer()");
+                    }).toThrow(new Error(("Device does not support startTimer()")));
                 });
             });
             describe('toggleOnOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.toggleOnOff('0x1', 1);
-                    }).toThrow("Device does not support toggleOnOff()");
+                    }).toThrow(new Error(("Device does not support toggleOnOff()")));
                 });
             });
             describe('toggleFanDirection()', function () {
@@ -2027,7 +2027,7 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.setFanDirection('0x1', 1);
-                    }).toThrow("Device does not support setFanDirection()");
+                    }).toThrow(new Error(("Device does not support setFanDirection()")));
                 });
             });
             describe('toggleLightOnOff()', function () {
@@ -2045,49 +2045,49 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.switchLightOn('0x1', 1);
-                    }).toThrow("Device does not support switchLightOn()");
+                    }).toThrow(new Error(("Device does not support switchLightOn()")));
                 });
             });
             describe('switchLightOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.switchLightOff('0x1', 1);
-                    }).toThrow("Device does not support switchLightOff()");
+                    }).toThrow(new Error(("Device does not support switchLightOff()")));
                 });
             });
             describe('program()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.program('0x1');
-                    }).toThrow("Device does not support program()");
+                    }).toThrow(new Error(("Device does not support program()")));
                 });
             });
             describe('confirm()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.confirm('0x1');
-                    }).toThrow("Device does not support confirm()");
+                    }).toThrow(new Error(("Device does not support confirm()")));
                 });
             });
             describe('eraseAll', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.eraseAll('0x1');
-                    }).toThrow("Device does not support eraseAll()");
+                    }).toThrow(new Error(("Device does not support eraseAll()")));
                 });
             });
             describe('standby', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.standby('0x1');
-                    }).toThrow("Device does not support standby()");
+                    }).toThrow(new Error(("Device does not support standby()")));
                 });
             });
             describe('resetFilter', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.resetFilter('0x1');
-                    }).toThrow("Device does not support resetFilter()");
+                    }).toThrow(new Error(("Device does not support resetFilter()")));
                 });
             });
         });
@@ -2095,7 +2095,7 @@ describe('Fan class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     fan.switchOff('0x1/A');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address value', function (done) {
                 let sentCommandId = NaN;
@@ -2118,12 +2118,12 @@ describe('Fan class', function () {
             it('should throw an exception with an invalid address 0x10', function () {
                 expect(function () {
                     fan.switchOff('0x10');
-                }).toThrow("Address 0x10 outside valid range");
+                }).toThrow(new Error(("Address 0x10 outside valid range")));
             });
             it('should throw an exception with an invalid address -1', function () {
                 expect(function () {
                     fan.switchOff('-1');
-                }).toThrow("Address -0x1 outside valid range");
+                }).toThrow(new Error(("Address -0x1 outside valid range")));
             });
         });
     });
@@ -2136,14 +2136,14 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.buttonPress('0x123456', 'T2');
-                    }).toThrow("Device does not support buttonPress()");
+                    }).toThrow(new Error(("Device does not support buttonPress()")));
                 });
             });
             describe('setSpeed', function () {
                 it('should throw an exception for speed 0', function () {
                     expect(function () {
                         fan.setSpeed('0x123456', 0);
-                    }).toThrow("Invalid speed: value must be in range 1-4");
+                    }).toThrow(new Error(("Invalid speed: value must be in range 1-4")));
                 });
                 it('should send the correct bytes to the serialport for speed 1', function (done) {
                     let sentCommandId = NaN;
@@ -2184,28 +2184,28 @@ describe('Fan class', function () {
                 it('should throw an exception for speed >4', function () {
                     expect(function () {
                         fan.setSpeed('0x123456', 5);
-                    }).toThrow("Invalid speed: value must be in range 1-4");
+                    }).toThrow(new Error(("Invalid speed: value must be in range 1-4")));
                 });
             });
             describe('decreaseSpeed()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.decreaseSpeed('0x123456');
-                    }).toThrow("Device does not support decreaseSpeed()");
+                    }).toThrow(new Error(("Device does not support decreaseSpeed()")));
                 });
             });
             describe('increaseSpeed()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.increaseSpeed('0x123456');
-                    }).toThrow("Device does not support increaseSpeed()");
+                    }).toThrow(new Error(("Device does not support increaseSpeed()")));
                 });
             });
             describe('switchOff', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.switchOff('0x123456');
-                    }).toThrow("Device does not support switchOff()");
+                    }).toThrow(new Error(("Device does not support switchOff()")));
                 });
             });
             describe('startTimer()', function () {
@@ -2239,49 +2239,49 @@ describe('Fan class', function () {
                 it('should throw an exception with an invalid timeout', function () {
                     expect(function () {
                         fan.startTimer('0x123456', 4);
-                    }).toThrow("Invalid timer timeout: value must be in range 1-3");
+                    }).toThrow(new Error(("Invalid timer timeout: value must be in range 1-3")));
                 });
             });
             describe('toggleOnOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.toggleOnOff('0x123456');
-                    }).toThrow("Device does not support toggleOnOff()");
+                    }).toThrow(new Error(("Device does not support toggleOnOff()")));
                 });
             });
             describe('toggleFanDirection()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.toggleFanDirection('0x123456');
-                    }).toThrow("Device does not support toggleFanDirection()");
+                    }).toThrow(new Error(("Device does not support toggleFanDirection()")));
                 });
             });
             describe('setFanDirection()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.setFanDirection('0x123456', 'reverse');
-                    }).toThrow("Device does not support setFanDirection()");
+                    }).toThrow(new Error(("Device does not support setFanDirection()")));
                 });
             });
             describe('toggleLightOnOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.toggleLightOnOff('0x123456');
-                    }).toThrow("Device does not support toggleLightOnOff()");
+                    }).toThrow(new Error(("Device does not support toggleLightOnOff()")));
                 });
             });
             describe('switchLightOn()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.switchLightOn('0x123456');
-                    }).toThrow("Device does not support switchLightOn()");
+                    }).toThrow(new Error(("Device does not support switchLightOn()")));
                 });
             });
             describe('switchLightOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.switchLightOff('0x123456');
-                    }).toThrow("Device does not support switchLightOff()");
+                    }).toThrow(new Error(("Device does not support switchLightOff()")));
                 });
             });
             describe('program()', function () {
@@ -2299,7 +2299,7 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.confirm('0x123456');
-                    }).toThrow("Device does not support confirm()");
+                    }).toThrow(new Error(("Device does not support confirm()")));
                 });
             });
             describe('eraseAll', function () {
@@ -2328,7 +2328,7 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.resetFilter('0x1');
-                    }).toThrow("Device does not support resetFilter()");
+                    }).toThrow(new Error(("Device does not support resetFilter()")));
                 });
             });
         });
@@ -2336,7 +2336,7 @@ describe('Fan class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     fan.startTimer('0x1234/A');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address value', function (done) {
                 let sentCommandId = NaN;
@@ -2359,12 +2359,12 @@ describe('Fan class', function () {
             it('should throw an exception with an invalid address 0x1000000', function () {
                 expect(function () {
                     fan.startTimer('0x1000000');
-                }).toThrow("Address 0x1000000 outside valid range");
+                }).toThrow(new Error(("Address 0x1000000 outside valid range")));
             });
             it('should throw an exception with an invalid address 0x0', function () {
                 expect(function () {
                     fan.startTimer('0x0');
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
         });
     });
@@ -2377,14 +2377,14 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.buttonPress('0x1', 'T2');
-                    }).toThrow("Device does not support buttonPress()");
+                    }).toThrow(new Error(("Device does not support buttonPress()")));
                 });
             });
             describe('setSpeed', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.setSpeed('0x1', 1);
-                    }).toThrow("Device does not support setSpeed()");
+                    }).toThrow(new Error(("Device does not support setSpeed()")));
                 });
             });
             describe('decreaseSpeed()', function () {
@@ -2413,14 +2413,14 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.switchOff('0x1', 1);
-                    }).toThrow("Device does not support switchOff()");
+                    }).toThrow(new Error(("Device does not support switchOff()")));
                 });
             });
             describe('startTimer()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.startTimer('0x1');
-                    }).toThrow("Device does not support startTimer()");
+                    }).toThrow(new Error(("Device does not support startTimer()")));
                 });
             });
             describe('toggleOnOff()', function () {
@@ -2438,14 +2438,14 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.toggleFanDirection('0x1');
-                    }).toThrow("Device does not support toggleFanDirection()");
+                    }).toThrow(new Error(("Device does not support toggleFanDirection()")));
                 });
             });
             describe('setFanDirection()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.setFanDirection('0x1', 0);
-                    }).toThrow("Device does not support setFanDirection()");
+                    }).toThrow(new Error(("Device does not support setFanDirection()")));
                 });
             });
             describe('toggleLightOnOff()', function () {
@@ -2463,14 +2463,14 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.switchLightOn('0x1');
-                    }).toThrow("Device does not support switchLightOn()");
+                    }).toThrow(new Error(("Device does not support switchLightOn()")));
                 });
             });
             describe('switchLightOff()', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.switchLightOff('0x1', 1);
-                    }).toThrow("Device does not support switchLightOff()");
+                    }).toThrow(new Error(("Device does not support switchLightOff()")));
                 });
             });
             describe('program()', function () {
@@ -2488,21 +2488,21 @@ describe('Fan class', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.confirm('0x1');
-                    }).toThrow("Device does not support confirm()");
+                    }).toThrow(new Error(("Device does not support confirm()")));
                 });
             });
             describe('eraseAll', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.eraseAll('0x1');
-                    }).toThrow("Device does not support eraseAll()");
+                    }).toThrow(new Error(("Device does not support eraseAll()")));
                 });
             });
             describe('standby', function () {
                 it('should throw an unsupported command exception', function () {
                     expect(function () {
                         fan.standby('0x1');
-                    }).toThrow("Device does not support standby()");
+                    }).toThrow(new Error(("Device does not support standby()")));
                 });
             });
             describe('resetFilter()', function () {
@@ -2521,7 +2521,7 @@ describe('Fan class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     fan.toggleLightOnOff('0x1/A');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should accept the highest address value', function (done) {
                 let sentCommandId = NaN;
@@ -2544,12 +2544,12 @@ describe('Fan class', function () {
             it('should throw an exception with an invalid address 0xa', function () {
                 expect(function () {
                     fan.toggleLightOnOff('0xa');
-                }).toThrow("Address 0xa outside valid range");
+                }).toThrow(new Error(("Address 0xa outside valid range")));
             });
             it('should throw an exception with an invalid address -1', function () {
                 expect(function () {
                     fan.toggleLightOnOff('-1');
-                }).toThrow("Address -0x1 outside valid range");
+                }).toThrow(new Error(("Address -0x1 outside valid range")));
             });
         });
     });

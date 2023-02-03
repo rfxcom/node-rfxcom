@@ -11,7 +11,7 @@ describe('Rfy class', function () {
         fakeSerialPort,
         device;
     beforeEach(function () {
-        this.addMatchers({
+        jasmine.addMatchers({
             toHaveSent: matchers.toHaveSent
         });
         fakeSerialPort = new FakeSerialPort();
@@ -56,12 +56,12 @@ describe('Rfy class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     rfy.stop('01020301');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should throw an exception with an address less than the minimum allowed', function () {
                 expect(function () {
                     rfy.stop('0x0/1');
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
             it('should accept the lowest valid address', function (done) {
                 let sentCommandId = NaN;
@@ -84,7 +84,7 @@ describe('Rfy class', function () {
             it('should throw an exception with an address greater than the maximum allowed', function () {
                 expect(function () {
                     rfy.stop('0x100000/1');
-                }).toThrow("Address 0x100000 outside valid range");
+                }).toThrow(new Error(("Address 0x100000 outside valid range")));
             });
             it('should accept the lowest valid unit code', function (done) {
                 let sentCommandId = NaN;
@@ -107,7 +107,7 @@ describe('Rfy class', function () {
             it('should throw an exception with an invalid unit code', function () {
                 expect(function () {
                     rfy.stop('0x010203/5');
-                }).toThrow("Invalid unit code 5");
+                }).toThrow(new Error(("Invalid unit code 5")));
             });
         });
         describe('up()', function () {
@@ -516,12 +516,12 @@ describe('Rfy class', function () {
             it('should throw an exception with an invalid command string', function () {
                 expect(function () {
                     rfy.doCommand('0x010203/5', "INVALID_COMMAND");
-                }).toThrow("Unknown command 'INVALID_COMMAND'");
+                }).toThrow(new Error(("Unknown command 'INVALID_COMMAND'")));
             });
             it('should throw an exception with an invalid command number', function () {
                 expect(function () {
                     rfy.doCommand('0x010203/5', -1);
-                }).toThrow("Invalid command number -1");
+                }).toThrow(new Error(("Invalid command number -1")));
             });
             it('should send the correct bytes to the serialport', function (done) {
                 let sentCommandId = NaN;
@@ -553,7 +553,7 @@ describe('Rfy class', function () {
             it('should throw an exception with an invalid command number', function () {
                 expect(function () {
                     rfy.doCommand('0x010203/5', 0x15);
-                }).toThrow("Invalid command number 21");
+                }).toThrow(new Error(("Invalid command number 21")));
             });
         });
     });
@@ -591,12 +591,12 @@ describe('Rfy class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     rfy.stop('01020301');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should throw an exception with an address less than the minimum allowed', function () {
                 expect(function () {
                     rfy.stop('0x0/1');
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
             it('should accept the lowest valid address', function (done) {
                 let sentCommandId = NaN;
@@ -619,7 +619,7 @@ describe('Rfy class', function () {
             it('should throw an exception with an address greater than the maximum allowed', function () {
                 expect(function () {
                     rfy.stop('0x100000/1');
-                }).toThrow("Address 0x100000 outside valid range");
+                }).toThrow(new Error(("Address 0x100000 outside valid range")));
             });
             it('should accept the lowest valid unit code', function (done) {
                 let sentCommandId = NaN;
@@ -642,7 +642,7 @@ describe('Rfy class', function () {
             it('should throw an exception with an invalid unit code', function () {
                 expect(function () {
                     rfy.stop('0x010203/0x10');
-                }).toThrow("Invalid unit code 0x10");
+                }).toThrow(new Error(("Invalid unit code 0x10")));
             });
         });
         describe('up()', function () {
@@ -1051,12 +1051,12 @@ describe('Rfy class', function () {
             it('should throw an exception with an invalid command string', function () {
                 expect(function () {
                     rfy.doCommand('0x010203/5', "INVALID_COMMAND");
-                }).toThrow("Unknown command 'INVALID_COMMAND'");
+                }).toThrow(new Error(("Unknown command 'INVALID_COMMAND'")));
             });
             it('should throw an exception with an invalid command number', function () {
                 expect(function () {
                     rfy.doCommand('0x010203/5', -1);
-                }).toThrow("Invalid command number -1");
+                }).toThrow(new Error(("Invalid command number -1")));
             });
             it('should send the correct bytes to the serialport', function (done) {
                 let sentCommandId = NaN;
@@ -1088,7 +1088,7 @@ describe('Rfy class', function () {
             it('should throw an exception with an invalid command number', function () {
                 expect(function () {
                     rfy.doCommand('0x010203/5', 0x15);
-                }).toThrow("Invalid command number 21");
+                }).toThrow(new Error(("Invalid command number 21")));
             });
         });
     });
@@ -1099,7 +1099,7 @@ describe('Rfy class', function () {
         it('should throw an exception for any command', function () {
             expect(function () {
                 rfy.stop('0x010203/02');
-            }).toThrow("RFY subtype GEOM no longer supported");
+            }).toThrow(new Error(("RFY subtype GEOM no longer supported")));
         });
     });
     describe("subtype ASA", function () {
@@ -1136,12 +1136,12 @@ describe('Rfy class', function () {
             it('should throw an exception with an invalid deviceId format', function () {
                 expect(function () {
                     rfy.stop('01020301');
-                }).toThrow("Invalid deviceId format");
+                }).toThrow(new Error(("Invalid deviceId format")));
             });
             it('should throw an exception with an address less than the minimum allowed', function () {
                 expect(function () {
                     rfy.stop('0x0/1');
-                }).toThrow("Address 0x0 outside valid range");
+                }).toThrow(new Error(("Address 0x0 outside valid range")));
             });
             it('should accept the lowest valid address', function (done) {
                 let sentCommandId = NaN;
@@ -1164,12 +1164,12 @@ describe('Rfy class', function () {
             it('should throw an exception with an address greater than the maximum allowed', function () {
                 expect(function () {
                     rfy.stop('0x100000/1');
-                }).toThrow("Address 0x100000 outside valid range");
+                }).toThrow(new Error(("Address 0x100000 outside valid range")));
             });
             it('should throw an exception with a unit code less than the minimum allowed', function () {
                 expect(function () {
                     rfy.stop('0x010203/0');
-                }).toThrow("Invalid unit code 0");
+                }).toThrow(new Error(("Invalid unit code 0")));
             });
             it('should accept the lowest valid unit code', function (done) {
                 let sentCommandId = NaN;
@@ -1192,7 +1192,7 @@ describe('Rfy class', function () {
             it('should throw an exception with an invalid unit code', function () {
                 expect(function () {
                     rfy.stop('0x010203/0x6');
-                }).toThrow("Invalid unit code 0x6");
+                }).toThrow(new Error(("Invalid unit code 0x6")));
             });
         });
         describe('up()', function () {
@@ -1287,28 +1287,28 @@ describe('Rfy class', function () {
                 it('should throw an exception', function () {
                     expect(function () {
                         rfy.venetianOpen('0x010203/01');
-                    }).toThrow("ASA: Venetian blinds commands not supported");
+                    }).toThrow(new Error(("ASA: Venetian blinds commands not supported")));
                 });
             });
             describe('venetianClose()', function () {
                 it('should throw an exception', function () {
                     expect(function () {
                         rfy.venetianClose('0x010203/01');
-                    }).toThrow("ASA: Venetian blinds commands not supported");
+                    }).toThrow(new Error(("ASA: Venetian blinds commands not supported")));
                 });
             });
             describe('venetianIncreaseAngle()', function () {
                 it('should throw an exception', function () {
                     expect(function () {
                         rfy.venetianIncreaseAngle('0x010203/01');
-                    }).toThrow("ASA: Venetian blinds commands not supported");
+                    }).toThrow(new Error(("ASA: Venetian blinds commands not supported")));
                 });
             });
             describe('venetianDecreaseAngle()', function () {
                 it('should throw an exception', function () {
                     expect(function () {
                         rfy.venetianDecreaseAngle('0x010203/01');
-                    }).toThrow("ASA: Venetian blinds commands not supported");
+                    }).toThrow(new Error(("ASA: Venetian blinds commands not supported")));
                 });
             });
         });
@@ -1320,28 +1320,28 @@ describe('Rfy class', function () {
                 it('should throw an exception', function () {
                     expect(function () {
                         rfy.venetianOpen('0x010203/01');
-                    }).toThrow("ASA: Venetian blinds commands not supported");
+                    }).toThrow(new Error(("ASA: Venetian blinds commands not supported")));
                 });
             });
             describe('venetianClose()', function () {
                 it('should throw an exception', function () {
                     expect(function () {
                         rfy.venetianClose('0x010203/01');
-                    }).toThrow("ASA: Venetian blinds commands not supported");
+                    }).toThrow(new Error(("ASA: Venetian blinds commands not supported")));
                 });
             });
             describe('venetianIncreaseAngle()', function () {
                 it('should throw an exception', function () {
                     expect(function () {
                         rfy.venetianIncreaseAngle('0x010203/01');
-                    }).toThrow("ASA: Venetian blinds commands not supported");
+                    }).toThrow(new Error(("ASA: Venetian blinds commands not supported")));
                 });
             });
             describe('venetianDecreaseAngle()', function () {
                 it('should throw an exception', function () {
                     expect(function () {
                         rfy.venetianDecreaseAngle('0x010203/01');
-                    }).toThrow("ASA: Venetian blinds commands not supported");
+                    }).toThrow(new Error(("ASA: Venetian blinds commands not supported")));
                 });
             });
         });
@@ -1569,12 +1569,12 @@ describe('Rfy class', function () {
             it('should throw an exception with an invalid command string', function () {
                 expect(function () {
                     rfy.doCommand('0x010203/5', "INVALID_COMMAND");
-                }).toThrow("Unknown command 'INVALID_COMMAND'");
+                }).toThrow(new Error(("Unknown command 'INVALID_COMMAND'")));
             });
             it('should throw an exception with an invalid command number', function () {
                 expect(function () {
                     rfy.doCommand('0x010203/5', -1);
-                }).toThrow("Invalid command number -1");
+                }).toThrow(new Error(("Invalid command number -1")));
             });
             it('should send the correct bytes to the serialport', function (done) {
                 let sentCommandId = NaN;
@@ -1606,7 +1606,7 @@ describe('Rfy class', function () {
             it('should throw an exception with an invalid command number', function () {
                 expect(function () {
                     rfy.doCommand('0x010203/5', 0x15);
-                }).toThrow("Invalid command number 21");
+                }).toThrow(new Error(("Invalid command number 21")));
             });
         });
     });

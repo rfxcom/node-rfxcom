@@ -6,7 +6,7 @@ const rfxcom = require('../lib'),
 
 describe("RfxCom", function() {
     beforeEach(function() {
-        this.addMatchers({
+        jasmine.addMatchers({
             toHaveSent: matchers.toHaveSent
         });
     });
@@ -134,7 +134,7 @@ describe("RfxCom", function() {
                 device.open();
                 device.parser.emit("data", [0x0b, 0x15, 0x00, 0x00, 0xF0, 0x9A, 0x42, 0x00, 0x03, 0x00, 0x00, 0x00]);
             });
-            it("should emit a chime1 event when it receives message type 0x16", function (done) {
+            it("should emit a chime1 event when it receives message type 0x16 (old style)", function (done) {
                 const fakeSerialPort = new FakeSerialPort(),
                     device = new rfxcom.RfxCom("/", {
                         port: fakeSerialPort
@@ -143,10 +143,30 @@ describe("RfxCom", function() {
                     expect(packetType).toBe(0x16);
                     expect(this.packetNames[packetType]).toEqual("chime1");
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["Byron SX"]);
+                    expect(evt.id).toBe("0xFF")
+                    expect(evt.commandNumber).toBe(13)
+                    expect(evt.command).toBe("Tubular 3 notes")
+                    expect(evt.rssi).toBe(3)
                     done();
                 });
                 device.open();
                 device.parser.emit("data", [0x07, 0x16, 0x00, 0x00, 0x00, 0xff, 0x0d, 0x30]);
+            });
+            it("should emit a chime1 event when it receives message type 0x16 (new style)", function (done) {
+                const fakeSerialPort = new FakeSerialPort(),
+                    device = new rfxcom.RfxCom("/", {
+                        port: fakeSerialPort
+                    });
+                device.on("chime1", function (evt, packetType) {
+                    expect(packetType).toBe(0x16);
+                    expect(this.packetNames[packetType]).toEqual("chime1");
+                    expect(this.deviceNames[packetType][evt.subtype]).toEqual(["Byron DBY"]);
+                    expect(evt.id).toBe("0x00FF0D01")
+                    expect(evt.rssi).toBe(6)
+                    done();
+                });
+                device.open();
+                device.parser.emit("data", [0x08, 0x16, 0x07, 0x00, 0x00, 0xff, 0x0d, 0x01, 0x60]);
             });
             it("should emit a blinds1 event when it receives message type 0x19", function (done) {
                 const fakeSerialPort = new FakeSerialPort(),
@@ -516,6 +536,20 @@ describe("RfxCom", function() {
                 device.open();
                 device.parser.emit("data", [0x0A, 0x71, 0x00, 0x37, 0x08, 0xF8, 0x00, 0x8A, 0x64, 0x67, 0x70]);
             });
+            it("should emit a waterlevel event when it receives message type 0x73", function(done) {
+                const fakeSerialPort = new FakeSerialPort(),
+                    device = new rfxcom.RfxCom("/", {
+                        port: fakeSerialPort
+                    });
+                device.on("waterlevel", function (evt, packetType) {
+                    expect(packetType).toBe(0x73);
+                    expect(this.packetNames[packetType]).toEqual("waterlevel");
+                    expect(this.deviceNames[packetType][evt.subtype]).toEqual(["TS FT002"]);
+                    done();
+                });
+                device.open();
+                device.parser.emit("data", [0x0D, 0x73, 0x00, 0x2A, 0x12, 0x34, 0x00, 0x01, 0xF4, 0x01, 0x5f, 0x00, 0x00, 0x73]);
+            });
         });
         describe(".initialise function", function () {
             it("should emit a 'connectfailed' event if the serial port device file does not exist", function (done) {
@@ -536,22 +570,25 @@ describe("RfxCom", function() {
                         device = new rfxcom.RfxCom("/dev/ttyUSB0", {
                             port: fakeSerialPort
                         });
-                        jasmine.Clock.useMock(); // There is a 500ms Timeout in the initialisation code, we must mock it
+                        jasmine.clock().install(); // There is a 500ms Timeout in the initialisation code, we must mock it
                     });
+                afterEach(function () {
+                    jasmine.clock().uninstall()
+                })
                 it("should prepare the device for use.", function (done) {
                     const
-                        resetSpy = spyOn(device, "resetRFX").andCallThrough(),
-                        flushSpy = spyOn(device, "flush").andCallThrough(),
-                        getStatusSpy = spyOn(device, "getRFXStatus").andCallFake(function () {
+                        resetSpy = spyOn(device, "resetRFX").and.callThrough(),
+                        flushSpy = spyOn(device, "flush").and.callThrough(),
+                        getStatusSpy = spyOn(device, "getRFXStatus").and.callFake(function () {
                             device.statusMessageHandler([0x00, 0x01, 0x02, 0x53, 0x5E, 0x08, 0x02, 0x25, 0x00, 0x01, 0x01, 0x1C])
                         }),
-                        openSpy = spyOn(device, "open").andCallFake(function () {
+                        openSpy = spyOn(device, "open").and.callFake(function () {
                             device.connected = true;
                             device.emit("ready");
                         });
 
                     device.initialise(() => { done() });
-                    jasmine.Clock.tick(501);
+                    jasmine.clock().tick(501);
                     expect(resetSpy).toHaveBeenCalled();
                     // noinspection JSCheckFunctionSignatures
                     expect(flushSpy).toHaveBeenCalledWith(jasmine.any(Function));
@@ -561,23 +598,23 @@ describe("RfxCom", function() {
                 });
                 it("should prepare the device for use (current firmware).", function (done) {
                     const
-                        resetSpy = spyOn(device, "resetRFX").andCallThrough(),
-                        flushSpy = spyOn(device, "flush").andCallThrough(),
-                        startRxSpy = spyOn(device, "startRFXReceiver").andCallFake(function () {
+                        resetSpy = spyOn(device, "resetRFX").and.callThrough(),
+                        flushSpy = spyOn(device, "flush").and.callThrough(),
+                        startRxSpy = spyOn(device, "startRFXReceiver").and.callFake(function () {
                             device.statusMessageHandler([0x07, 0x02, 0x07, 0x43, 0x6F, 0x70, 0x79, 0x72, 0x69, 0x67, 0x68,
                                 0x74, 0x20, 0x52, 0x46, 0x58, 0x43, 0x4F, 0x4D])
                         }),
-                        getStatusSpy = spyOn(device, "getRFXStatus").andCallFake(function () {
+                        getStatusSpy = spyOn(device, "getRFXStatus").and.callFake(function () {
                             device.statusMessageHandler([0x00, 0x01, 0x02, 0x53, 0x5E, 0x08, 0x02, 0x25, 0x00, 0x01, 0x01,
                                 0x1C, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
                         }),
-                        openSpy = spyOn(device, "open").andCallFake(function () {
+                        openSpy = spyOn(device, "open").and.callFake(function () {
                             device.connected = true;
                             device.emit("ready");
                         });
 
                     device.initialise(() => { done() });
-                    jasmine.Clock.tick(501);
+                    jasmine.clock().tick(501);
                     expect(resetSpy).toHaveBeenCalled();
                     // noinspection JSCheckFunctionSignatures
                     expect(flushSpy).toHaveBeenCalledWith(jasmine.any(Function));
@@ -1251,7 +1288,7 @@ describe("RfxCom", function() {
             beforeEach(function() {
                 device = new rfxcom.RfxCom("/dev/ttyUSB0");
             });
-            it("should emit a chime1 message when called", function(done) {
+            it("should emit a chime1 message when called (old style)", function(done) {
                 device.on("chime1", function(evt) {
                     expect(evt.subtype).toBe(0);
                     expect(evt.id).toBe("0x9A");
@@ -1263,7 +1300,19 @@ describe("RfxCom", function() {
                 });
                 device.chimeHandler([0x00, 0x01, 0x00, 0x9A, 0x03, 0x10], packetType);
             });
-            it("should handle long ID devices", function(done) {
+            it("should emit a chime1 message when called (new style)", function(done) {
+                device.on("chime1", function(evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0x9A");
+                    expect(evt.command).toBe("Big Ben");
+                    expect(evt.commandNumber).toBe(3);
+                    expect(evt.seqnbr).toBe(1);
+                    expect(evt.rssi).toBe(1);
+                    done();
+                });
+                device.chimeHandler([0x00, 0x01, 0x00, 0x9A, 0x03, 0x00, 0x10], packetType);
+            });
+            it("should handle long ID devices (old style)", function(done) {
                 device.on("chime1", function(evt) {
                     expect(evt.subtype).toBe(2);
                     expect(evt.id).toBe("0x03FFFF");
@@ -1275,7 +1324,19 @@ describe("RfxCom", function() {
                 });
                 device.chimeHandler([0x02, 0x02, 0x03, 0xFF, 0xFF, 0x20], packetType);
             });
-            it("should handle long ID devices", function(done) {
+            it("should handle long ID devices (new style)", function(done) {
+                device.on("chime1", function(evt) {
+                    expect(evt.subtype).toBe(2);
+                    expect(evt.id).toBe("0x03FFFF");
+                    expect(evt.command).toBeUndefined();
+                    expect(evt.commandNumber).toBeUndefined();
+                    expect(evt.seqnbr).toBe(2);
+                    expect(evt.rssi).toBe(2);
+                    done();
+                });
+                device.chimeHandler([0x02, 0x02, 0x03, 0xFF, 0xFF, 0x00, 0x20], packetType);
+            });
+            it("should handle long ID devices (old style)", function(done) {
                 device.on("chime1", function(evt) {
                     expect(evt.subtype).toBe(4);
                     expect(evt.id).toBe("0xFFFFFF");
@@ -1287,7 +1348,19 @@ describe("RfxCom", function() {
                 });
                 device.chimeHandler([0x04, 0x04, 0xFF, 0xFF, 0xFF, 0x80], packetType);
             });
-            it("should handle BYRON_MP001 devices", function(done) {
+            it("should handle long ID devices (new style)", function(done) {
+                device.on("chime1", function(evt) {
+                    expect(evt.subtype).toBe(4);
+                    expect(evt.id).toBe("0xFFFFFF");
+                    expect(evt.command).toBeUndefined();
+                    expect(evt.commandNumber).toBeUndefined();
+                    expect(evt.seqnbr).toBe(4);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.chimeHandler([0x04, 0x04, 0xFF, 0xFF, 0xFF, 0x00, 0x80], packetType);
+            });
+            it("should handle BYRON_MP001 devices (old style)", function(done) {
                 device.on("chime1", function(evt) {
                     expect(evt.subtype).toBe(1);
                     expect(evt.id).toBe("101000");
@@ -1299,7 +1372,19 @@ describe("RfxCom", function() {
                 });
                 device.chimeHandler([0x01, 0x05, 0x11, 0x5F, 0x54, 0x40], packetType);
             });
-            it("should handle BYRON_BY devices", function(done) {
+            it("should handle BYRON_MP001 devices (new style)", function(done) {
+                device.on("chime1", function(evt) {
+                    expect(evt.subtype).toBe(1);
+                    expect(evt.id).toBe("101000");
+                    expect(evt.command).toBeUndefined();
+                    expect(evt.commandNumber).toBeUndefined();
+                    expect(evt.seqnbr).toBe(5);
+                    expect(evt.rssi).toBe(4);
+                    done();
+                });
+                device.chimeHandler([0x01, 0x05, 0x11, 0x5F, 0x54, 0x00, 0x40], packetType);
+            });
+            it("should handle BYRON_BY devices (old style)", function(done) {
                 device.on("chime1", function(evt) {
                     expect(evt.subtype).toBe(3);
                     expect(evt.id).toBe("0x012345");
@@ -1310,6 +1395,30 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.chimeHandler([0x03, 0x06, 0x23, 0x45, 0x85, 0x40], packetType);
+            });
+            it("should handle BYRON_BY devices (new style)", function(done) {
+                device.on("chime1", function(evt) {
+                    expect(evt.subtype).toBe(3);
+                    expect(evt.id).toBe("0x012345");
+                    expect(evt.command).toBe("");
+                    expect(evt.commandNumber).toBe(5);
+                    expect(evt.seqnbr).toBe(6);
+                    expect(evt.rssi).toBe(4);
+                    done();
+                });
+                device.chimeHandler([0x03, 0x06, 0x23, 0x45, 0x85, 0x00, 0x40], packetType);
+            });
+            it("should handle very long ID devices (new style only)", function(done) {
+                device.on("chime1", function(evt) {
+                    expect(evt.subtype).toBe(6);
+                    expect(evt.id).toBe("0x03FFFFFF");
+                    expect(evt.command).toBeUndefined();
+                    expect(evt.commandNumber).toBeUndefined();
+                    expect(evt.seqnbr).toBe(52);
+                    expect(evt.rssi).toBe(7);
+                    done();
+                });
+                device.chimeHandler([0x06, 0x34, 0x03, 0xFF, 0xFF, 0xFF, 0x70], packetType);
             });
 
         });
@@ -2648,19 +2757,6 @@ describe("RfxCom", function() {
                 });
                 device.blinds1Handler([0x04, 0x05, 0x00, 0x12, 0x34, 0x00, 0x00, 0x80], packetType);
             });
-            it("should handle BLINDS_T6 devices", function(done) {
-                device.on("blinds1", function(evt) {
-                    expect(evt.subtype).toBe(6);
-                    expect(evt.id).toBe("0x5638010");
-                    expect(evt.unitCode).toBe(3);
-                    expect(evt.command).toBe("Close");
-                    expect(evt.commandNumber).toBe(1);
-                    expect(evt.seqnbr).toBe(4);
-                    expect(evt.rssi).toBe(7);
-                    done();
-                });
-                device.blinds1Handler([0x06, 0x04, 0x56, 0x38, 0x01, 0x03, 0x01, 0x78], packetType);
-            });
             it("should handle BLINDS_T4 devices delete limits event", function(done) {
                 device.on("blinds1", function(evt) {
                     expect(evt.subtype).toBe(4);
@@ -2700,6 +2796,19 @@ describe("RfxCom", function() {
                 });
                 device.blinds1Handler([0x04, 0x05, 0x00, 0x12, 0x34, 0x00, 0x05, 0x80], packetType);
             });
+            it("should handle BLINDS_T6 devices", function(done) {
+                device.on("blinds1", function(evt) {
+                    expect(evt.subtype).toBe(6);
+                    expect(evt.id).toBe("0x5638010");
+                    expect(evt.unitCode).toBe(3);
+                    expect(evt.command).toBe("Close");
+                    expect(evt.commandNumber).toBe(1);
+                    expect(evt.seqnbr).toBe(4);
+                    expect(evt.rssi).toBe(7);
+                    done();
+                });
+                device.blinds1Handler([0x06, 0x04, 0x56, 0x38, 0x01, 0x03, 0x01, 0x78], packetType);
+            });
             it("should handle BLINDS_T10 devices reverse event", function(done) {
                 device.on("blinds1", function(evt) {
                     expect(evt.subtype).toBe(10);
@@ -2717,14 +2826,14 @@ describe("RfxCom", function() {
                 device.on("blinds1", function(evt) {
                     expect(evt.subtype).toBe(11);
                     expect(evt.id).toBe("0x001234");
-                    expect(evt.unitCode).toBe(1);
+                    expect(evt.unitCode).toBe(3);
                     expect(evt.command).toBe("Open");
                     expect(evt.commandNumber).toBe(0);
                     expect(evt.seqnbr).toBe(5);
                     expect(evt.rssi).toBe(8);
                     done();
                 });
-                device.blinds1Handler([0x0b, 0x05, 0x00, 0x12, 0x34, 0x00, 0x00, 0x80], packetType);
+                device.blinds1Handler([0x0b, 0x05, 0x00, 0x12, 0x34, 0x03, 0x00, 0x80], packetType);
             });
         });
 
@@ -4341,6 +4450,27 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.rfxmeterHandler([0x00, 0x37, 0x08, 0xF8, 0x00, 0x8A, 0x64, 0x67, 0x70], packetType);
+            });
+        });
+
+        describe(".waterlevelHandler", function() {
+            let device = {};
+            let packetType = 0x73;
+            beforeEach(function() {
+                device = new rfxcom.RfxCom("/dev/ttyUSB0");
+            });
+            it("should emit a waterlevel message when called", function(done) {
+                device.on("waterlevel", function(evt) {
+                    expect(evt.subtype).toBe(0x00);
+                    expect(evt.seqnbr).toBe(42);
+                    expect(evt.id).toBe("0x1234");
+                    expect(evt.level).toBe(500); // (cm)
+                    expect(evt.temperature).toBe(35.1);
+                    expect(evt.rssi).toBe(7);
+                    expect(evt.batteryLevel).toBe(3);
+                    done();
+                });
+                device.waterlevelHandler([0x00, 0x2A, 0x12, 0x34, 0x00, 0x01, 0xF4, 0x01, 0x5f,0x00, 0x00, 0x73], packetType);
             });
         });
 

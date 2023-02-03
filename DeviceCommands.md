@@ -33,6 +33,9 @@ Devices:
     BLINDS_T16
     BLINDS_T17
     BLINDS_T18
+    BLINDS_T19
+    BLINDS_T20
+    BLINDS_T21
 
 Commands:
 
@@ -77,6 +80,8 @@ Devices:
     BYRON_BY
     ENVIVO
     ALFAWISE
+    QH_A19
+    BYRON_DBY
     
 Commands:
 
@@ -347,6 +352,26 @@ Commands:
     Radiator1.setDayMode()
     Radiator1.setTemperature()
 
+RawTx
+-----
+
+Devices:
+
+    RAW
+
+Commands:
+
+    RawTx.sendMessage(deviceId, params)
+
+[*DeviceId* is not used and may be omitted] Send the message with the specified parameters, given by the fields of the `params` object:
+
+    {
+        repeats: 1-10   Optional (defaults to 5))
+        pulseTimes:     <string or array of numbers>
+    }
+
+*Note: All pulseTimes values must be integers in the range 1-65535; there must be an even number up to a mximum of 496*
+
 Remote
 ------
 
@@ -510,3 +535,25 @@ Send the message with the specified parameters, given by the fields of the `para
                                     Mandatory
     }
 
+Thermostat5
+-----------
+
+Devices:
+
+    GAZCO_RF290A
+
+Commands:
+
+    Thermostat5.sendMessage(deviceId, params)
+    
+Send the message with the specified parameters, given by the fields of the params object:
+
+    {
+        mode:<0, 1, 2, 3, 4>, or
+             <"Off", "LED", "Standby", "Low", "High"> (case-insensitive, 3 characters needed)
+                                    Mandatory
+        flameBrightness: 0-5  (0 is off)
+        flameColour: 1-3
+        fuelBrightness: 0-5   (0 is off)
+        fuelColour: 1-14      (14 is cycle)
+    }

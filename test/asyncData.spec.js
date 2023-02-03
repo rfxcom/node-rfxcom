@@ -8,7 +8,7 @@ describe('AsyncData class', function () {
         fakeSerialPort,
         device;
     beforeEach(function () {
-        this.addMatchers({
+        jasmine.addMatchers({
             toHaveSent: matchers.toHaveSent
         });
         fakeSerialPort = new FakeSerialPort();
@@ -29,7 +29,7 @@ describe('AsyncData class', function () {
         it('should throw an error if no subtype is specified', function () {
             expect(function () {
                 asyncData = new rfxcom.AsyncData(device);
-            }).toThrow("Must provide a subtype.");
+            }).toThrow(new Error("Must provide a subtype."));
         });
     });
 });
