@@ -16,7 +16,7 @@ const
             SENDING_RESTART: 4,
             WAIT_FOR_RESTART_RESPONSE: 5,
             SENDING_SAVE: 6,
-        WAIT_FOR_SAVE_RESPONSE: 7
+            WAIT_FOR_SAVE_RESPONSE: 7
     };
 
 
@@ -82,20 +82,11 @@ if (args.length < 2) {
         device = args[args.length-1];
     }
 }
-// Check these protocols actually exist
-const unrecognisedProtocols = protocolsToDisable.filter((entry) => {return !rfxcom.protocols.hasOwnProperty(entry)}).
-                              concat(protocolsToEnable.filter((entry) => {return !rfxcom.protocols.hasOwnProperty(entry)}));
-if (unrecognisedProtocols.length === 1) {
-    console.log("set-protocols: Unrecognised protocol " + unrecognisedProtocols[0]);
-    process.exit(0);
-} else if (unrecognisedProtocols.length > 1){
-    console.log("set-protocols: Unrecognised protocols " + unrecognisedProtocols.sort());
-    process.exit(0);
-}
 
 // Create the RFXCOM object and install its event handlers
 console.log("Trying to open RFXCOM device on " + device + "...");
 const rfxtrx = new rfxcom.RfxCom(device);
+let receiverTypeCode = -1;
 
 rfxtrx.on("connecting", () => {console.log("Serial port open, initialising RFXCOM device...")});
 
@@ -110,8 +101,22 @@ rfxtrx.on("receiverstarted", () => {
             if (protocolsToEnable.length > 0 || protocolsToDisable.length > 0) {
                 protocolsToEnable.sort();
                 protocolsToDisable.sort();
-                process.nextTick(sendEnable);
-                currentState = STATE.SENDING_ENABLE;
+                // Check these protocols actually exist
+                const unrecognisedProtocols = 
+                        protocolsToDisable.filter((entry) => {return !rfxcom.protocols[receiverTypeCode].hasOwnProperty(entry)}).
+                            concat(protocolsToEnable.filter((entry) => {return !rfxcom.protocols[receiverTypeCode].hasOwnProperty(entry)}));
+                if (unrecognisedProtocols.length === 1) {
+                    console.log("Protocol not supported by receiver type 0x" + receiverTypeCode.toString(16) + ": " + unrecognisedProtocols[0]);
+                    rfxtrx.close();
+                    process.exit(0);
+                } else if (unrecognisedProtocols.length > 1){
+                    console.log("Protocols not supported by receiver type 0x" + receiverTypeCode.toString(16) + ": "  + unrecognisedProtocols.sort());
+                    rfxtrx.close();
+                    process.exit(0);
+                } else {
+                    process.nextTick(sendEnable);
+                    currentState = STATE.SENDING_ENABLE;
+                };
             } else if (listProtocols) {
                 console.log("Enabled protocols:  " + enabledProtocols);
                 console.log("Disabled protocols: " + disabledProtocols);
@@ -141,14 +146,18 @@ rfxtrx.on("status", evt => {
         case STATE.INITIALISING:
             console.log(evt.receiverType + " hardware version " + evt.hardwareVersion +
                 ", firmware version " + evt.firmwareVersion + " " + evt.firmwareType);
+            receiverTypeCode = evt.receiverTypeCode;
+            console.log("Receiver type 0x" + receiverTypeCode.toString(16));
             enabledProtocols = evt.enabledProtocols.sort();
-            for (let key in rfxcom.protocols) {
-                if (rfxcom.protocols.hasOwnProperty(key)) {
-                    if (enabledProtocols.indexOf(key) < 0) {
-                        disabledProtocols.push(key);
+            if (typeof rfxcom.protocols[receiverTypeCode] == "object") {
+                for (let key in rfxcom.protocols[receiverTypeCode]) {
+                    if (rfxcom.protocols[receiverTypeCode].hasOwnProperty(key)) {
+                        if (enabledProtocols.indexOf(key) < 0) {
+                            disabledProtocols.push(key);
+                        }
                     }
                 }
-            }
+            };
             disabledProtocols.sort();
             if (listProtocols === false) {
                 console.log("Currently enabled: " + enabledProtocols);
@@ -191,7 +200,7 @@ const sendEnable = function () {
 
 
     // Send the command
-    rfxtrx.enableRFXProtocols(protocolsToEnable.map(entry => rfxcom.protocols[entry]));
+    rfxtrx.enableRFXProtocols(protocolsToEnable.map(entry => rfxcom.protocols[receiverTypeCode][entry]));
     currentState = STATE.WAIT_FOR_ENABLE_RESPONSE;
 };
 

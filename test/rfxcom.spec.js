@@ -699,7 +699,7 @@ describe("RfxCom", function() {
                     });
                 device.connected = true;
                 device.receiverTypeCode = 0x53;
-                device.configureRFX(433.92, +10, [protocols.LACROSSE, protocols.OREGON, protocols.AC, protocols.ARC, protocols.X10], function() {
+                device.configureRFX(433.92, +10, [protocols[0x53].LACROSSE, protocols[0x53].OREGON, protocols[0x53].AC, protocols[0x53].ARC, protocols[0x53].X10], function() {
                     done();
                 });
                 expect(fakeSerialPort).toHaveSent([0x0D, 0x00, 0x00, 0x00, 0x03, 0x53, 0x1c, 0x00, 0x08, 0x27, 0x00, 0x00, 0x00, 0x00]);
@@ -714,7 +714,7 @@ describe("RfxCom", function() {
                     });
                 device.connected = true;
                 device.receiverTypeCode = 0x53;
-                device.configureRFX(433.42, 0, [protocols.LACROSSE, protocols.OREGON, protocols.AC, protocols.ARC, protocols.X10], function() {
+                device.configureRFX(433.42, 0, [protocols[0x53].LACROSSE, protocols[0x53].OREGON, protocols[0x53].AC, protocols[0x53].ARC, protocols[0x53].X10], function() {
                     done();
                 });
                 expect(fakeSerialPort).toHaveSent([0x0D, 0x00, 0x00, 0x00, 0x03, 0x54, 0x1c, 0x00, 0x08, 0x27, 0x00, 0x00, 0x00, 0x00]);
@@ -729,7 +729,7 @@ describe("RfxCom", function() {
                     });
                 device.connected = true;
                 device.receiverTypeCode = 0x53;
-                device.configureRFX("434.50", 0, [protocols.LACROSSE, protocols.OREGON, protocols.AC, protocols.ARC, protocols.X10], function() {
+                device.configureRFX("434.50", 0, [protocols[0x53].LACROSSE, protocols[0x53].OREGON, protocols[0x53].AC, protocols[0x53].ARC, protocols[0x53].X10], function() {
                     done();
                 });
                 expect(fakeSerialPort).toHaveSent([0x0D, 0x00, 0x00, 0x00, 0x03, 0x5F, 0x1c, 0x00, 0x08, 0x27, 0x00, 0x00, 0x00, 0x00]);
@@ -744,10 +744,10 @@ describe("RfxCom", function() {
                     });
                 device.connected = true;
                 device.receiverTypeCode = 0x5C;
-                device.configureRFX(433, -5, [protocols.LACROSSE, protocols.OREGON, protocols.AC, protocols.ARC, protocols.X10], function() {
+                device.configureRFX(433, -5, [protocols[0x5C].LIGHTWAVERF, protocols[0x5C].VISONIC, protocols[0x5C].KEELOQ, protocols[0x5C].MEIANTECH], function() {
                     done();
                 });
-                expect(fakeSerialPort).toHaveSent([0x0D, 0x00, 0x00, 0x00, 0x03, 0x5c, 0x0d, 0x00, 0x08, 0x27, 0x00, 0x00, 0x00, 0x00]);
+                expect(fakeSerialPort).toHaveSent([0x0D, 0x00, 0x00, 0x00, 0x03, 0x5c, 0x0d, 0x00, 0x02, 0xC0, 0x01, 0x00, 0x00, 0x00]);
                 expect(device.receiverTypeCode).toBe(0x5C);
                 expect(device.transmitterPower).toBe(-5.0);
                 device.acknowledge.forEach(acknowledge => {if (typeof acknowledge === "function") {acknowledge()}});
@@ -759,10 +759,10 @@ describe("RfxCom", function() {
                     });
                 device.connected = true;
                 device.receiverTypeCode = 0x5C;
-                device.configureRFX(868, 13, [protocols.LACROSSE, protocols.OREGON, protocols.AC, protocols.ARC, protocols.X10], function() {
+                device.configureRFX(868, 13, [protocols[0x5C].LIGHTWAVERF, protocols[0x5C].VISONIC, protocols[0x5C].KEELOQ, protocols[0x5C].MEIANTECH], function() {
                     done();
                 });
-                expect(fakeSerialPort).toHaveSent([0x0D, 0x00, 0x00, 0x00, 0x03, 0x5d, 0x1f, 0x00, 0x08, 0x27, 0x00, 0x00, 0x00, 0x00]);
+                expect(fakeSerialPort).toHaveSent([0x0D, 0x00, 0x00, 0x00, 0x03, 0x5d, 0x1f, 0x00, 0x02, 0xC0, 0x01, 0x00, 0x00, 0x00]);
                 expect(device.receiverTypeCode).toBe(0x5D);
                 expect(device.transmitterPower).toBe(+13.0);
                 device.acknowledge.forEach(acknowledge => {if (typeof acknowledge === "function") {acknowledge()}});
@@ -774,10 +774,10 @@ describe("RfxCom", function() {
                     });
                 device.connected = true;
                 device.receiverTypeCode = 0x50;
-                device.configureRFX(315, 13, [protocols.LACROSSE, protocols.OREGON, protocols.AC, protocols.ARC, protocols.X10], function() {
+                device.configureRFX(315, 13, [protocols[0x50].LIGHTING4, protocols[0x50].VISONIC, protocols[0x50].X10], function() {
                     done();
                 });
-                expect(fakeSerialPort).toHaveSent([0x0D, 0x00, 0x00, 0x00, 0x03, 0x51, 0x1c, 0x00, 0x08, 0x27, 0x00, 0x00, 0x00, 0x00]);
+                expect(fakeSerialPort).toHaveSent([0x0D, 0x00, 0x00, 0x00, 0x03, 0x51, 0x1c, 0x08, 0x00, 0x81, 0x00, 0x00, 0x00, 0x00]);
                 expect(device.receiverTypeCode).toBe(0x51);
                 expect(device.transmitterPower).toBe(+10.0);
                 device.acknowledge.forEach(acknowledge => {if (typeof acknowledge === "function") {acknowledge()}});
@@ -789,10 +789,10 @@ describe("RfxCom", function() {
                     });
                 device.connected = true;
                 device.receiverTypeCode = 0x51;
-                device.configureRFX(310, 13, [protocols.LACROSSE, protocols.OREGON, protocols.AC, protocols.ARC, protocols.X10], function() {
+                device.configureRFX(310, 13, [protocols[0x51].LIGHTING4, protocols[0x51].VISONIC, protocols[0x51].X10], function() {
                     done();
                 });
-                expect(fakeSerialPort).toHaveSent([0x0D, 0x00, 0x00, 0x00, 0x03, 0x50, 0x1c, 0x00, 0x08, 0x27, 0x00, 0x00, 0x00, 0x00]);
+                expect(fakeSerialPort).toHaveSent([0x0D, 0x00, 0x00, 0x00, 0x03, 0x50, 0x1c, 0x08, 0x00, 0x81, 0x00, 0x00, 0x00, 0x00]);
                 expect(device.receiverTypeCode).toBe(0x50);
                 expect(device.transmitterPower).toBe(+10.0);
                 device.acknowledge.forEach(acknowledge => {if (typeof acknowledge === "function") {acknowledge()}});
@@ -806,7 +806,7 @@ describe("RfxCom", function() {
                     });
                 device.connected = true;
                 device.receiverTypeCode = 0x53;
-                device.enableRFXProtocols([protocols.LACROSSE, protocols.OREGON, protocols.AC, protocols.ARC, protocols.X10], function() {
+                device.enableRFXProtocols([protocols[0x53].LACROSSE, protocols[0x53].OREGON, protocols[0x53].AC, protocols[0x53].ARC, protocols[0x53].X10], function() {
                     done();
                 });
                 expect(fakeSerialPort).toHaveSent([0x0D, 0x00, 0x00, 0x00, 0x03, 0x53, 0x1c, 0x00, 0x08, 0x27, 0x00, 0x00, 0x00, 0x00]);
@@ -820,7 +820,7 @@ describe("RfxCom", function() {
                     });
                 device.connected = true;
                 device.receiverTypeCode = 0x53;
-                device.enableRFXProtocols(protocols.LIGHTWAVERF, function() {
+                device.enableRFXProtocols(protocols[0x53].LIGHTWAVERF, function() {
                     done();
                 });
                 expect(fakeSerialPort).toHaveSent([0x0D, 0x00, 0x00, 0x00, 0x03, 0x53, 0x1c, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00]);
@@ -866,6 +866,7 @@ describe("RfxCom", function() {
                     expect(evt.seqnbr).toBe(0x01);
                     expect(evt.cmnd).toBe(0x2);
                     expect(evt.receiverType).toBe("433.92MHz transceiver");
+                    expect(evt.receiverTypeCode).toBe(0x53);
                     expect(evt.firmwareVersion).toBe(161);
                     expect(evt.firmwareType).toBe("Type 1");
                     expect(evt.enabledProtocols).toEqual(["RSL", "BYRONSX"]);
@@ -879,6 +880,7 @@ describe("RfxCom", function() {
                     expect(evt.seqnbr).toBe(0x01);
                     expect(evt.cmnd).toBe(0x2);
                     expect(evt.receiverType).toBe("433.92MHz transceiver");
+                    expect(evt.receiverTypeCode).toBe(0x53);
                     expect(evt.firmwareVersion).toBe(162);
                     expect(evt.firmwareType).toBe("Type 2");
                     expect(evt.enabledProtocols).toEqual(["RSL", "BYRONSX"]);
@@ -892,6 +894,7 @@ describe("RfxCom", function() {
                     expect(evt.seqnbr).toBe(0x01);
                     expect(evt.cmnd).toBe(0x2);
                     expect(evt.receiverType).toBe("433.92MHz transceiver");
+                    expect(evt.receiverTypeCode).toBe(0x53);
                     expect(evt.firmwareVersion).toBe(224);
                     expect(evt.firmwareType).toBe("Type 2");
                     expect(evt.enabledProtocols).toEqual(["RSL", "BYRONSX"]);
@@ -905,6 +908,7 @@ describe("RfxCom", function() {
                     expect(evt.seqnbr).toBe(0x01);
                     expect(evt.cmnd).toBe(0x2);
                     expect(evt.receiverType).toBe("433.92MHz transceiver");
+                    expect(evt.receiverTypeCode).toBe(0x53);
                     expect(evt.firmwareVersion).toBe(225);
                     expect(evt.firmwareType).toBe("Ext");
                     expect(evt.enabledProtocols).toEqual(["RSL", "BYRONSX"]);
@@ -918,6 +922,7 @@ describe("RfxCom", function() {
                     expect(evt.seqnbr).toBe(0x01);
                     expect(evt.cmnd).toBe(0x2);
                     expect(evt.receiverType).toBe("433.92MHz transceiver");
+                    expect(evt.receiverTypeCode).toBe(0x53);
                     expect(evt.firmwareVersion).toBe(1001);
                     expect(evt.firmwareType).toBe("Type 1");
                     expect(evt.enabledProtocols).toEqual(["RSL", "BYRONSX"]);
@@ -931,6 +936,7 @@ describe("RfxCom", function() {
                     expect(evt.seqnbr).toBe(0x01);
                     expect(evt.cmnd).toBe(0x2);
                     expect(evt.receiverType).toBe("433.92MHz transceiver");
+                    expect(evt.receiverTypeCode).toBe(0x53);
                     expect(evt.firmwareVersion).toBe(1001);
                     expect(evt.firmwareType).toBe("Type 2");
                     expect(evt.enabledProtocols).toEqual(["RSL", "BYRONSX"]);
@@ -944,6 +950,7 @@ describe("RfxCom", function() {
                     expect(evt.seqnbr).toBe(0x01);
                     expect(evt.cmnd).toBe(0x2);
                     expect(evt.receiverType).toBe("433.92MHz transceiver");
+                    expect(evt.receiverTypeCode).toBe(0x53);
                     expect(evt.firmwareVersion).toBe(1001);
                     expect(evt.firmwareType).toBe("Ext");
                     expect(evt.enabledProtocols).toEqual(["RSL", "BYRONSX"]);
@@ -957,6 +964,7 @@ describe("RfxCom", function() {
                     expect(evt.seqnbr).toBe(0x01);
                     expect(evt.cmnd).toBe(0x2);
                     expect(evt.receiverType).toBe("433.92MHz transceiver");
+                    expect(evt.receiverTypeCode).toBe(0x53);
                     expect(evt.firmwareVersion).toBe(1001);
                     expect(evt.firmwareType).toBe("Ext 2");
                     expect(evt.enabledProtocols).toEqual(["RSL", "BYRONSX"]);
@@ -970,6 +978,7 @@ describe("RfxCom", function() {
                     expect(evt.seqnbr).toBe(0x01);
                     expect(evt.cmnd).toBe(0x2);
                     expect(evt.receiverType).toBe("433.92MHz transceiver");
+                    expect(evt.receiverTypeCode).toBe(0x53);
                     expect(evt.firmwareVersion).toBe(1001);
                     expect(evt.firmwareType).toBe("Pro 1");
                     expect(evt.enabledProtocols).toEqual(["RSL", "BYRONSX"]);
@@ -983,6 +992,7 @@ describe("RfxCom", function() {
                     expect(evt.seqnbr).toBe(0x01);
                     expect(evt.cmnd).toBe(0x2);
                     expect(evt.receiverType).toBe("433.92MHz transceiver");
+                    expect(evt.receiverTypeCode).toBe(0x53);
                     expect(evt.firmwareVersion).toBe(1001);
                     expect(evt.firmwareType).toBe("Pro 2");
                     expect(evt.enabledProtocols).toEqual(["RSL", "BYRONSX"]);
@@ -996,6 +1006,7 @@ describe("RfxCom", function() {
                     expect(evt.seqnbr).toBe(0x01);
                     expect(evt.cmnd).toBe(0x2);
                     expect(evt.receiverType).toBe("433.92MHz transceiver");
+                    expect(evt.receiverTypeCode).toBe(0x53);
                     expect(evt.firmwareVersion).toBe(1001);
                     expect(evt.firmwareType).toBe("ProXL 1");
                     expect(evt.enabledProtocols).toEqual(["RSL", "BYRONSX"]);
@@ -1009,6 +1020,7 @@ describe("RfxCom", function() {
                     expect(evt.seqnbr).toBe(0x01);
                     expect(evt.cmnd).toBe(0x2);
                     expect(evt.receiverType).toBe("433.92MHz transceiver");
+                    expect(evt.receiverTypeCode).toBe(0x53);
                     expect(evt.firmwareVersion).toBe(1001);
                     expect(evt.firmwareType).toBe("Unknown firmware");
                     expect(evt.enabledProtocols).toEqual(["RSL", "BYRONSX"]);
@@ -1022,9 +1034,10 @@ describe("RfxCom", function() {
                     expect(evt.seqnbr).toBe(0x01);
                     expect(evt.cmnd).toBe(0x2);
                     expect(evt.receiverType).toBe("Unknown device");
+                    expect(evt.receiverTypeCode).toBe(0xfe);
                     expect(evt.firmwareVersion).toBe(1001);
                     expect(evt.firmwareType).toBe("Pro 2");
-                    expect(evt.enabledProtocols).toEqual(["RSL", "BYRONSX"]);
+                    expect(evt.enabledProtocols).toEqual([]);
                     done();
                 });
                 device.statusMessageHandler([0, 1, 0x2, 0xfe, 1, 0x30, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0], packetType);
