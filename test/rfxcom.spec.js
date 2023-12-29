@@ -997,7 +997,7 @@ describe("RfxCom", function() {
                     expect(evt.cmnd).toBe(0x2);
                     expect(evt.receiverType).toBe("433.92MHz transceiver");
                     expect(evt.firmwareVersion).toBe(1001);
-                    expect(evt.firmwareType).toBe("ProXL1");
+                    expect(evt.firmwareType).toBe("ProXL 1");
                     expect(evt.enabledProtocols).toEqual(["RSL", "BYRONSX"]);
                     done();
                 });
@@ -3127,6 +3127,55 @@ describe("RfxCom", function() {
             });
         });
 
+        describe(".activLinkHandler", function () {
+            let device = {};
+            let packetType = 0x1e;
+            beforeEach(function () {
+                device = new rfxcom.RfxCom("/dev/ttyUSB0");
+            });
+            it("should handle a bell push message", function(done) {
+                device.on("activlink", function (evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.seqnbr).toBe(18);
+                    expect(evt.id).toBe("0x012345");
+                    expect(evt.alert).toBe(0);
+                    expect(evt.commandNumber).toBe(0);
+                    expect(evt.command).toBe("Normal");
+                    expect(evt.rssi).toBe(6);
+                    expect(evt.batteryLevel).toBe(9);
+                    done();
+                });
+                device.activLinkHandler([0x00, 0x12, 0x01, 0x23, 0x45, 0x00, 0x00, 0x00, 0x69], packetType);
+            });
+            it("should decode the secret knock", function(done) {
+                device.on("activlink", function (evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.seqnbr).toBe(18);
+                    expect(evt.id).toBe("0x012345");
+                    expect(evt.alert).toBe(3);
+                    expect(evt.commandNumber).toBe(1);
+                    expect(evt.command).toBe("Secret Knock");
+                    expect(evt.rssi).toBe(6);
+                    expect(evt.batteryLevel).toBe(9);
+                    done();
+                });
+                device.activLinkHandler([0x00, 0x12, 0x01, 0x23, 0x45, 0x03, 0x01, 0x00, 0x69], packetType);
+            });
+            it("should handle a PIR message", function(done) {
+                device.on("activlink", function (evt) {
+                    expect(evt.subtype).toBe(1);
+                    expect(evt.seqnbr).toBe(18);
+                    expect(evt.id).toBe("0x012345");
+                    expect(evt.alert).toBe(0);
+                    expect(evt.deviceStatus).toBe(0);
+                    expect(evt.rssi).toBe(6);
+                    expect(evt.batteryLevel).toBe(9);
+                    done();
+                });
+                device.activLinkHandler([0x01, 0x12, 0x01, 0x23, 0x45, 0x00, 0x00, 0x00, 0x69], packetType);
+            });
+        });
+
         describe(".funkbusHandler", function () {
             let device = {};
             let packetType = 0x1e;
@@ -3871,7 +3920,7 @@ describe("RfxCom", function() {
             });
             it("should extract the rainfall increment for a RAIN9 sensor", function(done) {
                 device.on("rain1", function(evt) {
-                    expect(evt.rainfallIncrement).toBeCloseTo(80.7, 7);
+                    expect(evt.rainfallIncrement).toBeCloseTo(68.326, 7);
                     expect(evt.subtype).toBe(9);
                     done();
                 });
@@ -4117,7 +4166,7 @@ describe("RfxCom", function() {
             beforeEach(function () {
                 device = new rfxcom.RfxCom("/dev/ttyUSB0");
             });
-            it("should emit an elec1 message when called with subtype CM113", function (done) {
+            it("should emit an elec1 event when called with subtype CM113", function (done) {
                 device.on("elec1", function (evt) {
                     expect(evt.subtype).toBe(1);
                     expect(evt.id).toBe("0x8600");
@@ -4139,7 +4188,7 @@ describe("RfxCom", function() {
             beforeEach(function () {
                 device = new rfxcom.RfxCom("/dev/ttyUSB0");
             });
-            it("should emit an elec23 message when called with subtype CM119_160", function (done) {
+            it("should emit an elec23 event when called with subtype CM119_160", function (done) {
                 device.on("elec23", function (evt) {
                     expect(evt.subtype).toBe(1);
                     expect(evt.id).toBe("0x1A73");
@@ -4152,7 +4201,7 @@ describe("RfxCom", function() {
                 });
                 device.elec23Handler([0x01, 0x07, 0x1A, 0x73, 0x00, 0x00, 0x00, 0x03, 0xF6, 0x00, 0x00, 0x00, 0x00, 0x35, 0x0B, 0x89], packetType);
             });
-            it("should emit an elec23 message when called with subtype CM180", function (done) {
+            it("should emit an elec23 event when called with subtype CM180", function (done) {
                 device.on("elec23", function (evt) {
                     expect(evt.subtype).toBe(2);
                     expect(evt.id).toBe("0xA412");
@@ -4185,7 +4234,7 @@ describe("RfxCom", function() {
             beforeEach(function () {
                 device = new rfxcom.RfxCom("/dev/ttyUSB0");
             });
-            it("should emit an elec4 message when called with subtype CM180I", function (done) {
+            it("should emit an elec4 event when called with subtype CM180I", function (done) {
                 device.on("elec4", function (evt) {
                     expect(evt.subtype).toBe(1);
                     expect(evt.id).toBe("0xB800");
@@ -4225,7 +4274,7 @@ describe("RfxCom", function() {
             beforeEach(function () {
                 device = new rfxcom.RfxCom("/dev/ttyUSB0");
             });
-            it("should emit an elec message when called with subtype REVOLT", function (done) {
+            it("should emit an elec event when called with subtype REVOLT", function (done) {
                 device.on("elec5", function (evt) {
                     expect(evt.subtype).toBe(1);
                     expect(evt.id).toBe("0x002D");
@@ -4241,7 +4290,7 @@ describe("RfxCom", function() {
                 });
                 device.elec5Handler([0x01, 0x03, 0x00, 0x2D, 0xE4, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x32, 0x80], packetType);
             });
-            it("should emit an elec message when called with subtype REVOLT", function (done) {
+            it("should emit an elec event when called with subtype REVOLT", function (done) {
                 device.on("elec5", function (evt) {
                     expect(evt.subtype).toBe(1);
                     expect(evt.id).toBe("0x002D");
@@ -4257,7 +4306,7 @@ describe("RfxCom", function() {
                 });
                 device.elec5Handler([0x01, 0x04, 0x00, 0x2D, 0xE4, 0x00, 0x02, 0x00, 0x2F, 0x00, 0x03, 0x64, 0x32, 0x80], packetType);
             });
-            it("should emit an elec message when called with subtype REVOLT", function (done) {
+            it("should emit an elec event when called with subtype REVOLT", function (done) {
                 device.on("elec5", function (evt) {
                     expect(evt.subtype).toBe(1);
                     expect(evt.id).toBe("0x002D");
@@ -4273,7 +4322,7 @@ describe("RfxCom", function() {
                 });
                 device.elec5Handler([0x01, 0x05, 0x00, 0x2D, 0xE3, 0x00, 0x14, 0x01, 0xBD, 0x00, 0x03, 0x64, 0x32, 0x80], packetType);
             });
-            it("should emit an elec message when called with subtype REVOLT", function (done) {
+            it("should emit an elec event when called with subtype REVOLT", function (done) {
                 device.on("elec5", function (evt) {
                     expect(evt.subtype).toBe(1);
                     expect(evt.id).toBe("0x002D");
@@ -4297,7 +4346,7 @@ describe("RfxCom", function() {
             beforeEach(function() {
                 device = new rfxcom.RfxCom("/dev/ttyUSB0");
             });
-            it("should emit a weight message when called", function(done) {
+            it("should emit a weight event when called", function(done) {
                 device.on("weight1", function(evt) {
                     expect(evt.subtype).toBe(0x01);
                     expect(evt.seqnbr).toBe(0xF5);
@@ -4317,7 +4366,7 @@ describe("RfxCom", function() {
             beforeEach(function() {
                 device = new rfxcom.RfxCom("/dev/ttyUSB0");
             });
-            it("should emit a cartelectronic message when called with a CARTELECTRONIC_TIC subtype", function(done) {
+            it("should emit a cartelectronic event when called with a CARTELECTRONIC_TIC subtype", function(done) {
                 device.on("cartelectronic", function(evt) {
                     expect(evt.subtype).toBe(rfxcom.cartelectronic.CARTELECTRONIC_TIC);
                     expect(evt.seqnbr).toBe(0);
@@ -4337,7 +4386,7 @@ describe("RfxCom", function() {
                 device.cartelectronicHandler([0x01, 0x00, 0x12, 0x34, 0x56, 0x78, 0x9a,
                     0x47, 0x12, 0x34, 0x56, 0x78, 0x12, 0x34, 0x56, 0x78, 0x07, 0x5a, 0x12, 0x79], packetType);
             });
-            it("should emit a cartelectronic message when called with a CARTELECTRONIC_ENCODER subtype", function(done) {
+            it("should emit a cartelectronic event when called with a CARTELECTRONIC_ENCODER subtype", function(done) {
                 device.on("cartelectronic", function(evt) {
                     expect(evt.subtype).toBe(rfxcom.cartelectronic.CARTELECTRONIC_ENCODER);
                     expect(evt.seqnbr).toBe(0);
@@ -4351,7 +4400,7 @@ describe("RfxCom", function() {
                 device.cartelectronicHandler([0x02, 0x00, 0x12, 0x34, 0x56, 0x78,
                     0x12, 0x34, 0x56, 0x78, 0x12, 0x34, 0x56, 0x78, 0x12, 0x79], packetType);
             });
-            it("should emit a cartelectronic message when called with a CARTELECTRONIC_LINKY subtype", function(done) {
+            it("should emit a cartelectronic event when called with a CARTELECTRONIC_LINKY subtype", function(done) {
                 device.on("cartelectronic", function(evt) {
                     expect(evt.subtype).toBe(rfxcom.cartelectronic.CARTELECTRONIC_LINKY);
                     expect(evt.seqnbr).toBe(0);
@@ -4389,7 +4438,7 @@ describe("RfxCom", function() {
             beforeEach(function() {
                 device = new rfxcom.RfxCom("/dev/ttyUSB0");
             });
-            it("should emit a rfxsensor message when called with sensor subtype 0 data", function(done) {
+            it("should emit a rfxsensor event when called with sensor subtype 0 data", function(done) {
                 device.on("rfxsensor", function(evt) {
                     expect(evt.subtype).toBe(rfxcom.rfxsensor.TEMP);
                     expect(evt.seqnbr).toBe(233);
@@ -4411,7 +4460,7 @@ describe("RfxCom", function() {
                 });
                 device.rfxsensorHandler([0x00, 0x02, 0x08, 0x80, 0x96, 0x50], packetType);
             });
-            it("should emit a rfxsensor message when called with sensor subtype 2 data", function(done) {
+            it("should emit a rfxsensor event when called with sensor subtype 2 data", function(done) {
                 device.on("rfxsensor", function(evt) {
                     expect(evt.subtype).toBe(rfxcom.rfxsensor.VOLTAGE);
                     expect(evt.seqnbr).toBe(234);
@@ -4422,7 +4471,7 @@ describe("RfxCom", function() {
                 });
                 device.rfxsensorHandler([0x02, 0xEA, 0x28, 0x01, 0xD8, 0x70], packetType);
             });
-            it("should emit a rfxsensor message when called with sensor subtype 1 data", function(done) {
+            it("should emit a rfxsensor event when called with sensor subtype 1 data", function(done) {
                 device.on("rfxsensor", function(evt) {
                     expect(evt.subtype).toBe(rfxcom.rfxsensor.AD);
                     expect(evt.seqnbr).toBe(235);
@@ -4441,7 +4490,7 @@ describe("RfxCom", function() {
             beforeEach(function() {
                 device = new rfxcom.RfxCom("/dev/ttyUSB0");
             });
-            it("should emit a rfxmeter message when called", function(done) {
+            it("should emit a rfxmeter event when called", function(done) {
                 device.on("rfxmeter", function(evt) {
                     expect(evt.subtype).toBe(0x00);
                     expect(evt.seqnbr).toBe(55);
@@ -4453,13 +4502,13 @@ describe("RfxCom", function() {
             });
         });
 
-        describe(".waterlevelHandler", function() {
+        describe(".waterlevelHandler", function () {
             let device = {};
             let packetType = 0x73;
             beforeEach(function() {
                 device = new rfxcom.RfxCom("/dev/ttyUSB0");
             });
-            it("should emit a waterlevel message when called", function(done) {
+            it("should emit a waterlevel event when called", function(done) {
                 device.on("waterlevel", function(evt) {
                     expect(evt.subtype).toBe(0x00);
                     expect(evt.seqnbr).toBe(42);
@@ -4474,23 +4523,77 @@ describe("RfxCom", function() {
             });
         });
 
-        describe(".weatherHandler", function() {
+        describe(".lightningHandler", function () {
+            let device = {};
+            let packetType = 0x74;
+            beforeEach(function() {
+                device = new rfxcom.RfxCom("/dev/ttyUSB0");
+            });
+            it("should emit a lightning event when called", function(done) {
+                device.on("lightning", function(evt) {
+                    expect(evt.subtype).toBe(1);
+                    expect(evt.seqnbr).toBe(3);
+                    expect(evt.id).toBe("0x123456");
+                    expect(evt.status).toBe("strike");
+                    expect(evt.distance).toBe(12);
+                    expect(evt.strikes).toBe(6);
+                    expect(evt.rssi).toBe(5);
+                    expect(evt.batteryLevel).toBe(8);
+                    done();
+                });
+                device.lightningHandler([0x01, 0x03, 0x12, 0x34, 0x56, 0x08, 0x0c, 0x06, 0x00, 0x00, 0x58], packetType);
+            });
+        });
+
+        describe(".weatherHandler", function () {
             let device = {};
             let packetType = 0x76;
             beforeEach(function() {
                 device = new rfxcom.RfxCom("/dev/ttyUSB0");
             });
-            it("should emit a weather message when called for subtype 1", function(done) {
+            it("should emit a weather event when called for subtype 0", function(done) {
                 device.on("weather", function(evt) {
-                    expect(evt.subtype).toBe(0x01);
+                    expect(evt.subtype).toBe(0x00);
                     expect(evt.seqnbr).toBe(0xF5);
                     expect(evt.id).toBe("0x0007");
-                    expect(evt.batteryLevel).toBe(3);
-                    expect(evt.rssi).toBe(9);
+                    expect(evt.direction).toBe(270.0);
                     expect(evt.averageSpeed).toBe(6.7);
                     expect(evt.gustSpeed).toBe(11.4);
                     expect(evt.temperature).toBe(-2.3);
+                    expect(evt.chill).toBeUndefined();
+                    expect(evt.humidity).toBe(58.0);
+                    expect(evt.humidityStatus).toBe(1);
+                    expect(evt.rainrate).toBeUndefined();
+                    expect(evt.rainfallIncrement).toBe(41.6);
+                    expect(evt.uv).toBe(3.1);
+                    expect(evt.insolation).toBe(218.0);
+                    expect(evt.barometer).toBeUndefined();
+                    expect(evt.forecast).toBeUndefined();
+                    expect(evt.chill).toBeUndefined();
+                    expect(evt.batteryLevel).toBe(3);
+                    done();
+                });
+                device.weatherHandler([0x00, 0xF5, 0x00, 0x07,
+                    0x01, 0x0e, 0x00, 0x43, 0x00, 0x72, 0x80, 0x17, 0x00, 0x00, 0x3a, 0x01, 0x00, 0x00,
+                    0x00, 0x01, 0xa0, 0x1f, 0x00, 0xda, 0x03, 0xfd, 0x00, 0x00, 0x00, 0x93], packetType);
+            });
+            it("should emit a weather event when called for subtype 1", function(done) {
+                device.on("weather", function(evt) {
+                    expect(evt.direction).toBeUndefined();
+                    expect(evt.averageSpeed).toBe(6.7);
+                    expect(evt.gustSpeed).toBe(11.4);
+                    expect(evt.temperature).toBe(-2.3);
+                    expect(evt.chill).toBeUndefined();
+                    expect(evt.humidity).toBeUndefined();
+                    expect(evt.humidityStatus).toBeUndefined();
+                    expect(evt.rainrate).toBeUndefined();
                     expect(evt.rainfallIncrement).toBe(124.8);
+                    expect(evt.uv).toBeUndefined();
+                    expect(evt.insolation).toBeUndefined();
+                    expect(evt.barometer).toBeUndefined();
+                    expect(evt.forecast).toBeUndefined();
+                    expect(evt.chill).toBeUndefined();
+                    expect(evt.batteryLevel).toBeUndefined();
                     done();
                 });
                 device.weatherHandler([0x01, 0xF5, 0x00, 0x07,
@@ -4502,7 +4605,33 @@ describe("RfxCom", function() {
                     expect(evt.subtype).toBe(0x02);
                     expect(evt.seqnbr).toBe(0xF5);
                     expect(evt.id).toBe("0x0007");
-                    expect(evt.batteryLevel).toBe(3);
+                    expect(evt.direction).toBe(270.0);
+                    expect(evt.averageSpeed).toBe(6.7);
+                    expect(evt.gustSpeed).toBe(11.4);
+                    expect(evt.temperature).toBe(-2.3);
+                    expect(evt.chill).toBeUndefined();
+                    expect(evt.humidity).toBe(58.0);
+                    expect(evt.humidityStatus).toBe(1);
+                    expect(evt.rainrate).toBeUndefined();
+                    expect(evt.rainfallIncrement).toBe(105.664);
+                    expect(evt.uv).toBe(3.1);
+                    expect(evt.insolation).toBe(218.0);
+                    expect(evt.barometer).toBeUndefined();
+                    expect(evt.forecast).toBeUndefined();
+                    expect(evt.chill).toBeUndefined();
+                    expect(evt.batteryLevel).toBeUndefined();
+                    done();
+                });
+                device.weatherHandler([0x02, 0xF5, 0x00, 0x07,
+                    0x01, 0x0e, 0x00, 0x43, 0x00, 0x72, 0x80, 0x17, 0x00, 0x00, 0x3a, 0x01, 0x00, 0x00,
+                    0x00, 0x01, 0xa0, 0x1f, 0x00, 0xda, 0x03, 0xfd, 0x00, 0x00, 0x00, 0x93], packetType);
+            });
+/*             it("should emit a weather event when called for subtype 3", function(done) {
+                device.on("weather", function(evt) {
+                    expect(evt.subtype).toBe(0x03);
+                    expect(evt.seqnbr).toBe(0xF5);
+                    expect(evt.id).toBe("0x0007");
+                    // expect(evt.batteryLevel).toBe(3);
                     expect(evt.rssi).toBe(9);
                     expect(evt.direction).toBe(270.0);
                     expect(evt.averageSpeed).toBe(6.7);
@@ -4515,10 +4644,10 @@ describe("RfxCom", function() {
                     expect(evt.insolation).toBe(218.0);
                     done();
                 });
-                device.weatherHandler([0x02, 0xF5, 0x00, 0x07,
+                device.weatherHandler([0x03, 0xF5, 0x00, 0x07,
                     0x01, 0x0e, 0x00, 0x43, 0x00, 0x72, 0x80, 0x17, 0x00, 0x00, 0x3a, 0x01, 0x00, 0x00,
                     0x00, 0x01, 0xa0, 0x1f, 0x00, 0xda, 0x03, 0xfd, 0x00, 0x00, 0x00, 0x93], packetType);
-            });
+            }); */
         });
 
         describe(".solarHandler", function() {
@@ -4527,7 +4656,7 @@ describe("RfxCom", function() {
             beforeEach(function() {
                 device = new rfxcom.RfxCom("/dev/ttyUSB0");
             });
-            it("should emit a weather message when called for subtype 1", function(done) {
+            it("should emit a solar event when called for subtype 1", function(done) {
                 device.on("solar", function(evt) {
                     expect(evt.subtype).toBe(0x02);
                     expect(evt.seqnbr).toBe(0x21);

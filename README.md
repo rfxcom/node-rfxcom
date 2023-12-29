@@ -324,6 +324,10 @@ Emitted whan a message is received from an RFXCOM rfxmeter device.
 ---------
 Emitted when a message is received from a TS_FT002 water level (depth) sensor
 
+"lightning"
+---------
+Emitted when a message is received from an Ecowitt WH57 lightning sesnsor
+
 "weather"
 ---------
 Emitted when a message is received from a remote multi-function weather station
@@ -364,6 +368,10 @@ Emitted when a message is received from Blyss lighting remote control devices.
 "chime1"
 --------
 Emitted when data arrives from Byron or similar doorbell pushbutton
+
+"activlink"
+-------
+Emitted when a message is received from a doorbell pushbutton (or PIR sensor) using the Honeywell ActivLink 868MHz protocol
 
 "blinds1"
 ---------

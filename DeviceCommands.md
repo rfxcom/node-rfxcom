@@ -6,8 +6,19 @@ A quick reference of the currently supported device types and subtypes, and the 
 all the available commands. Invalid command/device combinations, address codes and parameters will throw an error.
 
 For the full details see the RFXtrx433 user manual (in a few cases information from the SDK manual is also needed).
-Some of these devices may only be supported by recent versions of
-the RFXCOM firmware, and in some cases, the E version hardware is required.
+Some of these devices may only be supported by recent versions of the RFXCOM firmware, and in some cases, hardware.
+
+ActivLink
+--------
+
+Devices:
+
+    ACTIV_LINK_CHIME
+    ACTIV_LINK_PIR
+
+Commands:
+
+    ActivLink.chime()
 
 Blinds1
 --------
@@ -52,6 +63,26 @@ Commands:
     Blinds1.venetianIncreaseAngle()
     Blinds1.venetianDecreaseAngle()
     Blinds1.toggleLightOnOff()
+
+Blinds2
+--------
+
+Devices:
+
+    BREL_DOOYA
+
+Commands:
+
+    Blinds2.open()
+    Blinds2.up()
+    Blinds2.close()
+    Blinds2.down()
+    Blinds2.stop()
+    Blinds2.confirm()
+    Blinds2.setAngle()
+    Blinds2.setPercent()
+    Blinds2.setPercentAndAngle()
+    Blinds2.reverse()
 
 Camera1
 -------
