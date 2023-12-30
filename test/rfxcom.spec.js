@@ -238,6 +238,20 @@ describe("RfxCom", function() {
                 device.open();
                 device.parser.emit("data", [0x06, 0x30, 0x00, 0x04, 0x0F, 0x0D, 0x82]);
             });
+            it("should emit a blinds2 event when it receives message type 0x31", function (done) {
+                const fakeSerialPort = new FakeSerialPort(),
+                    device = new rfxcom.RfxCom("/", {
+                        port: fakeSerialPort
+                    });
+                device.on("blinds2", function (evt, packetType) {
+                    expect(packetType).toBe(0x31);
+                    expect(this.packetNames[packetType]).toEqual("blinds2");
+                    expect(this.deviceNames[packetType][evt.subtype]).toEqual(["Brel", "Dooya DDxxxx"]);
+                    done();
+                });
+                device.open();
+                device.parser.emit("data", [0x0c, 0x31, 0x00, 0x05, 0x12, 0x34, 0x56, 0x78, 0x04, 0x00, 50, 90, 0x83]);
+            });
             it("should emit a thermostat1 event when it receives message type 0x40", function(done) {
                 const fakeSerialPort = new FakeSerialPort(),
                     device = new rfxcom.RfxCom("/", {
@@ -3489,6 +3503,30 @@ describe("RfxCom", function() {
                     done();
                 });
                 device.remoteHandler([0x00, 0x04, 0x0F, 0x0C, 0x82], packetType);
+            });
+        });
+
+        describe(".blinds2Handler", function () {
+            let device = {};
+            let packetType = 0x31;
+            beforeEach(function () {
+                device = new rfxcom.RfxCom("/dev/ttyUSB0");
+            });
+            it("should handle BREL_DOOYA device up event", function(done) {
+                device.on("blinds2", function(evt) {
+                    expect(evt.subtype).toBe(0);
+                    expect(evt.id).toBe("0x12345678");
+                    expect(evt.unitCode).toBe(5);
+                    expect(evt.command).toBe("Up");
+                    expect(evt.commandNumber).toBe(0);
+                    expect(evt.percent).toBe(50);
+                    expect(evt.angle).toBe(90);
+                    expect(evt.seqnbr).toBe(5);
+                    expect(evt.batteryLevel).toBe(3);
+                    expect(evt.rssi).toBe(8);
+                    done();
+                });
+                device.blinds2Handler([0x00, 0x05, 0x12, 0x34, 0x56, 0x78, 0x04, 0x00, 50, 90, 0x83], packetType);
             });
         });
 
