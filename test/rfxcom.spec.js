@@ -145,7 +145,7 @@ describe("RfxCom", function() {
                     expect(this.deviceNames[packetType][evt.subtype]).toEqual(["Byron SX"]);
                     expect(evt.id).toBe("0xFF")
                     expect(evt.commandNumber).toBe(13)
-                    expect(evt.command).toBe("Tubular 3 notes")
+                    expect(evt.command).toBe("Tubular 3 Notes")
                     expect(evt.rssi).toBe(3)
                     done();
                 });
@@ -415,7 +415,7 @@ describe("RfxCom", function() {
                 device.on("uv1", function (evt, packetType) {
                     expect(packetType).toBe(0x57);
                     expect(this.packetNames[packetType]).toEqual("uv1");
-                    expect(this.deviceNames[packetType][evt.subtype]).toEqual(["UVN128", "UV138"]);
+                    expect(this.deviceNames[packetType][evt.subtype]).toEqual(["UVN128", "UV138", "Davis"]);
                     done();
                 });
                 device.open();
@@ -1093,7 +1093,7 @@ describe("RfxCom", function() {
             });
             it("should report an unknown command", function (done) {
                 device.on("lighting1", function (evt) {
-                    expect(evt.command).toBe("Unknown");
+                    expect(evt.command).toBe("Illegal Command");
                     expect(evt.commandNumber).toBe(255);
                     done();
                 });
@@ -1242,10 +1242,10 @@ describe("RfxCom", function() {
             });
             it("should identify the subtype correctly", function(done) {
                 device.on("lighting5", function(evt) {
-                    expect(evt.subtype).toBe(1);
+                    expect(evt.subtype).toBe(2);
                     done();
                 });
-                device.lighting5Handler([0x01, 0x01, 0xF0, 0x9A, 0xC7, 0x01, 0x00, 0x00, 0x80], packetType);
+                device.lighting5Handler([0x02, 0x01, 0xF0, 0x9A, 0xC7, 0x01, 0x00, 0x00, 0x80], packetType);
             });
 
             it("should identify the command correctly", function(done) {
@@ -1254,14 +1254,14 @@ describe("RfxCom", function() {
                     expect(evt.commandNumber).toBe(1);
                     done();
                 });
-                device.lighting5Handler([0x01, 0x01, 0xF0, 0x9A, 0xC7, 0x01, 0x01, 0x00, 0x80], packetType);
+                device.lighting5Handler([0x02, 0x01, 0xF0, 0x9A, 0xC7, 0x01, 0x01, 0x00, 0x80], packetType);
             });
             it("should calculate the rssi correctly", function(done) {
                 device.on("lighting5", function(evt) {
                     expect(evt.rssi).toBe(8);
                     done();
                 });
-                device.lighting5Handler([0x01, 0x01, 0xF0, 0x9A, 0xC7, 0x01, 0x01, 0x00, 0x80], packetType);
+                device.lighting5Handler([0x02, 0x01, 0xF0, 0x9A, 0xC7, 0x01, 0x01, 0x00, 0x80], packetType);
             });
         });
 
@@ -1460,7 +1460,7 @@ describe("RfxCom", function() {
                 device.on("fan", function(evt) {
                     expect(evt.subtype).toBe(0);
                     expect(evt.id).toBe("0x1234");
-                    expect(evt.command).toBeUndefined();
+                    expect(evt.command).toBe("Unknown");
                     expect(evt.commandNumber).toBe(0);
                     expect(evt.seqnbr).toBe(0);
                     expect(evt.rssi).toBe(8);
@@ -1544,7 +1544,7 @@ describe("RfxCom", function() {
                 device.on("fan", function(evt) {
                     expect(evt.subtype).toBe(1);
                     expect(evt.id).toBe("0x123456");
-                    expect(evt.command).toBeUndefined();
+                    expect(evt.command).toBe("Unknown");
                     expect(evt.commandNumber).toBe(0);
                     expect(evt.seqnbr).toBe(0);
                     expect(evt.rssi).toBe(8);
@@ -1604,7 +1604,7 @@ describe("RfxCom", function() {
                 device.on("fan", function(evt) {
                     expect(evt.subtype).toBe(1);
                     expect(evt.id).toBe("0x123456");
-                    expect(evt.command).toBe("Not at Home");
+                    expect(evt.command).toBe("Not At Home");
                     expect(evt.commandNumber).toBe(5);
                     expect(evt.seqnbr).toBe(5);
                     expect(evt.rssi).toBe(8);
@@ -1628,7 +1628,7 @@ describe("RfxCom", function() {
                 device.on("fan", function(evt) {
                     expect(evt.subtype).toBe(1);
                     expect(evt.id).toBe("0x123456");
-                    expect(evt.command).toBe("Erase all remotes");
+                    expect(evt.command).toBe("Erase All Remotes");
                     expect(evt.commandNumber).toBe(7);
                     expect(evt.seqnbr).toBe(7);
                     expect(evt.rssi).toBe(8);
@@ -1640,7 +1640,7 @@ describe("RfxCom", function() {
                 device.on("fan", function(evt) {
                     expect(evt.subtype).toBe(2);
                     expect(evt.id).toBe("0x01");
-                    expect(evt.command).toBeUndefined();
+                    expect(evt.command).toBe("Unknown");
                     expect(evt.commandNumber).toBe(0);
                     expect(evt.seqnbr).toBe(0);
                     expect(evt.rssi).toBe(8);
@@ -1712,7 +1712,7 @@ describe("RfxCom", function() {
                 device.on("fan", function(evt) {
                     expect(evt.subtype).toBe(3);
                     expect(evt.id).toBe("1/10/0100000001/0x1f");
-                    expect(evt.command).toBeUndefined();
+                    expect(evt.command).toBe("Unknown");
                     expect(evt.commandNumber).toBe(0);
                     expect(evt.seqnbr).toBe(0);
                     expect(evt.rssi).toBe(8);
@@ -1772,7 +1772,7 @@ describe("RfxCom", function() {
                 device.on("fan", function(evt) {
                     expect(evt.subtype).toBe(4);
                     expect(evt.id).toBe("0x01");
-                    expect(evt.command).toBeUndefined();
+                    expect(evt.command).toBe("Unknown");
                     expect(evt.commandNumber).toBe(0);
                     expect(evt.seqnbr).toBe(0);
                     expect(evt.rssi).toBe(8);
@@ -1844,7 +1844,7 @@ describe("RfxCom", function() {
                 device.on("fan", function(evt) {
                     expect(evt.subtype).toBe(5);
                     expect(evt.id).toBe("0x01");
-                    expect(evt.command).toBeUndefined();
+                    expect(evt.command).toBe("Unknown");
                     expect(evt.commandNumber).toBe(0);
                     expect(evt.seqnbr).toBe(0);
                     expect(evt.rssi).toBe(8);
@@ -1916,7 +1916,7 @@ describe("RfxCom", function() {
                 device.on("fan", function(evt) {
                     expect(evt.subtype).toBe(5);
                     expect(evt.id).toBe("0x01");
-                    expect(evt.command).toBe("Natural flow");
+                    expect(evt.command).toBe("Natural Flow");
                     expect(evt.commandNumber).toBe(6);
                     expect(evt.seqnbr).toBe(6);
                     expect(evt.rssi).toBe(8);
@@ -1940,7 +1940,7 @@ describe("RfxCom", function() {
                 device.on("fan", function(evt) {
                     expect(evt.subtype).toBe(6);
                     expect(evt.id).toBe("0x01");
-                    expect(evt.command).toBeUndefined();
+                    expect(evt.command).toBe("Unknown");
                     expect(evt.commandNumber).toBe(0);
                     expect(evt.seqnbr).toBe(0);
                     expect(evt.rssi).toBe(8);
@@ -2012,7 +2012,7 @@ describe("RfxCom", function() {
                 device.on("fan", function(evt) {
                     expect(evt.subtype).toBe(7);
                     expect(evt.id).toBe("0x1234");
-                    expect(evt.command).toBeUndefined();
+                    expect(evt.command).toBe("Unknown");
                     expect(evt.commandNumber).toBe(0);
                     expect(evt.seqnbr).toBe(0);
                     expect(evt.rssi).toBe(8);
@@ -2156,7 +2156,7 @@ describe("RfxCom", function() {
                 device.on("fan", function(evt) {
                     expect(evt.subtype).toBe(8);
                     expect(evt.id).toBe("0x0F");
-                    expect(evt.command).toBeUndefined();
+                    expect(evt.command).toBe("Unknown");
                     expect(evt.commandNumber).toBe(0);
                     expect(evt.seqnbr).toBe(0);
                     expect(evt.rssi).toBe(8);
@@ -2300,7 +2300,7 @@ describe("RfxCom", function() {
                 device.on("fan", function(evt) {
                     expect(evt.subtype).toBe(9);
                     expect(evt.id).toBe("0x0F");
-                    expect(evt.command).toBeUndefined();
+                    expect(evt.command).toBe("Unknown");
                     expect(evt.commandNumber).toBe(0);
                     expect(evt.seqnbr).toBe(0);
                     expect(evt.rssi).toBe(8);
@@ -2420,7 +2420,7 @@ describe("RfxCom", function() {
                 device.on("fan", function(evt) {
                     expect(evt.subtype).toBe(10);
                     expect(evt.id).toBe("0x123456");
-                    expect(evt.command).toBeUndefined();
+                    expect(evt.command).toBe("Unknown");
                     expect(evt.commandNumber).toBe(0);
                     expect(evt.seqnbr).toBe(0);
                     expect(evt.rssi).toBe(8);
@@ -2553,7 +2553,7 @@ describe("RfxCom", function() {
                 device.on("fan", function(evt) {
                     expect(evt.subtype).toBe(11);
                     expect(evt.id).toBe("0x09");
-                    expect(evt.command).toBeUndefined();
+                    expect(evt.command).toBe("Unknown");
                     expect(evt.commandNumber).toBe(0);
                     expect(evt.seqnbr).toBe(0);
                     expect(evt.rssi).toBe(8);
@@ -2685,7 +2685,7 @@ describe("RfxCom", function() {
                     expect(evt.subtype).toBe(0);
                     expect(evt.id).toBe("0x1234");
                     expect(evt.unitCode).toBe(5);
-                    expect(evt.command).toBe("Confirm");
+                    expect(evt.command).toBe("Confirm/Pair");
                     expect(evt.commandNumber).toBe(3);
                     expect(evt.seqnbr).toBe(5);
                     expect(evt.rssi).toBe(8);
@@ -2698,7 +2698,7 @@ describe("RfxCom", function() {
                     expect(evt.subtype).toBe(0);
                     expect(evt.id).toBe("0x1234");
                     expect(evt.unitCode).toBe(5);
-                    expect(evt.command).toBe("Set limit");
+                    expect(evt.command).toBe("Set Limit");
                     expect(evt.commandNumber).toBe(4);
                     expect(evt.seqnbr).toBe(5);
                     expect(evt.rssi).toBe(8);
@@ -2789,7 +2789,7 @@ describe("RfxCom", function() {
                     expect(evt.subtype).toBe(4);
                     expect(evt.id).toBe("0x001234");
                     expect(evt.unitCode).toBe(1);
-                    expect(evt.command).toBe("Delete limits");
+                    expect(evt.command).toBe("Delete Limits");
                     expect(evt.commandNumber).toBe(6);
                     expect(evt.seqnbr).toBe(5);
                     expect(evt.rssi).toBe(8);
@@ -2797,12 +2797,12 @@ describe("RfxCom", function() {
                 });
                 device.blinds1Handler([0x04, 0x05, 0x00, 0x12, 0x34, 0x00, 0x06, 0x80], packetType);
             });
-            it("should handle BLINDS_T4 devices reverse event", function(done) {
+            it("should handle BLINDS_T4 devices change direction event", function(done) {
                 device.on("blinds1", function(evt) {
                     expect(evt.subtype).toBe(4);
                     expect(evt.id).toBe("0x001234");
                     expect(evt.unitCode).toBe(1);
-                    expect(evt.command).toBe("Reverse");
+                    expect(evt.command).toBe("Change Direction");
                     expect(evt.commandNumber).toBe(7);
                     expect(evt.seqnbr).toBe(5);
                     expect(evt.rssi).toBe(8);
@@ -2815,7 +2815,7 @@ describe("RfxCom", function() {
                     expect(evt.subtype).toBe(4);
                     expect(evt.id).toBe("0x001234");
                     expect(evt.unitCode).toBe(1);
-                    expect(evt.command).toBe("Set lower limit");
+                    expect(evt.command).toBe("Set Lower Limit");
                     expect(evt.commandNumber).toBe(5);
                     expect(evt.seqnbr).toBe(5);
                     expect(evt.rssi).toBe(8);
@@ -2836,12 +2836,12 @@ describe("RfxCom", function() {
                 });
                 device.blinds1Handler([0x06, 0x04, 0x56, 0x38, 0x01, 0x03, 0x01, 0x78], packetType);
             });
-            it("should handle BLINDS_T10 devices reverse event", function(done) {
+            it("should handle BLINDS_T10 devices change direction event", function(done) {
                 device.on("blinds1", function(evt) {
                     expect(evt.subtype).toBe(10);
                     expect(evt.id).toBe("0x001234");
                     expect(evt.unitCode).toBe(1);
-                    expect(evt.command).toBe("Reverse");
+                    expect(evt.command).toBe("Change Direction");
                     expect(evt.commandNumber).toBe(6);
                     expect(evt.seqnbr).toBe(5);
                     expect(evt.rssi).toBe(8);
@@ -2932,7 +2932,7 @@ describe("RfxCom", function() {
                     expect(evt.subtype).toBe(0);
                     expect(evt.id).toBe("0x12345678");
                     expect(evt.unitCode).toBe(9);
-                    expect(evt.command).toBe("Set level");
+                    expect(evt.command).toBe("Set Level");
                     expect(evt.commandNumber).toBe(3);
                     expect(evt.seqnbr).toBe(67);
                     expect(evt.level).toBe(82);
@@ -2970,7 +2970,7 @@ describe("RfxCom", function() {
                     expect(evt.subtype).toBe(0);
                     expect(evt.id).toBe("0x12345678");
                     expect(evt.unitCode).toBe(9);
-                    expect(evt.command).toBe("Toggle dim");
+                    expect(evt.command).toBe("Toggle Dim");
                     expect(evt.commandNumber).toBe(6);
                     expect(evt.seqnbr).toBe(70);
                     expect(evt.level).toBe(1);
@@ -2989,7 +2989,7 @@ describe("RfxCom", function() {
                     expect(evt.subtype).toBe(0);
                     expect(evt.id).toBe("0x12345678");
                     expect(evt.unitCode).toBe(9);
-                    expect(evt.command).toBe("Stop dim");
+                    expect(evt.command).toBe("Stop Dim");
                     expect(evt.commandNumber).toBe(7);
                     expect(evt.seqnbr).toBe(71);
                     expect(evt.level).toBe(1);
@@ -3156,7 +3156,7 @@ describe("RfxCom", function() {
 
         describe(".activLinkHandler", function () {
             let device = {};
-            let packetType = 0x1e;
+            let packetType = 0x1d;
             beforeEach(function () {
                 device = new rfxcom.RfxCom("/dev/ttyUSB0");
             });
@@ -3215,7 +3215,7 @@ describe("RfxCom", function() {
                     expect(evt.id).toBe("0x1234");
                     expect(evt.groupCode).toBe("B");
                     expect(evt.channelNumber).toBe(1);
-                    expect(evt.command).toBe("Up");
+                    expect(evt.command).toBe("Channel Up");
                     expect(evt.commandNumber).toBe(1);
                     expect(evt.seqnbr).toBe(64);
                     expect(evt.rssi).toBe(8);
@@ -3244,7 +3244,7 @@ describe("RfxCom", function() {
                     expect(evt.id).toBe("0x1234");
                     expect(evt.groupCode).toBe("B");
                     expect(evt.commandNumber).toBe(0);
-                    expect(evt.command).toBe("Down");
+                    expect(evt.command).toBe("Channel Down");
                     expect(evt.sceneNumber).toBeUndefined();
                     expect(evt.channelNumber).toBe(6);
                     expect(evt.seqnbr).toBe(65);
@@ -3259,7 +3259,7 @@ describe("RfxCom", function() {
                     expect(evt.id).toBe("0x1234");
                     expect(evt.groupCode).toBe("B");
                     expect(evt.commandNumber).toBe(1);
-                    expect(evt.command).toBe("Up");
+                    expect(evt.command).toBe("Channel Up");
                     expect(evt.sceneNumber).toBeUndefined();
                     expect(evt.channelNumber).toBe(3);
                     expect(evt.seqnbr).toBe(64);
@@ -4159,14 +4159,14 @@ describe("RfxCom", function() {
                     expect(evt.temperature).toBe(20.0);
                     done();
                 });
-                device.uvHandler([0x01, 0x13, 0xf1, 0xd0, 0x0a, 0x00, 0xc8, 0x79], packetType);
+                device.uvHandler([0x03, 0x13, 0xf1, 0xd0, 0x0a, 0x00, 0xc8, 0x79], packetType);
             });
             it("should extract a negative temperature", function (done) {
                 device.on("uv1", function (evt) {
                     expect(evt.temperature).toBe(-5.0);
                     done();
                 });
-                device.uvHandler([0x01, 0x13, 0xf1, 0xd0, 0x0a, 0x80, 0x32, 0x79], packetType);
+                device.uvHandler([0x03, 0x13, 0xf1, 0xd0, 0x0a, 0x80, 0x32, 0x79], packetType);
             });
             it("should extract the battery level correctly", function(done) {
                 device.on("uv1", function(evt) {
