@@ -43,6 +43,15 @@ describe('Blinds2 class', function () {
                 expect(fakeSerialPort).toHaveSent([0x0c, 0x31, 0x00, 0x00, 0x12, 0x34, 0x56, 0x78, 0x08, 0x00, 0x00, 0x00, 0x00]);
                 expect(sentCommandId).toEqual(0);
             });
+            it('should send the correct bytes for an up() command to the serialport', function (done) {
+                let sentCommandId = NaN;
+                blinds2.up('0x12345678/9', function (err, response, cmdId) {
+                    sentCommandId = cmdId;
+                    done();
+                });
+                expect(fakeSerialPort).toHaveSent([0x0c, 0x31, 0x00, 0x00, 0x12, 0x34, 0x56, 0x78, 0x08, 0x00, 0x00, 0x00, 0x00]);
+                expect(sentCommandId).toEqual(0);
+            });
             it('should accept an array deviceId', function (done) {
                 let sentCommandId = NaN;
                 blinds2.open(['0x12345678', '9'], function (err, response, cmdId) {
@@ -67,6 +76,15 @@ describe('Blinds2 class', function () {
             it('should send the correct bytes for a close() command to the serialport', function (done) {
                 let sentCommandId = NaN;
                 blinds2.close('0x12345678/9', function (err, response, cmdId) {
+                    sentCommandId = cmdId;
+                    done();
+                });
+                expect(fakeSerialPort).toHaveSent([0x0c, 0x31, 0x00, 0x00, 0x12, 0x34, 0x56, 0x78, 0x08, 0x01, 0x00, 0x00, 0x00]);
+                expect(sentCommandId).toEqual(0);
+            });
+            it('should send the correct bytes for a down() command to the serialport', function (done) {
+                let sentCommandId = NaN;
+                blinds2.down('0x12345678/9', function (err, response, cmdId) {
                     sentCommandId = cmdId;
                     done();
                 });

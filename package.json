@@ -1,14 +1,17 @@
 {
   "name": "rfxcom",
   "version": "2.5.0",
-  "contributors": ["Max Hadley <max@susato.co.uk>", "Kevin McDermott <kevin@bigkevmcd.com>"],
+  "contributors": [
+    "Max Hadley <max@susato.co.uk>",
+    "Kevin McDermott <kevin@bigkevmcd.com>"
+  ],
   "engines": {
     "node": ">=14.21.2"
   },
   "dependencies": {
-    "date-format": "^4.0.0",
+    "date-format": "^4.0.14",
     "queue": "^6.0.2",
-    "serialport": "^9.0.4"
+    "serialport": "^11.0.1"
   },
   "devDependencies": {
     "jasmine": "^4.5.0",
@@ -17,8 +20,8 @@
   "scripts": {
     "test": "jasmine",
     "watch": "./node_modules/.bin/jasmine-node --autotest .",
-    "find-rfxcom": "./node_modules/.bin/bin/find-rfxcom.js",
-    "set-protocols": "./node_modules/.bin/bin/set-protocols.js"
+    "find-rfxcom": "./node_modules/.bin/find-rfxcom",
+    "set-protocols": "./node_modules/.bin/set-protocols"
   },
   "bin": {
     "find-rfxcom": "./bin/find-rfxcom.js",
