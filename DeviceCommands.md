@@ -46,7 +46,6 @@ Devices:
     BLINDS_T18
     BLINDS_T19
     BLINDS_T20
-    BLINDS_T21
 
 Commands:
 
@@ -82,7 +81,6 @@ Commands:
     Blinds2.setAngle()
     Blinds2.setPercent()
     Blinds2.setPercentAndAngle()
-    Blinds2.reverse()
 
 Camera1
 -------

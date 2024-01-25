@@ -8,7 +8,7 @@ To install
   npm install rfxcom
 </pre>
 
-Depends on serialport ^9.0.0, date-format ^4.0.0, and queue ^6.0.0
+Depends on serialport ^11.0.0, date-format ^4.0.0, and queue ^6.0.0
 
 Note
 ----
@@ -57,7 +57,6 @@ Sending Commands
 Prototype transmitter objects are provided for almost all packet types (see the RFXCOM manual for details). The only
 packet types which can be transmitted but are *not* currently supported are:
 
-* 0x1D, Honeywell ActivLink (868 MHz devices only)
 * 0x21, Security2
 * 0x61, ASYNC port configuration (RFXtrx433XL only)
 * 0x62, ASYNC port data (RFXtrx433XL only)
@@ -115,7 +114,7 @@ HomeEasy: the ones marketed in UK are of type 'AC', while those in the Netherlan
 Rfy (Somfy) Blinds
 ------------------
 There is a specialised Rfy transmitter object. This supports three subtypes: 'RFY', 'RFYEXT'
-and 'ASA', one of which must be supplied to the Rfy constructor. RFY support requires an RFXtrx433E or RFXtrx433XL.
+and 'ASA', one of which must be supplied to the Rfy constructor. RFY support requires an RFXtrx433E, RFXtrx433XL, or RFX433.
 The 'RFY' and 'RFYEXT' subtypes can control venetian blinds, but the command modes differ between EU and US
 supplied blinds motors. The mode is specified by passing an options parameter to the constructor.
 The valid modes are `'EU'` and `'US'`. The default is `'EU'`.

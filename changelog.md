@@ -1,3 +1,21 @@
+Version 2.6.1
+-------------
+Bug fix: correct the format of transmitted ActivLink packet
+Add range checking to ActivLink.chime()
+
+Version 2.6.0
+-------------
+Support for firmware versions up to 1048 & 2022
+
+- Add new packet types & subtypes to version 9.39 SDK
+- Add support for new RFX433 and RFX868 devices
+- Each receiver type now has its own list of enabled receive protocols
+- Add ActivLink packet type from SDK 9.40
+- Major improvements to generating the _command_ (string) property of receive events: this now matches the
+SDK text for all subtypes
+
+Various minor bug fixes. Update serialport to 11.0.1
+
 Version 2.5.0
 -------------
 Support for RFX firmware 1045 (with longer chime1 packet)
@@ -9,12 +27,12 @@ Support for RFX firmware 1045 (with longer chime1 packet)
 - Add Blinds2 (bidirectional blinds) transmitter
 - Add support for waterlevel packet
 
-Various minor bug fixes
+Various minor bug fixes.
 Update test framework to Jasmine 4.4.x
 
 Version 2.4.0
 -------------
-Add Blinds1.intermediatePosition() function
+Add Blinds1.intermediatePosition() function.
 Silence warnings about missing AsyncConfig & AsyncData classes from NodeJS
 
 Version 2.3.1
@@ -47,8 +65,8 @@ Support for RFX firmware 1040
 - Add support for Weather & Solar packet types
 - Add fan receive handler
 
-Update to latest Serialport (>8.0.0) and Queue (>6.0.0)
-Debug log timestamps now include milliseconds
+Update to latest Serialport (>8.0.0) and Queue (>6.0.0).
+Debug log timestamps now include milliseconds.
 Correct the errors in the code samples in Readme.MD
 
 Bug fixes:
