@@ -376,6 +376,10 @@ Emitted when a message is received from a doorbell pushbutton (or PIR sensor) us
 ---------
 Emitted when a message arrives from a compatible type 1 blinds remote controller (only a few subtypes can be received)
 
+"blinds2"
+---------
+Emitted when a message arrives from a type 2 blinds remote controller (BREL/DOOYA)
+
 "fan"
 -----
 Emitted when a message arrives from a supported type of fan remote control (not Hunter fans - see below)
